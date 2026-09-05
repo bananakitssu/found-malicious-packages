@@ -10,6 +10,7 @@ ALLOWED = {"PENDING", "APPROVED", "REJECTED", "NEEDS_EDIT"}
 SEVERITIES = {"critical", "high", "medium", "low"}
 CWE_RE = re.compile(r"^CWE-[0-9]+$")
 MAX_CWE_IDS = 5
+CWE_STATUSES = {"AI_PROPOSED", "UNAVAILABLE"}
 
 
 def nonempty(value):
@@ -67,6 +68,10 @@ def validate(path):
     if cwe_notes is not None:
         if not isinstance(cwe_notes, list) or any(not isinstance(note, str) for note in cwe_notes):
             errors.append(f"{path}: database_specific.cwe_notes must be an array of strings")
+
+    cwe_status = database_specific.get("cwe_status")
+    if cwe_status is not None and cwe_status not in CWE_STATUSES:
+        errors.append(f"{path}: invalid database_specific.cwe_status: {cwe_status!r}")
 
     review = database_specific.get("review")
     if not isinstance(review, dict):
