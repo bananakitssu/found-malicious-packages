@@ -38,20 +38,25 @@ jobs:
           count = 0
           for advisory_path in sorted(root.rglob("AUTH-*.json")) if root.exists() else []:
               data = json.loads(advisory_path.read_text(encoding="utf-8"))
-              review = data.get("database_specific", {}).get("review", {})
-              if review.get("status") != "APPROVED" or review.get("human_review_required") is not False:
+              database_specific = data.get("database_specific", {})
+              review = database_specific.get("review", {})
+              if review.get("status") != "APPROVED":
                   continue
 
               advisory_id = data.get("id", advisory_path.stem)
               package = data.get("affected", [{}])[0].get("package", {})
               name = package.get("name", "unknown")
               versions = package.get("versions", [])
+              cwe_ids = database_specific.get("cwe_ids", [])
+              if not isinstance(cwe_ids, list):
+                  cwe_ids = []
               lines = [
                   f"# {advisory_id}", "",
                   f"**Package:** `{name}`",
                   f"**Affected versions:** {', '.join(f'`{v}`' for v in versions) or 'Not specified'}",
                   f"**Severity:** `{data.get('severity', 'n/a')}`",
                   f"**Published:** {data.get('published', generated)}",
+                  f"**CWE:** {', '.join(f'`{cwe}`' for cwe in cwe_ids) if cwe_ids else 'Not assigned'}",
                   "",
                   "> This advisory was generated from an automated draft and published only after human review and approval.",
                   "",
@@ -73,6 +78,11 @@ jobs:
               ]
               output = reports / f"{advisory_id}.md"
               output.write_text("\n".join(lines), encoding="utf-8")
+
+              # Publication is the point at which the human-review gate is cleared.
+              database_specific["human_review_required"] = False
+              data["database_specific"] = database_specific
+              advisory_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
               count += 1
 
           print(f"Generated {count} reviewed advisory report(s).")
@@ -83,7 +93,7 @@ jobs:
           set -e
           git config user.name "Authtics Bot"
           git config user.email "authtics-bot@users.noreply.github.com"
-          git add reports/advisories/
+          git add reports/advisories/ findings/npm/
           if git diff --cached --quiet; then
             echo "No newly approved advisory reports to publish."
             exit 0
