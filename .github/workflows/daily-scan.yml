@@ -90,6 +90,15 @@ jobs:
           AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
         run: python3 scripts/gemini_analyze.py
 
+      - name: Remove package workspace after static analysis
+        if: always()
+        run: |
+          echo "Removing downloaded package sources and temporary analysis files..."
+          rm -rf /tmp/authtics-packages/extracted
+          rm -f /tmp/authtics-packages/*.tgz
+          mkdir -p /tmp/authtics-packages/extracted
+          echo "Package workspace cleaned."
+
       - name: Classify CWE candidates
         if: always()
         env:
