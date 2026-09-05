@@ -4,7 +4,7 @@
 **Model:** `gemini-3.7-flash`
 **Packages analyzed:** 5
 
-> This report contains AI-generated draft analysis only. A human reviewer must verify any potential finding before publication.
+> This report was reviewed and approved through the merged Authtics pull request. The original analysis was AI-generated draft analysis; publication is based on human review.
 
 ---
 
@@ -14,7 +14,7 @@
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -40,7 +40,7 @@ Gemini analysis could not be completed. This is not a security finding.
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.8
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -67,7 +67,7 @@ The package manifest defines an architecture-specific distribution package for L
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.95
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -96,7 +96,7 @@ dd-trace 6.14.0 contains standard Datadog APM tracing, instrumentation plugins, 
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -122,7 +122,7 @@ Gemini analysis could not be completed. This is not a security finding.
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.95
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 

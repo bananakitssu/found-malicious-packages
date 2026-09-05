@@ -2,10 +2,13 @@
   "schema_version": "1.0",
   "generated": "2026-09-05T06-01-48Z",
   "model": "gemini-3.7-flash",
-  "status": "PENDING_REVIEW",
-  "human_review_required": true,
+  "status": "REVIEWED",
+  "human_review_required": false,
   "review": {
-    "status": "PENDING"
+    "status": "APPROVED",
+    "reviewed_at": "2026-09-05T06:04:03Z",
+    "pull_request": 2,
+    "merge_commit": "2bf4e13341781377afe66997d35cc8e43def4263"
   },
   "packages_analyzed": 5,
   "results": [
@@ -25,7 +28,10 @@
       "draft_title": "",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:04:03Z",
+        "pull_request": 2,
+        "merge_commit": "2bf4e13341781377afe66997d35cc8e43def4263"
       }
     },
     {
@@ -50,7 +56,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:04:03Z",
+        "pull_request": 2,
+        "merge_commit": "2bf4e13341781377afe66997d35cc8e43def4263"
       }
     },
     {
@@ -83,7 +92,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:04:03Z",
+        "pull_request": 2,
+        "merge_commit": "2bf4e13341781377afe66997d35cc8e43def4263"
       }
     },
     {
@@ -102,7 +114,10 @@
       "draft_title": "",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:04:03Z",
+        "pull_request": 2,
+        "merge_commit": "2bf4e13341781377afe66997d35cc8e43def4263"
       }
     },
     {
@@ -138,7 +153,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:04:03Z",
+        "pull_request": 2,
+        "merge_commit": "2bf4e13341781377afe66997d35cc8e43def4263"
       }
     }
   ]
