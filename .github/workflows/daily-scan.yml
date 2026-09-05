@@ -32,7 +32,7 @@ jobs:
 
           echo "Gemini API key is configured."
 
-      - name: Fetch npm packages
+      - name: Fetch newest npm packages
         run: |
           python3 - <<'PY'
           import json
@@ -40,15 +40,19 @@ jobs:
           import urllib.request
 
           params = urllib.parse.urlencode({
-              "text": "*",
-              "size": 250
+              "text": "javascript",
+              "size": 250,
+              "from": 0
           })
 
           url = f"https://registry.npmjs.org/-/v1/search?{params}"
 
+          print(f"Requesting npm Registry API...")
+
           request = urllib.request.Request(
               url,
               headers={
+                  "Accept": "application/json",
                   "User-Agent": "Authtics/0.1.0"
               }
           )
@@ -63,15 +67,15 @@ jobs:
 
               name = package.get("name")
               version = package.get("version")
-              date = package.get("date")
+              published = package.get("date")
 
-              if not name or not version or not date:
+              if not name or not version or not published:
                   continue
 
               packages.append({
                   "name": name,
                   "version": version,
-                  "published": date
+                  "published": published
               })
 
           packages.sort(
@@ -85,7 +89,7 @@ jobs:
               json.dump(selected, file, indent=2)
 
           print()
-          print("Newest packages returned by npm:")
+          print("Newest 5 packages returned by npm:")
           print()
 
           for index, package in enumerate(selected, 1):
@@ -99,7 +103,7 @@ jobs:
       - name: Show package metadata
         run: |
           echo "================================"
-          echo "Selected packages"
+          echo "Recent npm packages"
           echo "================================"
           cat metadata/recent-packages.json
 
