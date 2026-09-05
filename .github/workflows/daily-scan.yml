@@ -140,13 +140,11 @@ jobs:
           echo "================================"
           echo "Generated Gemini report"
           echo "================================"
-          find reports -type f -name '*.md' -print -exec cat {} \\
-;
+          find reports -type f -name '*.md' -print -exec cat {} \;
           echo "================================"
           echo "Generated findings JSON"
           echo "================================"
-          find findings -type f -name '*.json' -print -exec cat {} \\
-;
+          find findings -type f -name '*.json' -print -exec cat {} \;
 
       - name: Create review branch and pull request
         env:
