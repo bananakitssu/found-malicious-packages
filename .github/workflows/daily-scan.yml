@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   scan:
@@ -18,7 +19,7 @@ jobs:
 
       - name: Create working directories
         run: |
-          mkdir -p reports metadata /tmp/authtics-packages/extracted
+          mkdir -p reports findings metadata /tmp/authtics-packages/extracted
 
       - name: Check Gemini API key
         env:
@@ -110,6 +111,8 @@ jobs:
                       if not member_path.parts or member_path.parts[0] != "package":
                           continue
                       relative = member_path.relative_to(root)
+                      if any(part in {"..", ""} for part in relative.parts):
+                          continue
                       target = destination / relative
                       if member.isdir():
                           target.mkdir(parents=True, exist_ok=True)
@@ -132,21 +135,59 @@ jobs:
           AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
         run: python3 scripts/gemini_analyze.py
 
-      - name: Show generated report
+      - name: Show generated report and JSON
         run: |
           echo "================================"
           echo "Generated Gemini report"
           echo "================================"
           find reports -type f -name '*.md' -print -exec cat {} \;
+          echo "================================"
+          echo "Generated findings JSON"
+          echo "================================"
+          find findings -type f -name '*.json' -print -exec cat {} \;
 
-      - name: Commit report only
+      - name: Create review branch and pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -e
           git config user.name "Authtics Bot"
           git config user.email "authtics-bot@users.noreply.github.com"
-          git add reports/*.md metadata/recent-packages.json
+
+          BASE_BRANCH="${{ github.event.repository.default_branch }}"
+          BRANCH="authtics/daily-scan-${GITHUB_RUN_ID}"
+
+          git checkout -b "$BRANCH"
+          git add reports/*.md findings/*.json metadata/recent-packages.json
+
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "feat: add daily npm security scan report"
-          git push
+
+          git commit -m "security: add daily npm scan for review"
+          git push --set-upstream origin "$BRANCH"
+
+          REPORT="$(find reports -type f -name '*.md' | sort | tail -n 1)"
+          FINDINGS="$(find findings -type f -name '*.json' | sort | tail -n 1)"
+
+          gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --base "$BASE_BRANCH" \
+            --head "$BRANCH" \
+            --title "security: Authtics daily npm scan" \
+            --body "## Authtics Advisories — Human Review Required
+
+This pull request contains the latest automated npm package scan.
+
+- AI analysis is a draft only.
+- No package code was executed during analysis.
+- The JSON findings file is intended for reviewer editing/verification before merge.
+- A merge is required before the results become part of the default branch.
+
+### Generated files
+- \`$REPORT\` — human-readable scan report
+- \`$FINDINGS\` — structured JSON scan results
+
+**Please verify every potential finding against the exact package version before merging.**" \
+            --draft
