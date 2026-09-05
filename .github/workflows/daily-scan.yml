@@ -131,7 +131,7 @@ jobs:
       - name: Analyze packages with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-3.7-flash
+          GEMINI_MODEL: gemini-3.1-flash-lite
           AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
         run: python3 scripts/gemini_analyze.py
 
