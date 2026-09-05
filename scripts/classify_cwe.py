@@ -49,13 +49,36 @@ Advisory:
 {json.dumps(advisory, indent=2)}
 """
     result = json.loads(call_gemini(prompt))
+    if not isinstance(result, dict):
+        raise ValueError(f"CWE response must be a JSON object, got {type(result).__name__}")
     ids = result.get("cwe_ids", [])
     notes = result.get("cwe_notes", [])
     if not isinstance(ids, list) or not isinstance(notes, list):
         raise ValueError("CWE response fields must be arrays")
     ids = [item for item in ids if isinstance(item, str) and CWE_RE.fullmatch(item)]
     notes = [item for item in notes if isinstance(item, str)]
+    if len(ids) > 5:
+        ids = ids[:5]
     return sorted(set(ids)), notes
+
+
+def update_reports(advisories):
+    reports = sorted(Path("reports").glob("*.md"))
+    if not reports:
+        return
+    for report in reports:
+        text = report.read_text(encoding="utf-8")
+        for advisory_id, cwe_ids in advisories.items():
+            marker = f"- **Advisory:** `{advisory_id}`"
+            if marker not in text:
+                continue
+            cwe_line = f"- **CWE:** {', '.join(f'`{cwe}`' for cwe in cwe_ids) if cwe_ids else 'Not assigned'}"
+            next_marker = "- **Confidence:**"
+            if cwe_line in text:
+                continue
+            replacement = marker + "\n" + cwe_line
+            text = text.replace(marker, replacement, 1)
+        report.write_text(text, encoding="utf-8")
 
 
 def main():
@@ -63,6 +86,7 @@ def main():
     if not root.exists():
         print("No npm findings directory; nothing to classify.")
         return
+    classified = {}
     for path in sorted(root.rglob("AUTH-*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
         review = data.get("database_specific", {}).get("review", {})
@@ -74,6 +98,7 @@ def main():
             data["database_specific"]["cwe_notes"] = notes
             data["database_specific"]["cwe_status"] = "AI_PROPOSED"
             path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+            classified[data.get("id", path.stem)] = ids
             print(f"{path}: proposed CWE IDs: {', '.join(ids) if ids else 'none'}")
         except Exception as exc:
             # CWE classification is enrichment, so a classifier failure must not turn
@@ -83,6 +108,8 @@ def main():
             data["database_specific"]["cwe_notes"] = [f"CWE classification unavailable: {exc}"]
             data["database_specific"]["cwe_status"] = "UNAVAILABLE"
             path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+            classified[data.get("id", path.stem)] = []
+    update_reports(classified)
 
 
 if __name__ == "__main__":
