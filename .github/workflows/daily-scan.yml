@@ -33,32 +33,52 @@ jobs:
 
           echo "Gemini API key is configured."
 
-      - name: Fetch 5 newest npm packages
+      - name: Fetch recently published npm packages
         run: |
           python3 - <<'PY'
           import json
           import urllib.request
 
-          url = "https://registry.npmjs.org/-/v1/search?text=*&size=250"
+          url = "https://registry.npmjs.org/-/all"
 
-          with urllib.request.urlopen(url) as response:
+          request = urllib.request.Request(
+              url,
+              headers={
+                  "User-Agent": "Authtics/0.1.0"
+              }
+          )
+
+          with urllib.request.urlopen(request, timeout=60) as response:
               data = json.load(response)
 
           packages = []
 
-          for result in data.get("objects", []):
-              package = result.get("package", {})
+          for name, package in data.items():
+              time_data = package.get("time", {})
 
-              name = package.get("name")
-              version = package.get("version")
-              published = package.get("date")
+              if not time_data:
+                  continue
 
-              if name and version and published:
-                  packages.append({
-                      "name": name,
-                      "version": version,
-                      "published": published
-                  })
+              created = time_data.get("created")
+
+              if not created:
+                  continue
+
+              versions = [
+                  version
+                  for version in time_data
+                  if version not in ("created", "modified")
+              ]
+
+              for version in versions:
+                  published = time_data.get(version)
+
+                  if published:
+                      packages.append({
+                          "name": name,
+                          "version": version,
+                          "published": published
+                      })
 
           packages.sort(
               key=lambda package: package["published"],
