@@ -2,10 +2,13 @@
   "schema_version": "1.0",
   "generated": "2026-09-05T14-21-48Z",
   "model": "gemini-3.1-flash-lite",
-  "status": "PENDING_REVIEW",
-  "human_review_required": true,
+  "status": "REVIEWED",
+  "human_review_required": false,
   "review": {
-    "status": "PENDING"
+    "status": "APPROVED",
+    "reviewed_at": "2026-09-05T19:56:18Z",
+    "pull_request": 5,
+    "merge_commit": "34cc844ea53dc09be47acfae5674b750c17f210b"
   },
   "packages_analyzed": 5,
   "results": [
@@ -35,7 +38,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:56:18Z",
+        "pull_request": 5,
+        "merge_commit": "34cc844ea53dc09be47acfae5674b750c17f210b"
       }
     },
     {
@@ -68,7 +74,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:56:18Z",
+        "pull_request": 5,
+        "merge_commit": "34cc844ea53dc09be47acfae5674b750c17f210b"
       }
     },
     {
@@ -97,7 +106,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:56:18Z",
+        "pull_request": 5,
+        "merge_commit": "34cc844ea53dc09be47acfae5674b750c17f210b"
       }
     },
     {
@@ -134,7 +146,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:56:18Z",
+        "pull_request": 5,
+        "merge_commit": "34cc844ea53dc09be47acfae5674b750c17f210b"
       }
     },
     {
@@ -162,7 +177,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:56:18Z",
+        "pull_request": 5,
+        "merge_commit": "34cc844ea53dc09be47acfae5674b750c17f210b"
       }
     }
   ]

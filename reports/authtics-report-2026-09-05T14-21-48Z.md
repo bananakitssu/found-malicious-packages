@@ -4,7 +4,7 @@
 **Model:** `gemini-3.1-flash-lite`
 **Packages analyzed:** 5
 
-> This report contains AI-generated draft analysis only. A human reviewer must verify any potential finding before publication.
+> This report was reviewed and approved through the merged Authtics pull request. The original analysis was AI-generated draft analysis; publication is based on human review.
 
 ---
 
@@ -14,7 +14,7 @@
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.9
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -42,7 +42,7 @@ The package openid-client@6.8.8 is a well-structured OAuth 2.0 and OpenID Connec
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.9
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -71,7 +71,7 @@ The package oauth4webapi@3.8.8 is a low-level OAuth 2.0 and OpenID Connect clien
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.9
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -99,7 +99,7 @@ The package pocketbase@0.28.1 is a JavaScript SDK for the PocketBase backend. Th
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.9
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -130,7 +130,7 @@ The package 'workerd' is a runtime environment that uses a postinstall script to
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.9
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
