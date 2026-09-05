@@ -18,6 +18,8 @@ SCAN_STATE = Path("metadata/scan-state.json")
 MAX_FILE_CHARS = 12000
 MAX_TOTAL_CHARS = 120000
 MAX_RETRIES = 5
+RATE_LIMIT_MAX_RETRIES = 3
+REQUEST_DELAY_SECONDS = 1
 SEVERITIES = {"critical", "high", "medium", "low", "n/a"}
 
 ANALYSIS_SYSTEM_INSTRUCTION = """
@@ -33,6 +35,17 @@ NON-NEGOTIABLE OUTPUT RULES:
 6. The response must be valid JSON that can be parsed directly by json.loads().
 7. The result is a draft for human review. Never claim confirmed malicious intent solely from suspicion.
 8. Analyze only the exact package version and supplied evidence. Do not import historical vulnerabilities from other versions without evidence they still apply.
+
+OBFUSCATION AND SUSPICIOUS-DYNAMIC-BEHAVIOR GUIDANCE:
+- Flag eval(), Function(), dynamic require/import, runtime-generated code, encoded strings,
+  Base64/hex payloads, runtime decryption, or similar techniques when they materially hinder
+  security analysis.
+- Do NOT treat ordinary minification, bundling, transpilation, or generated files as malicious
+  by themselves.
+- If suspicious behavior is present but the final intent or payload cannot be established, it
+  may still be a potential_finding for human review.
+- Explain uncertainty clearly. Never claim a hidden payload is malicious without evidence showing
+  harmful behavior.
 """
 
 ANALYSIS_RESPONSE_SCHEMA = {
@@ -119,9 +132,21 @@ def call_gemini(prompt):
         try:
             with urllib.request.urlopen(request, timeout=180) as response:
                 data = json.load(response)
+            time.sleep(REQUEST_DELAY_SECONDS)
             break
         except urllib.error.HTTPError as exc:
-            if exc.code not in {429, 500, 502, 503, 504} or attempt == MAX_RETRIES:
+            if exc.code == 429:
+                if attempt >= RATE_LIMIT_MAX_RETRIES:
+                    raise RuntimeError(f"Gemini rate limit persisted after {RATE_LIMIT_MAX_RETRIES} attempts") from exc
+                retry_after = exc.headers.get("Retry-After") if exc.headers else None
+                try:
+                    delay = max(1, float(retry_after)) if retry_after else min(60, 2 ** (attempt - 1) * 5)
+                except (TypeError, ValueError):
+                    delay = min(60, 2 ** (attempt - 1) * 5)
+                print(f"Gemini returned HTTP 429; retrying in {delay:g}s (attempt {attempt}/{RATE_LIMIT_MAX_RETRIES})", flush=True)
+                time.sleep(delay)
+                continue
+            if exc.code not in {500, 502, 503, 504} or attempt == MAX_RETRIES:
                 raise
             delay = min(60, 2 ** (attempt - 1) * 5)
             print(f"Gemini returned HTTP {exc.code}; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES})", flush=True)
@@ -273,6 +298,17 @@ Never invent files, behavior, vulnerabilities, CVEs, package ownership, or inten
 Do not claim a package is safe or free of security issues.
 If the evidence does not establish an actionable finding, use verdict "no_obvious_issue" or "insufficient_evidence" and severity "n/a".
 If verdict is "potential_finding", severity MUST be critical/high/medium/low.
+
+OBFUSCATION AND SUSPICIOUS-DYNAMIC-BEHAVIOR GUIDANCE:
+- Flag eval(), Function(), dynamic require/import, runtime-generated code, encoded strings,
+  Base64/hex payloads, runtime decryption, or similar techniques when they materially hinder
+  security analysis.
+- Do NOT treat ordinary minification, bundling, transpilation, or generated files as malicious
+  by themselves.
+- If suspicious behavior is present but the final intent or payload cannot be established, it
+  may still be a potential_finding for human review.
+- Explain uncertainty clearly. Never claim a hidden payload is malicious without evidence showing
+  harmful behavior.
 
 FILE INVENTORY:
 {json.dumps(files, indent=2)}
