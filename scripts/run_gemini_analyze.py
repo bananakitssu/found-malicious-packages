@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """Run the Gemini scanner with additional obfuscation-focused review guidance."""
 
+import sys
+from pathlib import Path
+
+# When this file is executed directly, Python puts scripts/ on sys.path rather
+# than the repository root. Add the root so scripts.gemini_analyze can import.
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from scripts import gemini_analyze
 
 
