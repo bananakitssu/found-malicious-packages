@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 
 env:
-  AUTHTICS_PACKAGE_LIMIT: 500
+  AUTHTICS_PACKAGE_LIMIT: 100
 
 jobs:
   scan:
@@ -32,11 +32,11 @@ jobs:
 
       - name: Fetch newest npm packages
         env:
-          AUTHTICS_PACKAGE_LIMIT: 500
+          AUTHTICS_PACKAGE_LIMIT: 100
         run: |
           python3 - <<'PY'
           import json, urllib.parse, urllib.request, os
-          limit = int(os.environ.get("AUTHTICS_PACKAGE_LIMIT", "500"))
+          limit = int(os.environ.get("AUTHTICS_PACKAGE_LIMIT", "100"))
           page_size = 250
           packages = []
           for offset in range(0, limit, page_size):
