@@ -5,45 +5,113 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
 MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 CWE_RE = re.compile(r"^CWE-[0-9]+$")
+MAX_RETRIES = 5
+
+CWE_SYSTEM_INSTRUCTION = """
+You are the strict JSON CWE-classification engine for Authtics Advisories.
+Your output is machine-consumed. Follow the requested output schema exactly.
+
+NON-NEGOTIABLE OUTPUT RULES:
+1. Return EXACTLY ONE JSON OBJECT.
+2. NEVER return a JSON array at the top level.
+3. NEVER return Markdown, code fences, prose, explanations, or multiple JSON values outside the object.
+4. Use only the fields defined by the schema. Do not add extra fields.
+5. Every required field must be present, even when its value is empty.
+6. The response must be valid JSON that can be parsed directly by json.loads().
+7. CWE IDs are proposals for human review, not confirmed classifications.
+8. Only select CWE IDs directly supported by the supplied advisory evidence.
+9. Never invent a CWE ID. Do not infer a CWE merely because behavior sounds suspicious.
+"""
+
+CWE_RESPONSE_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "cwe_ids": {
+            "type": "ARRAY",
+            "items": {"type": "STRING"},
+        },
+        "cwe_notes": {
+            "type": "ARRAY",
+            "items": {"type": "STRING"},
+        },
+    },
+    "required": ["cwe_ids", "cwe_notes"],
+}
 
 
 def call_gemini(prompt):
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
         raise RuntimeError("GEMINI_API_KEY is not configured")
+
     body = {
+        "systemInstruction": {"parts": [{"text": CWE_SYSTEM_INSTRUCTION}]},
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.0, "responseMimeType": "application/json"},
+        "generationConfig": {
+            "temperature": 0.0,
+            "responseMimeType": "application/json",
+            "responseSchema": CWE_RESPONSE_SCHEMA,
+        },
     }
+
     request = urllib.request.Request(
         API_URL,
         data=json.dumps(body).encode("utf-8"),
-        headers={"Content-Type": "application/json", "x-goog-api-key": key, "User-Agent": "Authtics/0.1.0"},
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": key,
+            "User-Agent": "Authtics/0.1.0",
+        },
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=180) as response:
-        data = json.load(response)
-    return data["candidates"][0]["content"]["parts"][0]["text"]
+
+    last_error = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=180) as response:
+                data = json.load(response)
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+        except urllib.error.HTTPError as exc:
+            last_error = exc
+            if exc.code not in {429, 500, 502, 503, 504} or attempt == MAX_RETRIES:
+                raise
+            print(
+                f"Gemini CWE request returned HTTP {exc.code}; retrying "
+                f"({attempt}/{MAX_RETRIES})...",
+                file=sys.stderr,
+            )
+        except (urllib.error.URLError, TimeoutError) as exc:
+            last_error = exc
+            if attempt == MAX_RETRIES:
+                raise
+            print(
+                f"Gemini CWE request failed; retrying ({attempt}/{MAX_RETRIES}): {exc}",
+                file=sys.stderr,
+            )
+        time.sleep(min(2 ** (attempt - 1), 16))
+
+    raise RuntimeError(f"Gemini CWE request failed after retries: {last_error}")
 
 
 def classify(advisory):
     prompt = f"""
-You are a CWE classification assistant for Authtics Advisories.
+Classify the security behavior described in this ONE advisory.
 
-Classify the security behavior described in this ONE advisory. CWE IDs are a proposal for a human reviewer, not a confirmed classification.
-Only select CWE IDs that are directly supported by the advisory evidence. Do not infer a CWE merely because a behavior sounds suspicious.
-If no CWE clearly applies, return an empty array.
+Return exactly one JSON object matching the supplied response schema.
+The only fields are:
+- cwe_ids: an array of standard CWE numeric identifiers such as "CWE-123"
+- cwe_notes: an array of brief reasons corresponding to the proposed classifications
 
-Return JSON with exactly:
-{{"cwe_ids": ["CWE-123"], "cwe_notes": ["brief reason for each proposed classification"]}}
-
-Never invent a CWE ID. Use the standard CWE numeric identifier format.
+If no CWE clearly applies, return empty arrays.
+Do not invent a CWE ID, and do not classify behavior that is not directly supported by the advisory evidence.
 
 Advisory:
 {json.dumps(advisory, indent=2)}
@@ -51,14 +119,24 @@ Advisory:
     result = json.loads(call_gemini(prompt))
     if not isinstance(result, dict):
         raise ValueError(f"CWE response must be a JSON object, got {type(result).__name__}")
-    ids = result.get("cwe_ids", [])
-    notes = result.get("cwe_notes", [])
+
+    expected_fields = {"cwe_ids", "cwe_notes"}
+    extra_fields = set(result) - expected_fields
+    if extra_fields:
+        raise ValueError(f"CWE response contains unexpected fields: {', '.join(sorted(extra_fields))}")
+
+    ids = result.get("cwe_ids")
+    notes = result.get("cwe_notes")
     if not isinstance(ids, list) or not isinstance(notes, list):
         raise ValueError("CWE response fields must be arrays")
-    ids = [item for item in ids if isinstance(item, str) and CWE_RE.fullmatch(item)]
-    notes = [item for item in notes if isinstance(item, str)]
+
+    if any(not isinstance(item, str) or not CWE_RE.fullmatch(item) for item in ids):
+        raise ValueError("CWE response contains an invalid CWE ID")
+    if any(not isinstance(item, str) for item in notes):
+        raise ValueError("CWE response contains a non-string note")
     if len(ids) > 5:
-        ids = ids[:5]
+        raise ValueError("CWE response contains more than 5 CWE IDs")
+
     return sorted(set(ids)), notes
 
 
@@ -73,7 +151,6 @@ def update_reports(advisories):
             if marker not in text:
                 continue
             cwe_line = f"- **CWE:** {', '.join(f'`{cwe}`' for cwe in cwe_ids) if cwe_ids else 'Not assigned'}"
-            next_marker = "- **Confidence:**"
             if cwe_line in text:
                 continue
             replacement = marker + "\n" + cwe_line
