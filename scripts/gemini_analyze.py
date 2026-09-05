@@ -138,6 +138,7 @@ def failed_result(package, error):
         "reviewer_notes": [f"Analysis engine error: {error}"],
         "draft_title": "",
         "model": MODEL,
+        "review": {"status": "PENDING"},
     }
 
 
@@ -202,6 +203,7 @@ SELECTED FILE CONTENT:
             result["published"] = package.get("published")
             result["status"] = "PENDING_REVIEW"
             result["model"] = MODEL
+            result["review"] = {"status": "PENDING"}
         except Exception as exc:
             print(f"Gemini analysis failed for {name}@{version}: {exc}", file=sys.stderr, flush=True)
             result = failed_result(package, str(exc))
@@ -223,6 +225,7 @@ SELECTED FILE CONTENT:
         "model": MODEL,
         "status": "PENDING_REVIEW",
         "human_review_required": True,
+        "review": {"status": "PENDING"},
         "packages_analyzed": len(results),
         "results": results,
     }
@@ -250,6 +253,7 @@ SELECTED FILE CONTENT:
             f"- **Status:** `{result.get('status', 'unknown')}`",
             f"- **Verdict:** `{result.get('verdict', 'unknown')}`",
             f"- **Confidence:** {result.get('confidence', 0)}",
+            f"- **Review:** `{result.get('review', {}).get('status', 'PENDING')}`",
             "",
             "### Summary",
             "",
