@@ -20,6 +20,46 @@ MAX_TOTAL_CHARS = 120000
 MAX_RETRIES = 5
 SEVERITIES = {"critical", "high", "medium", "low", "n/a"}
 
+ANALYSIS_SYSTEM_INSTRUCTION = """
+You are the strict JSON security-analysis engine for Authtics Advisories.
+Your output is machine-consumed. Follow the requested output schema exactly.
+
+NON-NEGOTIABLE OUTPUT RULES:
+1. Return EXACTLY ONE JSON OBJECT.
+2. NEVER return a JSON array at the top level.
+3. NEVER return Markdown, code fences, prose, explanations, or multiple JSON values outside the object.
+4. Use only the fields defined by the schema. Do not add extra fields.
+5. Every required field must be present, even when its value is empty.
+6. The response must be valid JSON that can be parsed directly by json.loads().
+7. The result is a draft for human review. Never claim confirmed malicious intent solely from suspicion.
+8. Analyze only the exact package version and supplied evidence. Do not import historical vulnerabilities from other versions without evidence they still apply.
+"""
+
+ANALYSIS_RESPONSE_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "verdict": {"type": "STRING", "enum": ["no_obvious_issue", "potential_finding", "insufficient_evidence"]},
+        "severity": {"type": "STRING", "enum": ["critical", "high", "medium", "low", "n/a"]},
+        "confidence": {"type": "NUMBER", "minimum": 0, "maximum": 1},
+        "summary": {"type": "STRING"},
+        "suspicious_behaviors": {"type": "ARRAY", "items": {"type": "STRING"}},
+        "evidence": {
+            "type": "ARRAY",
+            "items": {
+                "type": "OBJECT",
+                "properties": {
+                    "file": {"type": "STRING"},
+                    "reason": {"type": "STRING"},
+                },
+                "required": ["file", "reason"],
+            },
+        },
+        "reviewer_notes": {"type": "ARRAY", "items": {"type": "STRING"}},
+        "draft_title": {"type": "STRING"},
+    },
+    "required": ["verdict", "severity", "confidence", "summary", "suspicious_behaviors", "evidence", "reviewer_notes", "draft_title"],
+}
+
 
 def collect_evidence(package_dir):
     files = []
@@ -61,8 +101,13 @@ def call_gemini(prompt):
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not configured")
     body = {
+        "systemInstruction": {"parts": [{"text": ANALYSIS_SYSTEM_INSTRUCTION}]},
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json"},
+        "generationConfig": {
+            "temperature": 0.1,
+            "responseMimeType": "application/json",
+            "responseSchema": ANALYSIS_RESPONSE_SCHEMA,
+        },
     }
     for attempt in range(1, MAX_RETRIES + 1):
         request = urllib.request.Request(
@@ -207,24 +252,14 @@ def main():
             continue
         files, evidence = collect_evidence(package_dir)
         prompt = f"""
-You are the analysis engine for Authtics Advisories, a security advisory project.
-
-Analyze ONE exact npm package version using only the supplied evidence. Do not execute code.
-Distinguish legitimate functionality, dangerous functionality, and actual evidence of malicious intent.
-The result is a DRAFT for a human security reviewer and must never claim confirmed maliciousness solely because AI suspects it.
+Analyze the exact npm package version below using only the supplied evidence.
+Do not execute code. Distinguish legitimate functionality, dangerous functionality, and actual evidence of malicious intent.
+The result is a DRAFT for a human security reviewer.
 
 Package: {name}@{version}
 Published: {package.get('published', 'unknown')}
 
-Return JSON with exactly these fields:
-- verdict: one of "no_obvious_issue", "potential_finding", "insufficient_evidence"
-- severity: one of "critical", "high", "medium", "low", "n/a"
-- confidence: number from 0 to 1
-- summary: concise explanation based only on observed evidence
-- suspicious_behaviors: array of concrete observed behaviors
-- evidence: array of objects with "file" and "reason"
-- reviewer_notes: array of questions or checks for the human reviewer
-- draft_title: proposed advisory title, or empty string when severity is n/a
+Return exactly one JSON object matching the supplied response schema. Do not return an array.
 
 Severity guidance:
 - critical: strong evidence of severe malicious behavior or remote code execution with major impact
@@ -233,7 +268,7 @@ Severity guidance:
 - low: minor or lower-impact suspicious/security behavior
 - n/a: no actionable finding or insufficient evidence
 
-IMPORTANT: Historical issues must not be applied to this exact version without evidence that they still exist.
+Historical issues must not be applied to this exact version without evidence that they still exist.
 Never invent files, behavior, vulnerabilities, CVEs, package ownership, or intent.
 Do not claim a package is safe or free of security issues.
 If the evidence does not establish an actionable finding, use verdict "no_obvious_issue" or "insufficient_evidence" and severity "n/a".
