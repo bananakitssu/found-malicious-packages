@@ -3,10 +3,13 @@
 
 import json
 import pathlib
+import re
 import sys
 
 ALLOWED = {"PENDING", "APPROVED", "REJECTED", "NEEDS_EDIT"}
 SEVERITIES = {"critical", "high", "medium", "low"}
+CWE_RE = re.compile(r"^CWE-[0-9]+$")
+MAX_CWE_IDS = 5
 
 
 def nonempty(value):
@@ -46,6 +49,24 @@ def validate(path):
     if not isinstance(database_specific, dict):
         errors.append(f"{path}: database_specific object is required")
         return errors
+
+    cwe_ids = database_specific.get("cwe_ids")
+    if cwe_ids is not None:
+        if not isinstance(cwe_ids, list):
+            errors.append(f"{path}: database_specific.cwe_ids must be an array")
+        else:
+            if len(cwe_ids) > MAX_CWE_IDS:
+                errors.append(f"{path}: database_specific.cwe_ids may contain at most {MAX_CWE_IDS} IDs")
+            if len(cwe_ids) != len(set(cwe_ids)):
+                errors.append(f"{path}: database_specific.cwe_ids must not contain duplicates")
+            for cwe_id in cwe_ids:
+                if not isinstance(cwe_id, str) or not CWE_RE.fullmatch(cwe_id):
+                    errors.append(f"{path}: invalid CWE ID: {cwe_id!r}")
+
+    cwe_notes = database_specific.get("cwe_notes")
+    if cwe_notes is not None:
+        if not isinstance(cwe_notes, list) or any(not isinstance(note, str) for note in cwe_notes):
+            errors.append(f"{path}: database_specific.cwe_notes must be an array of strings")
 
     review = database_specific.get("review")
     if not isinstance(review, dict):
