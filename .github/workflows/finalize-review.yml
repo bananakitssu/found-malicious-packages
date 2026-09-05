@@ -1,0 +1,102 @@
+name: Finalize Authtics Review
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Finalize reviewed findings
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          REVIEWED_AT: ${{ github.event.pull_request.merged_at }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -e
+
+          git fetch origin "$BASE_SHA" "$MERGE_SHA" || true
+
+          changed_files=$(git diff --name-only "$BASE_SHA" "$MERGE_SHA" -- 'findings/*.json' 'reports/*.md')
+
+          if [ -z "$changed_files" ]; then
+            echo "No findings or reports changed by this PR."
+            exit 0
+          fi
+
+          python3 - "$changed_files" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          files = sys.argv[1].splitlines()
+          pr_number = int(os.environ["PR_NUMBER"])
+          merge_sha = os.environ["MERGE_SHA"]
+          reviewed_at = os.environ["REVIEWED_AT"]
+
+          for filename in files:
+              path = Path(filename)
+              if not path.exists():
+                  continue
+
+              if path.suffix == ".json" and str(path).startswith("findings/"):
+                  data = json.loads(path.read_text(encoding="utf-8"))
+                  data["status"] = "REVIEWED"
+                  data["human_review_required"] = False
+                  data["review"] = {
+                      "status": "APPROVED",
+                      "reviewed_at": reviewed_at,
+                      "pull_request": pr_number,
+                      "merge_commit": merge_sha,
+                  }
+
+                  for result in data.get("results", []):
+                      result["review"] = {
+                          "status": "APPROVED",
+                          "reviewed_at": reviewed_at,
+                          "pull_request": pr_number,
+                          "merge_commit": merge_sha,
+                      }
+
+                  path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+                  print(f"Finalized {path}")
+
+              elif path.suffix == ".md" and str(path).startswith("reports/"):
+                  text = path.read_text(encoding="utf-8")
+                  text = text.replace(
+                      "> This report contains AI-generated draft analysis only. A human reviewer must verify any potential finding before publication.",
+                      "> This report was reviewed and approved through the merged Authtics pull request. The original analysis was AI-generated draft analysis; publication is based on human review."
+                  )
+                  text = text.replace("- **Review:** `PENDING`", "- **Review:** `APPROVED`")
+                  path.write_text(text, encoding="utf-8")
+                  print(f"Finalized {path}")
+          PY
+
+      - name: Commit finalized review state
+        run: |
+          set -e
+          git config user.name "Authtics Bot"
+          git config user.email "authtics-bot@users.noreply.github.com"
+          git add findings/*.json reports/*.md
+
+          if git diff --cached --quiet; then
+            echo "Review state is already finalized."
+            exit 0
+          fi
+
+          git commit -m "security: finalize reviewed daily scan"
+          git push origin "${{ github.event.repository.default_branch }}"
