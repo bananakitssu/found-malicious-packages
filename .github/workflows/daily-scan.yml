@@ -9,6 +9,9 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  AUTHTICS_PACKAGE_LIMIT: 500
+
 jobs:
   scan:
     runs-on: ubuntu-latest
@@ -28,21 +31,40 @@ jobs:
           echo "Gemini API key is configured."
 
       - name: Fetch newest npm packages
+        env:
+          AUTHTICS_PACKAGE_LIMIT: 500
         run: |
           python3 - <<'PY'
-          import json, urllib.parse, urllib.request
-          params = urllib.parse.urlencode({"text": "javascript", "size": 250, "from": 0})
-          url = f"https://registry.npmjs.org/-/v1/search?{params}"
-          request = urllib.request.Request(url, headers={"Accept":"application/json","User-Agent":"Authtics/0.1.0"})
-          with urllib.request.urlopen(request, timeout=60) as response: data = json.load(response)
+          import json, urllib.parse, urllib.request, os
+          limit = int(os.environ.get("AUTHTICS_PACKAGE_LIMIT", "500"))
+          page_size = 250
           packages = []
-          for result in data.get("objects", []):
-              package = result.get("package", {})
-              if package.get("name") and package.get("version") and package.get("date"):
-                  packages.append({"name": package["name"], "version": package["version"], "published": package["date"]})
+          for offset in range(0, limit, page_size):
+              size = min(page_size, limit - offset)
+              params = urllib.parse.urlencode({"text": "javascript", "size": size, "from": offset})
+              url = f"https://registry.npmjs.org/-/v1/search?{params}"
+              request = urllib.request.Request(url, headers={"Accept":"application/json","User-Agent":"Authtics/0.1.0"})
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  data = json.load(response)
+              for result in data.get("objects", []):
+                  package = result.get("package", {})
+                  if package.get("name") and package.get("version") and package.get("date"):
+                      packages.append({"name": package["name"], "version": package["version"], "published": package["date"]})
+              if len(data.get("objects", [])) < size:
+                  break
           packages.sort(key=lambda p: p["published"], reverse=True)
-          selected = packages[:5]
+          selected = []
+          seen = set()
+          for package in packages:
+              key = (package["name"], package["version"])
+              if key in seen:
+                  continue
+              seen.add(key)
+              selected.append(package)
+              if len(selected) >= limit:
+                  break
           with open("metadata/recent-packages.json", "w") as file: json.dump(selected, file, indent=2)
+          print(f"Selected {len(selected)} npm package versions for analysis (target: {limit}).")
           for i, p in enumerate(selected, 1): print(f'{i}. {p["name"]}@{p["version"]} ({p["published"]})')
           PY
 
@@ -52,10 +74,10 @@ jobs:
           rm -rf /tmp/authtics-packages/extracted
           mkdir -p /tmp/authtics-packages/extracted
           python3 - <<'PY'
-          import json, tarfile, urllib.request
+          import json, tarfile, urllib.request, time
           from pathlib import Path
           packages = json.loads(Path("metadata/recent-packages.json").read_text())
-          for package in packages:
+          for index, package in enumerate(packages, 1):
               name, version = package["name"], package["version"]
               destination = Path("/tmp/authtics-packages/extracted") / name / version
               destination.mkdir(parents=True, exist_ok=True)
@@ -63,9 +85,10 @@ jobs:
               request = urllib.request.Request(metadata_url, headers={"Accept":"application/json","User-Agent":"Authtics/0.1.0"})
               with urllib.request.urlopen(request, timeout=60) as response: metadata = json.load(response)
               version_data = metadata.get("versions", {}).get(version)
-              if not version_data or not version_data.get("dist", {}).get("tarball"): raise RuntimeError(f"Tarball metadata not found for {name}@{version}")
+              if not version_data or not version_data.get("dist", {}).get("tarball"):
+                  raise RuntimeError(f"Tarball metadata not found for {name}@{version}")
               tarball_path = Path("/tmp/authtics-packages") / f"{name.replace('/', '__')}-{version}.tgz"
-              print(f"Downloading {name}@{version}...")
+              print(f"[{index}/{len(packages)}] Downloading {name}@{version}...")
               urllib.request.urlretrieve(version_data["dist"]["tarball"], tarball_path)
               with tarfile.open(tarball_path, "r:gz") as archive:
                   root = Path("package")
@@ -81,6 +104,9 @@ jobs:
                       source = archive.extractfile(member)
                       if source is not None: target.write_bytes(source.read())
               print(f"Stored for analysis: {destination}")
+              tarball_path.unlink(missing_ok=True)
+              if index % 25 == 0:
+                  time.sleep(1)
           PY
 
       - name: Analyze packages with Gemini
