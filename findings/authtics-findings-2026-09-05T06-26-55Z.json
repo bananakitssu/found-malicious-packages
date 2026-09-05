@@ -2,10 +2,13 @@
   "schema_version": "1.0",
   "generated": "2026-09-05T06-26-55Z",
   "model": "gemini-3.1-flash-lite",
-  "status": "PENDING_REVIEW",
-  "human_review_required": true,
+  "status": "REVIEWED",
+  "human_review_required": false,
   "review": {
-    "status": "PENDING"
+    "status": "APPROVED",
+    "reviewed_at": "2026-09-05T19:57:15Z",
+    "pull_request": 4,
+    "merge_commit": "f80516b1a6aafbd6ef120046028323dd215cfa94"
   },
   "packages_analyzed": 5,
   "results": [
@@ -39,7 +42,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:57:15Z",
+        "pull_request": 4,
+        "merge_commit": "f80516b1a6aafbd6ef120046028323dd215cfa94"
       }
     },
     {
@@ -68,7 +74,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:57:15Z",
+        "pull_request": 4,
+        "merge_commit": "f80516b1a6aafbd6ef120046028323dd215cfa94"
       }
     },
     {
@@ -87,7 +96,10 @@
       "draft_title": "",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:57:15Z",
+        "pull_request": 4,
+        "merge_commit": "f80516b1a6aafbd6ef120046028323dd215cfa94"
       }
     },
     {
@@ -106,7 +118,10 @@
       "draft_title": "",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:57:15Z",
+        "pull_request": 4,
+        "merge_commit": "f80516b1a6aafbd6ef120046028323dd215cfa94"
       }
     },
     {
@@ -138,7 +153,10 @@
       "status": "PENDING_REVIEW",
       "model": "gemini-3.1-flash-lite",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T19:57:15Z",
+        "pull_request": 4,
+        "merge_commit": "f80516b1a6aafbd6ef120046028323dd215cfa94"
       }
     }
   ]

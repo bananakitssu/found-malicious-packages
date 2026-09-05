@@ -4,7 +4,7 @@
 **Model:** `gemini-3.1-flash-lite`
 **Packages analyzed:** 5
 
-> This report contains AI-generated draft analysis only. A human reviewer must verify any potential finding before publication.
+> This report was reviewed and approved through the merged Authtics pull request. The original analysis was AI-generated draft analysis; publication is based on human review.
 
 ---
 
@@ -14,7 +14,7 @@
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.9
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -44,7 +44,7 @@ The package 'workerd' is a runtime environment that uses a post-install script t
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 0.9
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -72,7 +72,7 @@ The package @cloudflare/workerd-linux-64 is a platform-specific binary distribut
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -98,7 +98,7 @@ Gemini analysis could not be completed. This is not a security finding.
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -124,7 +124,7 @@ Gemini analysis could not be completed. This is not a security finding.
 - **Status:** `PENDING_REVIEW`
 - **Verdict:** `no_obvious_issue`
 - **Confidence:** 1
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
