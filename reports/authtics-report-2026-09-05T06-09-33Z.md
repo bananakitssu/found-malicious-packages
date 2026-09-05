@@ -4,7 +4,7 @@
 **Model:** `gemini-3.7-flash`
 **Packages analyzed:** 5
 
-> This report contains AI-generated draft analysis only. A human reviewer must verify any potential finding before publication.
+> This report was reviewed and approved through the merged Authtics pull request. The original analysis was AI-generated draft analysis; publication is based on human review.
 
 ---
 
@@ -14,7 +14,7 @@
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -40,7 +40,7 @@ Gemini analysis could not be completed. This is not a security finding.
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -66,7 +66,7 @@ Gemini analysis could not be completed. This is not a security finding.
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -92,7 +92,7 @@ Gemini analysis could not be completed. This is not a security finding.
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -118,7 +118,7 @@ Gemini analysis could not be completed. This is not a security finding.
 - **Status:** `ANALYSIS_FAILED`
 - **Verdict:** `insufficient_evidence`
 - **Confidence:** 0
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 

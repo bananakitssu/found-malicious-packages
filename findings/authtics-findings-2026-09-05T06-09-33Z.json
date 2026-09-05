@@ -2,10 +2,13 @@
   "schema_version": "1.0",
   "generated": "2026-09-05T06-09-33Z",
   "model": "gemini-3.7-flash",
-  "status": "PENDING_REVIEW",
-  "human_review_required": true,
+  "status": "REVIEWED",
+  "human_review_required": false,
   "review": {
-    "status": "PENDING"
+    "status": "APPROVED",
+    "reviewed_at": "2026-09-05T06:24:43Z",
+    "pull_request": 3,
+    "merge_commit": "ad7872c3260cec25d37c83795ae56b2217018a04"
   },
   "packages_analyzed": 5,
   "results": [
@@ -25,7 +28,10 @@
       "draft_title": "",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:24:43Z",
+        "pull_request": 3,
+        "merge_commit": "ad7872c3260cec25d37c83795ae56b2217018a04"
       }
     },
     {
@@ -44,7 +50,10 @@
       "draft_title": "",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:24:43Z",
+        "pull_request": 3,
+        "merge_commit": "ad7872c3260cec25d37c83795ae56b2217018a04"
       }
     },
     {
@@ -63,7 +72,10 @@
       "draft_title": "",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:24:43Z",
+        "pull_request": 3,
+        "merge_commit": "ad7872c3260cec25d37c83795ae56b2217018a04"
       }
     },
     {
@@ -82,7 +94,10 @@
       "draft_title": "",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:24:43Z",
+        "pull_request": 3,
+        "merge_commit": "ad7872c3260cec25d37c83795ae56b2217018a04"
       }
     },
     {
@@ -101,7 +116,10 @@
       "draft_title": "",
       "model": "gemini-3.7-flash",
       "review": {
-        "status": "PENDING"
+        "status": "APPROVED",
+        "reviewed_at": "2026-09-05T06:24:43Z",
+        "pull_request": 3,
+        "merge_commit": "ad7872c3260cec25d37c83795ae56b2217018a04"
       }
     }
   ]
