@@ -1,0 +1,28 @@
+name: Validate Authtics Findings
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'findings/**/*.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Findings review gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+
+      - name: Validate findings
+        run: |
+          set -euo pipefail
+          files=$(find findings -type f -name '*.json' -print)
+          if [ -z "$files" ]; then
+            echo "No findings JSON files found."
+            exit 0
+          fi
+          python3 scripts/validate_findings.py $files
