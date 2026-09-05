@@ -1,0 +1,92 @@
+name: Publish Reviewed Authtics Advisories
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout merged main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Generate reviewed advisory reports
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          root = Path("findings/npm")
+          reports = Path("reports/advisories")
+          reports.mkdir(parents=True, exist_ok=True)
+          generated = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+          pr = os.environ["PR_NUMBER"]
+          merge_sha = os.environ["MERGE_SHA"]
+
+          count = 0
+          for advisory_path in sorted(root.rglob("AUTH-*.json")) if root.exists() else []:
+              data = json.loads(advisory_path.read_text(encoding="utf-8"))
+              review = data.get("database_specific", {}).get("review", {})
+              if review.get("status") != "APPROVED" or review.get("human_review_required") is not False:
+                  continue
+
+              advisory_id = data.get("id", advisory_path.stem)
+              package = data.get("affected", [{}])[0].get("package", {})
+              name = package.get("name", "unknown")
+              versions = package.get("versions", [])
+              lines = [
+                  f"# {advisory_id}", "",
+                  f"**Package:** `{name}`",
+                  f"**Affected versions:** {', '.join(f'`{v}`' for v in versions) or 'Not specified'}",
+                  f"**Severity:** `{data.get('severity', 'n/a')}`",
+                  f"**Published:** {data.get('published', generated)}",
+                  "",
+                  "> This advisory was generated from an automated draft and published only after human review and approval.",
+                  "",
+                  "## Summary", "", data.get("summary", ""), "",
+                  "## Details", "", data.get("details", ""), "",
+                  "## References", "",
+              ]
+              refs = data.get("references", [])
+              if refs:
+                  lines.extend(f"- {ref.get('url', '')}" for ref in refs if ref.get("url"))
+              else:
+                  lines.append("- None")
+              lines += [
+                  "", "## Review", "",
+                  f"- **Reviewed by:** {review.get('reviewed_by', 'unknown')}",
+                  f"- **Reviewed at:** {review.get('reviewed_at', 'unknown')}",
+                  f"- **Published from PR:** #{pr}",
+                  f"- **Merge commit:** `{merge_sha}`", "",
+              ]
+              output = reports / f"{advisory_id}.md"
+              output.write_text("\n".join(lines), encoding="utf-8")
+              count += 1
+
+          print(f"Generated {count} reviewed advisory report(s).")
+          PY
+
+      - name: Commit published advisory reports
+        run: |
+          set -e
+          git config user.name "Authtics Bot"
+          git config user.email "authtics-bot@users.noreply.github.com"
+          git add reports/advisories/
+          if git diff --cached --quiet; then
+            echo "No newly approved advisory reports to publish."
+            exit 0
+          fi
+          git commit -m "docs: publish reviewed advisory reports"
+          git push origin "${{ github.event.repository.default_branch }}"
