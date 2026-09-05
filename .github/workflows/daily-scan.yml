@@ -18,52 +18,32 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create working directories
-        run: |
-          mkdir -p reports findings metadata /tmp/authtics-packages/extracted
+        run: mkdir -p reports findings metadata /tmp/authtics-packages/extracted
 
       - name: Check Gemini API key
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          if [ -z "$GEMINI_API_KEY" ]; then
-            echo "GEMINI_API_KEY is not configured."
-            exit 1
-          fi
+          if [ -z "$GEMINI_API_KEY" ]; then echo "GEMINI_API_KEY is not configured."; exit 1; fi
           echo "Gemini API key is configured."
 
       - name: Fetch newest npm packages
         run: |
           python3 - <<'PY'
-          import json
-          import urllib.parse
-          import urllib.request
-
+          import json, urllib.parse, urllib.request
           params = urllib.parse.urlencode({"text": "javascript", "size": 250, "from": 0})
           url = f"https://registry.npmjs.org/-/v1/search?{params}"
-          request = urllib.request.Request(url, headers={
-              "Accept": "application/json",
-              "User-Agent": "Authtics/0.1.0"
-          })
-
-          with urllib.request.urlopen(request, timeout=60) as response:
-              data = json.load(response)
-
+          request = urllib.request.Request(url, headers={"Accept":"application/json","User-Agent":"Authtics/0.1.0"})
+          with urllib.request.urlopen(request, timeout=60) as response: data = json.load(response)
           packages = []
           for result in data.get("objects", []):
               package = result.get("package", {})
-              name = package.get("name")
-              version = package.get("version")
-              published = package.get("date")
-              if name and version and published:
-                  packages.append({"name": name, "version": version, "published": published})
-
-          packages.sort(key=lambda package: package["published"], reverse=True)
+              if package.get("name") and package.get("version") and package.get("date"):
+                  packages.append({"name": package["name"], "version": package["version"], "published": package["date"]})
+          packages.sort(key=lambda p: p["published"], reverse=True)
           selected = packages[:5]
-          with open("metadata/recent-packages.json", "w") as file:
-              json.dump(selected, file, indent=2)
-
-          for index, package in enumerate(selected, 1):
-              print(f'{index}. {package["name"]}@{package["version"]} ({package["published"]})')
+          with open("metadata/recent-packages.json", "w") as file: json.dump(selected, file, indent=2)
+          for i, p in enumerate(selected, 1): print(f'{i}. {p["name"]}@{p["version"]} ({p["published"]})')
           PY
 
       - name: Download package sources
@@ -71,60 +51,35 @@ jobs:
           set -e
           rm -rf /tmp/authtics-packages/extracted
           mkdir -p /tmp/authtics-packages/extracted
-
           python3 - <<'PY'
-          import json
-          import tarfile
-          import urllib.request
+          import json, tarfile, urllib.request
           from pathlib import Path
-
           packages = json.loads(Path("metadata/recent-packages.json").read_text())
           for package in packages:
-              name = package["name"]
-              version = package["version"]
+              name, version = package["name"], package["version"]
               destination = Path("/tmp/authtics-packages/extracted") / name / version
               destination.mkdir(parents=True, exist_ok=True)
-
               metadata_url = "https://registry.npmjs.org/" + name.replace("/", "%2F")
-              request = urllib.request.Request(metadata_url, headers={
-                  "Accept": "application/json",
-                  "User-Agent": "Authtics/0.1.0"
-              })
-              with urllib.request.urlopen(request, timeout=60) as response:
-                  metadata = json.load(response)
-
+              request = urllib.request.Request(metadata_url, headers={"Accept":"application/json","User-Agent":"Authtics/0.1.0"})
+              with urllib.request.urlopen(request, timeout=60) as response: metadata = json.load(response)
               version_data = metadata.get("versions", {}).get(version)
-              if not version_data:
-                  raise RuntimeError(f"Version metadata not found for {name}@{version}")
-              tarball_url = version_data.get("dist", {}).get("tarball")
-              if not tarball_url:
-                  raise RuntimeError(f"Tarball URL not found for {name}@{version}")
-
+              if not version_data or not version_data.get("dist", {}).get("tarball"): raise RuntimeError(f"Tarball metadata not found for {name}@{version}")
               tarball_path = Path("/tmp/authtics-packages") / f"{name.replace('/', '__')}-{version}.tgz"
               print(f"Downloading {name}@{version}...")
-              urllib.request.urlretrieve(tarball_url, tarball_path)
-
+              urllib.request.urlretrieve(version_data["dist"]["tarball"], tarball_path)
               with tarfile.open(tarball_path, "r:gz") as archive:
                   root = Path("package")
                   for member in archive.getmembers():
                       member_path = Path(member.name)
-                      if not member_path.parts or member_path.parts[0] != "package":
-                          continue
+                      if not member_path.parts or member_path.parts[0] != "package": continue
                       relative = member_path.relative_to(root)
-                      if any(part in {"..", ""} for part in relative.parts):
-                          continue
+                      if any(part in {"..", ""} for part in relative.parts): continue
                       target = destination / relative
-                      if member.isdir():
-                          target.mkdir(parents=True, exist_ok=True)
-                          continue
-                      if not member.isfile():
-                          continue
+                      if member.isdir(): target.mkdir(parents=True, exist_ok=True); continue
+                      if not member.isfile(): continue
                       target.parent.mkdir(parents=True, exist_ok=True)
                       source = archive.extractfile(member)
-                      if source is None:
-                          continue
-                      target.write_bytes(source.read())
-
+                      if source is not None: target.write_bytes(source.read())
               print(f"Stored for analysis: {destination}")
           PY
 
@@ -135,67 +90,51 @@ jobs:
           AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
         run: python3 scripts/gemini_analyze.py
 
-      - name: Show generated report and JSON
+      - name: Check for actionable findings
+        id: findings
         run: |
-          echo "================================"
-          echo "Generated Gemini report"
-          echo "================================"
+          if [ -z "$(find findings/npm -type f -name 'AUTH-*.json' -print -quit 2>/dev/null)" ]; then
+            echo "has_findings=false" >> "$GITHUB_OUTPUT"
+            echo "No actionable findings. Nothing will be committed or submitted as a PR."
+          else
+            echo "has_findings=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Show generated report and advisories
+        if: steps.findings.outputs.has_findings == 'true'
+        run: |
           find reports -type f -name '*.md' -print -exec cat {} \;
           echo "================================"
-          echo "Generated findings JSON"
-          echo "================================"
-          find findings -type f -name '*.json' -print -exec cat {} \;
+          find findings/npm -type f -name 'AUTH-*.json' -print -exec cat {} \;
 
       - name: Create review branch and pull request
+        if: steps.findings.outputs.has_findings == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -e
           git config user.name "Authtics Bot"
           git config user.email "authtics-bot@users.noreply.github.com"
-
           BASE_BRANCH="${{ github.event.repository.default_branch }}"
           BRANCH="authtics/daily-scan-${GITHUB_RUN_ID}"
-
           git checkout -b "$BRANCH"
-          git add reports/*.md findings/*.json metadata/recent-packages.json
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-
-          git commit -m "security: add daily npm scan for review"
+          git add reports/*.md findings/npm metadata/recent-packages.json metadata/scan-state.json
+          if git diff --cached --quiet; then echo "No changes to commit."; exit 0; fi
+          git commit -m "security: add daily npm advisories for review"
           git push --set-upstream origin "$BRANCH"
-
           REPORT=$(find reports -type f -name '*.md' | sort | tail -n 1)
-          FINDINGS=$(find findings -type f -name '*.json' | sort | tail -n 1)
-
           printf '%s\n' \
             '## Authtics Advisories — Human Review Required' \
             '' \
-            'This pull request contains the latest automated npm package scan.' \
+            'This draft contains only actionable findings. Results rated `n/a` are omitted.' \
             '' \
+            '- Severity uses `critical`, `high`, `medium`, `low`, or `n/a`.' \
+            '- `n/a` results never create advisory files, commits, or pull requests by themselves.' \
             '- AI analysis is a draft only.' \
             '- No package code was executed during analysis.' \
-            '- The JSON findings file contains both the automated verdict and a separate human review state.' \
-            '- Reviewers should edit the `review` object before merging.' \
-            '- Use `review.status` = `APPROVED`, `REJECTED`, or `NEEDS_EDIT` after human review.' \
-            '- Set `human_review_required` to `false` only after the review is complete.' \
-            '- A finding must not be published merely because Gemini returned `potential_finding`.' \
-            '- A merge is the gate that allows reviewed data into the default branch.' \
+            '- Verify the exact package version before publication.' \
             '' \
-            '### Generated files' \
-            "- \`$REPORT\` — human-readable scan report" \
-            "- \`$FINDINGS\` — structured JSON scan results" \
-            '' \
-            '**Verify every potential finding against the exact package version before merging.**' \
+            "### Report" \
+            "- \`$REPORT\`" \
             > /tmp/authtics-pr-body.md
-
-          gh pr create \
-            --repo "$GITHUB_REPOSITORY" \
-            --base "$BASE_BRANCH" \
-            --head "$BRANCH" \
-            --title "security: Authtics daily npm scan" \
-            --body-file /tmp/authtics-pr-body.md \
-            --draft
+          gh pr create --repo "$GITHUB_REPOSITORY" --base "$BASE_BRANCH" --head "$BRANCH" --title "security: Authtics daily npm advisories" --body-file /tmp/authtics-pr-body.md --draft
