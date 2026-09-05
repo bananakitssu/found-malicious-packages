@@ -6,10 +6,12 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 
 MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.7-flash")
 API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
+PACKAGE_ROOT = Path(os.environ.get("AUTHTICS_PACKAGE_ROOT", "/tmp/authtics-packages/extracted"))
 MAX_FILE_CHARS = 12000
 MAX_TOTAL_CHARS = 120000
 MAX_RETRIES = 5
@@ -95,19 +97,13 @@ def call_gemini(prompt):
             if exc.code not in {429, 500, 502, 503, 504} or attempt == MAX_RETRIES:
                 raise
             delay = min(60, 2 ** (attempt - 1) * 5)
-            print(
-                f"Gemini returned HTTP {exc.code}; retrying in {delay}s "
-                f"(attempt {attempt}/{MAX_RETRIES})..."
-            )
+            print(f"Gemini returned HTTP {exc.code}; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES})", flush=True)
             time.sleep(delay)
         except urllib.error.URLError as exc:
             if attempt == MAX_RETRIES:
                 raise
             delay = min(60, 2 ** (attempt - 1) * 5)
-            print(
-                f"Gemini network error: {exc}; retrying in {delay}s "
-                f"(attempt {attempt}/{MAX_RETRIES})..."
-            )
+            print(f"Gemini network error: {exc}; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES})", flush=True)
             time.sleep(delay)
     else:
         raise RuntimeError("Gemini request exhausted all retries")
@@ -128,7 +124,7 @@ def parse_json(text):
         raise
 
 
-def failed_finding(package, error):
+def failed_result(package, error):
     return {
         "package": package["name"],
         "version": package["version"],
@@ -151,18 +147,16 @@ def main():
         raise RuntimeError("metadata/recent-packages.json does not exist")
 
     packages = json.loads(metadata_path.read_text())
-    findings_dir = Path("findings")
-    findings_dir.mkdir(parents=True, exist_ok=True)
+    results = []
 
     for package in packages:
         name = package["name"]
         version = package["version"]
-        safe_name = name.replace("/", "__").replace("@", "")
-        package_dir = Path("packages") / "npm" / name / version
-        output = findings_dir / f"{safe_name}-{version}.json"
+        package_dir = PACKAGE_ROOT / name / version
 
         if not package_dir.exists():
-            print(f"Skipping {name}@{version}: package directory not found")
+            print(f"Skipping {name}@{version}: package directory not found", flush=True)
+            results.append(failed_result(package, "package directory not found"))
             continue
 
         files, evidence = collect_evidence(package_dir)
@@ -197,21 +191,88 @@ SELECTED FILE CONTENT:
 {json.dumps(evidence, indent=2)}
 """
 
-        print(f"Analyzing {name}@{version} with {MODEL}...")
+        print(f"Analyzing {name}@{version} with {MODEL}...", flush=True)
         try:
-            raw = call_gemini(prompt)
-            result = parse_json(raw)
+            result = parse_json(call_gemini(prompt))
             result["package"] = name
             result["version"] = version
             result["published"] = package.get("published")
             result["status"] = "PENDING_REVIEW"
             result["model"] = MODEL
         except Exception as exc:
-            print(f"Gemini analysis failed for {name}@{version}: {exc}", file=sys.stderr)
-            result = failed_finding(package, str(exc))
+            print(f"Gemini analysis failed for {name}@{version}: {exc}", file=sys.stderr, flush=True)
+            result = failed_result(package, str(exc))
 
-        output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-        print(f"Wrote {output}")
+        results.append(result)
+
+    report_dir = Path("reports")
+    report_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
+    report_path = report_dir / f"authtics-report-{timestamp}.md"
+
+    lines = [
+        "# Authtics Advisories — Package Scan Report",
+        "",
+        f"**Generated:** {timestamp}",
+        f"**Model:** `{MODEL}`",
+        f"**Packages analyzed:** {len(results)}",
+        "",
+        "> This report contains AI-generated draft analysis only. A human reviewer must verify any potential finding before publication.",
+        "",
+    ]
+
+    for index, result in enumerate(results, 1):
+        package_ref = f"{result['package']}@{result['version']}"
+        lines.extend([
+            "---",
+            "",
+            f"## {index}. `{package_ref}`",
+            "",
+            f"- **Published:** {result.get('published', 'unknown')}",
+            f"- **Status:** `{result.get('status', 'unknown')}`",
+            f"- **Verdict:** `{result.get('verdict', 'unknown')}`",
+            f"- **Confidence:** {result.get('confidence', 0)}",
+            "",
+            "### Summary",
+            "",
+            str(result.get("summary", "")),
+            "",
+        ])
+
+        behaviors = result.get("suspicious_behaviors") or []
+        lines.append("### Observed Behaviors")
+        lines.append("")
+        if behaviors:
+            lines.extend(f"- {item}" for item in behaviors)
+        else:
+            lines.append("- None reported.")
+        lines.append("")
+
+        evidence_items = result.get("evidence") or []
+        lines.append("### Evidence")
+        lines.append("")
+        if evidence_items:
+            for item in evidence_items:
+                lines.append(f"- `{item.get('file', 'unknown')}` — {item.get('reason', '')}")
+        else:
+            lines.append("- None reported.")
+        lines.append("")
+
+        notes = result.get("reviewer_notes") or []
+        lines.append("### Reviewer Notes")
+        lines.append("")
+        if notes:
+            lines.extend(f"- {item}" for item in notes)
+        else:
+            lines.append("- None.")
+        lines.append("")
+
+        title = result.get("draft_title") or ""
+        if title:
+            lines.extend(["### Draft Advisory Title", "", title, ""])
+
+    report_path.write_text("\n".join(lines), encoding="utf-8")
+    print(f"Wrote {report_path}")
 
 
 if __name__ == "__main__":
