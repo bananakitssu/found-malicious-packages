@@ -90,6 +90,13 @@ jobs:
           AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
         run: python3 scripts/gemini_analyze.py
 
+      - name: Classify CWE candidates
+        if: always()
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.1-flash-lite
+        run: python3 scripts/classify_cwe.py
+
       - name: Check for actionable findings
         id: findings
         run: |
@@ -131,6 +138,7 @@ jobs:
             '- Severity uses `critical`, `high`, `medium`, `low`, or `n/a`.' \
             '- `n/a` results never create advisory files, commits, or pull requests by themselves.' \
             '- AI analysis is a draft only.' \
+            '- CWE IDs are AI-proposed classifications and must be verified by the human reviewer.' \
             '- No package code was executed during analysis.' \
             '- Verify the exact package version before publication.' \
             '' \
