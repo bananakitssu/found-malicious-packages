@@ -168,26 +168,30 @@ jobs:
           git commit -m "security: add daily npm scan for review"
           git push --set-upstream origin "$BRANCH"
 
-          REPORT="$(find reports -type f -name '*.md' | sort | tail -n 1)"
-          FINDINGS="$(find findings -type f -name '*.json' | sort | tail -n 1)"
+          REPORT=$(find reports -type f -name '*.md' | sort | tail -n 1)
+          FINDINGS=$(find findings -type f -name '*.json' | sort | tail -n 1)
 
-          gh pr create \
-            --repo "$GITHUB_REPOSITORY" \
-            --base "$BASE_BRANCH" \
-            --head "$BRANCH" \
-            --title "security: Authtics daily npm scan" \
-            --body "## Authtics Advisories — Human Review Required
+          cat > /tmp/authtics-pr-body.md <<EOF
+## Authtics Advisories — Human Review Required
 
 This pull request contains the latest automated npm package scan.
 
 - AI analysis is a draft only.
 - No package code was executed during analysis.
-- The JSON findings file is intended for reviewer editing/verification before merge.
+- The JSON findings file is intended for reviewer editing and verification before merge.
 - A merge is required before the results become part of the default branch.
 
 ### Generated files
 - \`$REPORT\` — human-readable scan report
 - \`$FINDINGS\` — structured JSON scan results
 
-**Please verify every potential finding against the exact package version before merging.**" \
+**Please verify every potential finding against the exact package version before merging.**
+EOF
+
+          gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --base "$BASE_BRANCH" \
+            --head "$BRANCH" \
+            --title "security: Authtics daily npm scan" \
+            --body-file /tmp/authtics-pr-body.md \
             --draft
