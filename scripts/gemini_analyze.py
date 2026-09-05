@@ -175,14 +175,17 @@ Published: {package.get('published', 'unknown')}
 Return JSON with exactly these fields:
 - verdict: one of "no_obvious_issue", "potential_finding", "insufficient_evidence"
 - confidence: number from 0 to 1
-- summary: concise explanation
-- suspicious_behaviors: array of concrete observed behaviors
+- summary: concise explanation based only on observed evidence
+- suspicious_behaviors: array of concrete observed behaviors; do not say "none" unless the inspected evidence supports that conclusion
 - evidence: array of objects with "file" and "reason"
 - reviewer_notes: array of questions or checks for the human reviewer
 - draft_title: proposed advisory title, or empty string if no potential finding
 
 IMPORTANT: Never invent files, behavior, vulnerabilities, CVEs, package ownership,
-or intent. If the supplied evidence is incomplete, say so.
+or intent. Do not claim a package is safe, secure, benign, or free of security issues.
+Do not claim that a behavior is absent unless the supplied evidence actually establishes
+that absence. If the supplied evidence is incomplete, say so. Historical issues must
+not be applied to this exact version without evidence that they still exist.
 
 FILE INVENTORY:
 {json.dumps(files, indent=2)}
@@ -205,10 +208,25 @@ SELECTED FILE CONTENT:
 
         results.append(result)
 
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
+
     report_dir = Path("reports")
     report_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
     report_path = report_dir / f"authtics-report-{timestamp}.md"
+
+    findings_dir = Path("findings")
+    findings_dir.mkdir(parents=True, exist_ok=True)
+    findings_path = findings_dir / f"authtics-findings-{timestamp}.json"
+    findings_payload = {
+        "schema_version": "1.0",
+        "generated": timestamp,
+        "model": MODEL,
+        "status": "PENDING_REVIEW",
+        "human_review_required": True,
+        "packages_analyzed": len(results),
+        "results": results,
+    }
+    findings_path.write_text(json.dumps(findings_payload, indent=2) + "\n", encoding="utf-8")
 
     lines = [
         "# Authtics Advisories — Package Scan Report",
@@ -273,6 +291,7 @@ SELECTED FILE CONTENT:
 
     report_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"Wrote {report_path}")
+    print(f"Wrote {findings_path}")
 
 
 if __name__ == "__main__":
