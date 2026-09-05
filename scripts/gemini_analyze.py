@@ -110,7 +110,7 @@ def call_gemini(prompt):
 
     try:
         return data["candidates"][0]["content"]["parts"][0]["text"]
-    except (KeyError, IndexError) as exc:
+    except (KeyError, IndexError, TypeError) as exc:
         raise RuntimeError(f"Unexpected Gemini response: {json.dumps(data)[:4000]}") from exc
 
 
@@ -122,6 +122,51 @@ def parse_json(text):
         if match:
             return json.loads(match.group(1))
         raise
+
+
+def validate_result(result):
+    """Validate the model's structured output before the workflow adds metadata."""
+    if not isinstance(result, dict):
+        raise RuntimeError(
+            f"Unexpected Gemini analysis shape: expected a JSON object, got {type(result).__name__}"
+        )
+
+    required = {
+        "verdict", "confidence", "summary", "suspicious_behaviors",
+        "evidence", "reviewer_notes", "draft_title",
+    }
+    missing = sorted(required - result.keys())
+    if missing:
+        raise RuntimeError(f"Gemini analysis missing required fields: {', '.join(missing)}")
+
+    verdicts = {"no_obvious_issue", "potential_finding", "insufficient_evidence"}
+    if result["verdict"] not in verdicts:
+        raise RuntimeError(f"Invalid Gemini verdict: {result['verdict']!r}")
+
+    if not isinstance(result["confidence"], (int, float)) or isinstance(result["confidence"], bool):
+        raise RuntimeError("Gemini confidence must be a number")
+    if not 0 <= result["confidence"] <= 1:
+        raise RuntimeError("Gemini confidence must be between 0 and 1")
+
+    for field in ("summary", "draft_title"):
+        if not isinstance(result[field], str):
+            raise RuntimeError(f"Gemini field {field!r} must be a string")
+
+    for field in ("suspicious_behaviors", "reviewer_notes", "evidence"):
+        if not isinstance(result[field], list):
+            raise RuntimeError(f"Gemini field {field!r} must be an array")
+
+    for index, item in enumerate(result["evidence"]):
+        if not isinstance(item, dict):
+            raise RuntimeError(
+                f"Gemini evidence[{index}] must be an object with 'file' and 'reason'"
+            )
+        if not isinstance(item.get("file"), str) or not isinstance(item.get("reason"), str):
+            raise RuntimeError(
+                f"Gemini evidence[{index}] must contain string 'file' and 'reason' fields"
+            )
+
+    return result
 
 
 def failed_result(package, error):
@@ -197,7 +242,7 @@ SELECTED FILE CONTENT:
 
         print(f"Analyzing {name}@{version} with {MODEL}...", flush=True)
         try:
-            result = parse_json(call_gemini(prompt))
+            result = validate_result(parse_json(call_gemini(prompt)))
             result["package"] = name
             result["version"] = version
             result["published"] = package.get("published")
