@@ -15,12 +15,11 @@ jobs:
 
       - name: Create repository directories
         run: |
-          mkdir -p \
-            packages \
-            findings \
-            metadata \
-            scripts \
-            schemas
+          mkdir -p packages
+          mkdir -p findings
+          mkdir -p metadata
+          mkdir -p scripts
+          mkdir -p schemas
 
       - name: Check Gemini API key
         env:
@@ -33,13 +32,19 @@ jobs:
 
           echo "Gemini API key is configured."
 
-      - name: Fetch recently published npm packages
+      - name: Fetch npm packages
         run: |
           python3 - <<'PY'
           import json
+          import urllib.parse
           import urllib.request
 
-          url = "https://registry.npmjs.org/-/all"
+          params = urllib.parse.urlencode({
+              "text": "*",
+              "size": 250
+          })
+
+          url = f"https://registry.npmjs.org/-/v1/search?{params}"
 
           request = urllib.request.Request(
               url,
@@ -53,32 +58,21 @@ jobs:
 
           packages = []
 
-          for name, package in data.items():
-              time_data = package.get("time", {})
+          for result in data.get("objects", []):
+              package = result.get("package", {})
 
-              if not time_data:
+              name = package.get("name")
+              version = package.get("version")
+              date = package.get("date")
+
+              if not name or not version or not date:
                   continue
 
-              created = time_data.get("created")
-
-              if not created:
-                  continue
-
-              versions = [
-                  version
-                  for version in time_data
-                  if version not in ("created", "modified")
-              ]
-
-              for version in versions:
-                  published = time_data.get(version)
-
-                  if published:
-                      packages.append({
-                          "name": name,
-                          "version": version,
-                          "published": published
-                      })
+              packages.append({
+                  "name": name,
+                  "version": version,
+                  "published": date
+              })
 
           packages.sort(
               key=lambda package: package["published"],
@@ -87,20 +81,26 @@ jobs:
 
           selected = packages[:5]
 
-          with open("metadata/recent-packages.json", "w") as f:
-              json.dump(selected, f, indent=2)
+          with open("metadata/recent-packages.json", "w") as file:
+              json.dump(selected, file, indent=2)
 
-          print("Selected packages:")
+          print()
+          print("Newest packages returned by npm:")
+          print()
 
-          for package in selected:
+          for index, package in enumerate(selected, 1):
               print(
-                  f'{package["published"]} '
-                  f'{package["name"]}@{package["version"]}'
+                  f'{index}. '
+                  f'{package["name"]}@{package["version"]} '
+                  f'({package["published"]})'
               )
           PY
 
-      - name: Show selected packages
+      - name: Show package metadata
         run: |
+          echo "================================"
+          echo "Selected packages"
+          echo "================================"
           cat metadata/recent-packages.json
 
       - name: Commit package metadata
