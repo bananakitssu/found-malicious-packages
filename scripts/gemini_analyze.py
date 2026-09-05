@@ -3,6 +3,8 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -10,6 +12,7 @@ MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.7-flash")
 API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 MAX_FILE_CHARS = 12000
 MAX_TOTAL_CHARS = 120000
+MAX_RETRIES = 5
 
 
 def collect_evidence(package_dir):
@@ -72,19 +75,42 @@ def call_gemini(prompt):
         },
     }
 
-    request = urllib.request.Request(
-        API_URL,
-        data=json.dumps(body).encode("utf-8"),
-        headers={
-            "Content-Type": "application/json",
-            "x-goog-api-key": api_key,
-            "User-Agent": "Authtics/0.1.0",
-        },
-        method="POST",
-    )
+    for attempt in range(1, MAX_RETRIES + 1):
+        request = urllib.request.Request(
+            API_URL,
+            data=json.dumps(body).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "x-goog-api-key": api_key,
+                "User-Agent": "Authtics/0.1.0",
+            },
+            method="POST",
+        )
 
-    with urllib.request.urlopen(request, timeout=180) as response:
-        data = json.load(response)
+        try:
+            with urllib.request.urlopen(request, timeout=180) as response:
+                data = json.load(response)
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code not in {429, 500, 502, 503, 504} or attempt == MAX_RETRIES:
+                raise
+            delay = min(60, 2 ** (attempt - 1) * 5)
+            print(
+                f"Gemini returned HTTP {exc.code}; retrying in {delay}s "
+                f"(attempt {attempt}/{MAX_RETRIES})..."
+            )
+            time.sleep(delay)
+        except urllib.error.URLError as exc:
+            if attempt == MAX_RETRIES:
+                raise
+            delay = min(60, 2 ** (attempt - 1) * 5)
+            print(
+                f"Gemini network error: {exc}; retrying in {delay}s "
+                f"(attempt {attempt}/{MAX_RETRIES})..."
+            )
+            time.sleep(delay)
+    else:
+        raise RuntimeError("Gemini request exhausted all retries")
 
     try:
         return data["candidates"][0]["content"]["parts"][0]["text"]
@@ -102,6 +128,23 @@ def parse_json(text):
         raise
 
 
+def failed_finding(package, error):
+    return {
+        "package": package["name"],
+        "version": package["version"],
+        "published": package.get("published"),
+        "status": "ANALYSIS_FAILED",
+        "verdict": "insufficient_evidence",
+        "confidence": 0,
+        "summary": "Gemini analysis could not be completed. This is not a security finding.",
+        "suspicious_behaviors": [],
+        "evidence": [],
+        "reviewer_notes": [f"Analysis engine error: {error}"],
+        "draft_title": "",
+        "model": MODEL,
+    }
+
+
 def main():
     metadata_path = Path("metadata/recent-packages.json")
     if not metadata_path.exists():
@@ -116,6 +159,7 @@ def main():
         version = package["version"]
         safe_name = name.replace("/", "__").replace("@", "")
         package_dir = Path("packages") / "npm" / name / version
+        output = findings_dir / f"{safe_name}-{version}.json"
 
         if not package_dir.exists():
             print(f"Skipping {name}@{version}: package directory not found")
@@ -154,16 +198,18 @@ SELECTED FILE CONTENT:
 """
 
         print(f"Analyzing {name}@{version} with {MODEL}...")
-        raw = call_gemini(prompt)
-        result = parse_json(raw)
+        try:
+            raw = call_gemini(prompt)
+            result = parse_json(raw)
+            result["package"] = name
+            result["version"] = version
+            result["published"] = package.get("published")
+            result["status"] = "PENDING_REVIEW"
+            result["model"] = MODEL
+        except Exception as exc:
+            print(f"Gemini analysis failed for {name}@{version}: {exc}", file=sys.stderr)
+            result = failed_finding(package, str(exc))
 
-        result["package"] = name
-        result["version"] = version
-        result["published"] = package.get("published")
-        result["status"] = "PENDING_REVIEW"
-        result["model"] = MODEL
-
-        output = findings_dir / f"{safe_name}-{version}.json"
         output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
         print(f"Wrote {output}")
 
