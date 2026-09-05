@@ -16,9 +16,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create repository directories
+      - name: Create working directories
         run: |
-          mkdir -p packages/npm findings metadata scripts schemas
+          mkdir -p reports metadata /tmp/authtics-packages/extracted
 
       - name: Check Gemini API key
         env:
@@ -68,66 +68,85 @@ jobs:
       - name: Download package sources
         run: |
           set -e
-          rm -rf /tmp/authtics-packages
-          mkdir -p /tmp/authtics-packages
+          rm -rf /tmp/authtics-packages/extracted
+          mkdir -p /tmp/authtics-packages/extracted
 
           python3 - <<'PY'
           import json
-          import subprocess
+          import tarfile
+          import urllib.request
           from pathlib import Path
 
           packages = json.loads(Path("metadata/recent-packages.json").read_text())
           for package in packages:
               name = package["name"]
               version = package["version"]
-              destination = Path("packages/npm") / name / version
-
-              if destination.exists() and any(destination.iterdir()):
-                  print(f"Already stored: {name}@{version}")
-                  continue
-
+              destination = Path("/tmp/authtics-packages/extracted") / name / version
               destination.mkdir(parents=True, exist_ok=True)
-              temp = Path("/tmp/authtics-packages") / f"{name.replace('/', '__')}-{version}"
-              temp.mkdir(parents=True, exist_ok=True)
 
+              metadata_url = "https://registry.npmjs.org/" + name.replace("/", "%2F")
+              request = urllib.request.Request(metadata_url, headers={
+                  "Accept": "application/json",
+                  "User-Agent": "Authtics/0.1.0"
+              })
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  metadata = json.load(response)
+
+              version_data = metadata.get("versions", {}).get(version)
+              if not version_data:
+                  raise RuntimeError(f"Version metadata not found for {name}@{version}")
+              tarball_url = version_data.get("dist", {}).get("tarball")
+              if not tarball_url:
+                  raise RuntimeError(f"Tarball URL not found for {name}@{version}")
+
+              tarball_path = Path("/tmp/authtics-packages") / f"{name.replace('/', '__')}-{version}.tgz"
               print(f"Downloading {name}@{version}...")
-              subprocess.run([
-                  "npm", "pack", f"{name}@{version}",
-                  "--pack-destination", str(temp)
-              ], check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+              urllib.request.urlretrieve(tarball_url, tarball_path)
 
-              tarballs = list(temp.glob("*.tgz"))
-              if len(tarballs) != 1:
-                  raise RuntimeError(f"Expected one tarball for {name}@{version}, found {len(tarballs)}")
+              with tarfile.open(tarball_path, "r:gz") as archive:
+                  root = Path("package")
+                  for member in archive.getmembers():
+                      member_path = Path(member.name)
+                      if not member_path.parts or member_path.parts[0] != "package":
+                          continue
+                      relative = member_path.relative_to(root)
+                      target = destination / relative
+                      if member.isdir():
+                          target.mkdir(parents=True, exist_ok=True)
+                          continue
+                      if not member.isfile():
+                          continue
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      source = archive.extractfile(member)
+                      if source is None:
+                          continue
+                      target.write_bytes(source.read())
 
-              subprocess.run([
-                  "tar", "-xzf", str(tarballs[0]),
-                  "--strip-components=1", "-C", str(destination)
-              ], check=True)
-              print(f"Stored: {destination}")
+              print(f"Stored for analysis: {destination}")
           PY
 
       - name: Analyze packages with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.7-flash
+          AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
         run: python3 scripts/gemini_analyze.py
 
-      - name: Show generated findings
+      - name: Show generated report
         run: |
           echo "================================"
-          echo "Generated Gemini drafts"
+          echo "Generated Gemini report"
           echo "================================"
-          find findings -type f -name '*.json' -print -exec cat {} \;
+          find reports -type f -name '*.md' -print -exec cat {} \;
 
-      - name: Commit package data and findings
+      - name: Commit report only
         run: |
           git config user.name "Authtics Bot"
           git config user.email "authtics-bot@users.noreply.github.com"
-          git add packages findings metadata/recent-packages.json
+          git add reports/*.md metadata/recent-packages.json
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "feat: scan recent npm packages with Gemini"
+          git commit -m "feat: add daily npm security scan report"
           git push
