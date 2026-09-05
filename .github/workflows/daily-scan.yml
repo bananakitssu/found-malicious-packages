@@ -140,11 +140,13 @@ jobs:
           echo "================================"
           echo "Generated Gemini report"
           echo "================================"
-          find reports -type f -name '*.md' -print -exec cat {} \;
+          find reports -type f -name '*.md' -print -exec cat {} \\
+;
           echo "================================"
           echo "Generated findings JSON"
           echo "================================"
-          find findings -type f -name '*.json' -print -exec cat {} \;
+          find findings -type f -name '*.json' -print -exec cat {} \\
+;
 
       - name: Create review branch and pull request
         env:
@@ -178,14 +180,18 @@ jobs:
             '' \
             '- AI analysis is a draft only.' \
             '- No package code was executed during analysis.' \
-            '- The JSON findings file is intended for reviewer editing and verification before merge.' \
-            '- A merge is required before the results become part of the default branch.' \
+            '- The JSON findings file contains both the automated verdict and a separate human review state.' \
+            '- Reviewers should edit the `review` object before merging.' \
+            '- Use `review.status` = `APPROVED`, `REJECTED`, or `NEEDS_EDIT` after human review.' \
+            '- Set `human_review_required` to `false` only after the review is complete.' \
+            '- A finding must not be published merely because Gemini returned `potential_finding`.' \
+            '- A merge is the gate that allows reviewed data into the default branch.' \
             '' \
             '### Generated files' \
             "- \`$REPORT\` — human-readable scan report" \
             "- \`$FINDINGS\` — structured JSON scan results" \
             '' \
-            '**Please verify every potential finding against the exact package version before merging.**' \
+            '**Verify every potential finding against the exact package version before merging.**' \
             > /tmp/authtics-pr-body.md
 
           gh pr create \
