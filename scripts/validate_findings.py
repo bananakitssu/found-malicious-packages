@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Validate Authtics findings review state before a pull request can merge."""
+"""Validate OSV-style Authtics advisory review state before merge."""
 
 import json
 import pathlib
 import sys
 
 ALLOWED = {"PENDING", "APPROVED", "REJECTED", "NEEDS_EDIT"}
+SEVERITIES = {"critical", "high", "medium", "low"}
 
 
 def nonempty(value):
@@ -21,43 +22,53 @@ def validate(path):
 
     if data.get("schema_version") != "1.0":
         errors.append(f"{path}: schema_version must be '1.0'")
-    if data.get("status") != "PENDING_REVIEW":
-        errors.append(f"{path}: top-level status must be PENDING_REVIEW")
-    if data.get("human_review_required") is not True:
-        errors.append(f"{path}: human_review_required must be true")
+    if not nonempty(data.get("id")) or not data.get("id", "").startswith("AUTH-"):
+        errors.append(f"{path}: id must be an AUTH-* advisory ID")
+    if data.get("severity") not in SEVERITIES:
+        errors.append(f"{path}: actionable advisory severity must be critical/high/medium/low")
+    if not nonempty(data.get("summary")):
+        errors.append(f"{path}: summary is required")
+    if not isinstance(data.get("details"), str):
+        errors.append(f"{path}: details must be a string")
 
-    review = data.get("review")
-    if not isinstance(review, dict):
-        errors.append(f"{path}: missing top-level review object")
+    affected = data.get("affected")
+    if not isinstance(affected, list) or not affected:
+        errors.append(f"{path}: affected must be a non-empty array")
     else:
-        status = review.get("status")
-        if status not in ALLOWED:
-            errors.append(f"{path}: invalid top-level review.status: {status!r}")
+        for index, item in enumerate(affected):
+            package = item.get("package") if isinstance(item, dict) else None
+            if not isinstance(package, dict) or package.get("ecosystem") != "npm" or not nonempty(package.get("name")):
+                errors.append(f"{path}: affected[{index}] must identify an npm package")
+            if not isinstance(item.get("versions"), list) or not item["versions"]:
+                errors.append(f"{path}: affected[{index}].versions must be a non-empty array")
 
-    results = data.get("results")
-    if not isinstance(results, list):
-        return errors + [f"{path}: results must be an array"]
+    database_specific = data.get("database_specific")
+    if not isinstance(database_specific, dict):
+        errors.append(f"{path}: database_specific object is required")
+        return errors
 
-    for index, result in enumerate(results):
-        label = f"{path}: results[{index}]"
-        if not isinstance(result, dict):
-            errors.append(f"{label} must be an object")
-            continue
-        result_review = result.get("review")
-        if not isinstance(result_review, dict):
-            errors.append(f"{label}: missing review object")
-            continue
-        status = result_review.get("status")
-        if status not in ALLOWED:
-            errors.append(f"{label}: invalid review.status: {status!r}")
-            continue
-        if status in {"APPROVED", "REJECTED", "NEEDS_EDIT"}:
-            if not nonempty(result_review.get("reviewed_by")):
-                errors.append(f"{label}: reviewed_by is required for {status}")
-            if not nonempty(result_review.get("reviewed_at")):
-                errors.append(f"{label}: reviewed_at is required for {status}")
-        if status in {"REJECTED", "NEEDS_EDIT"} and not nonempty(result_review.get("notes")):
-            errors.append(f"{label}: notes are required for {status}")
+    review = database_specific.get("review")
+    if not isinstance(review, dict):
+        errors.append(f"{path}: database_specific.review object is required")
+        return errors
+
+    status = review.get("status")
+    if status not in ALLOWED:
+        errors.append(f"{path}: invalid review.status: {status!r}")
+        return errors
+
+    if status == "PENDING":
+        errors.append(f"{path}: human review is still pending")
+    elif status in {"APPROVED", "REJECTED", "NEEDS_EDIT"}:
+        if not nonempty(review.get("reviewed_by")):
+            errors.append(f"{path}: reviewed_by is required for {status}")
+        if not nonempty(review.get("reviewed_at")):
+            errors.append(f"{path}: reviewed_at is required for {status}")
+    if status in {"REJECTED", "NEEDS_EDIT"} and not nonempty(review.get("notes")):
+        errors.append(f"{path}: notes are required for {status}")
+
+    if database_specific.get("human_review_required") is not True:
+        errors.append(f"{path}: human_review_required must remain true until publication tooling clears it")
 
     return errors
 
@@ -73,12 +84,12 @@ def main():
         errors.extend(validate(path))
 
     if errors:
-        print("Authtics findings validation FAILED:")
+        print("Authtics advisory validation FAILED:")
         for error in errors:
             print(f"- {error}")
         return 1
 
-    print(f"Authtics findings validation passed for {len(files)} file(s).")
+    print(f"Authtics advisory validation passed for {len(files)} file(s).")
     return 0
 
 
