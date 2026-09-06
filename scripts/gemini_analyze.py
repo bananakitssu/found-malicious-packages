@@ -78,208 +78,136 @@ def collect_evidence(package_dir):
         rel = path.relative_to(package_dir).as_posix()
         if rel.startswith(".git/"):
             continue
-        try:
-            size = path.stat().st_size
-        except OSError:
-            continue
-        files.append({"path": rel, "size": size})
-
-    extensions = set(ECOSYSTEM.source_extensions)
-    extensions.update({".yml", ".yaml"})
-    interesting_names = {
-        ECOSYSTEM.package_manifest,
-        *ECOSYSTEM.install_script_names,
-        "index.js", "index.mjs", "index.py", "cli.js", "cli.py",
-    }
-    preferred = [item for item in files if Path(item["path"]).name in interesting_names or Path(item["path"]).suffix.lower() in extensions]
-
+        if path.suffix.lower() in ECOSYSTEM.source_extensions or path.name in {
+            ECOSYSTEM.package_manifest,
+            *ECOSYSTEM.install_script_names,
+            "index.js", "index.mjs", "index.py", "cli.js", "cli.py",
+        }:
+            files.append(path)
     evidence = []
     total = 0
-    for item in preferred:
-        path = package_dir / item["path"]
+    for path in files:
         try:
             text = path.read_text(encoding="utf-8", errors="replace")
-        except (OSError, UnicodeError):
+        except OSError:
             continue
         if len(text) > MAX_FILE_CHARS:
-            text = text[:MAX_FILE_CHARS] + "\n...[file truncated]..."
+            text = text[:MAX_FILE_CHARS] + "\n[truncated]"
         if total + len(text) > MAX_TOTAL_CHARS:
             break
-        evidence.append({"path": item["path"], "content": text})
+        evidence.append((path.relative_to(package_dir).as_posix(), text))
         total += len(text)
     return files, evidence
 
 
 def call_gemini(prompt):
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
+    key = os.environ.get("GEMINI_API_KEY")
+    if not key:
         raise RuntimeError("GEMINI_API_KEY is not configured")
-    body = {
-        "systemInstruction": {"parts": [{"text": ANALYSIS_SYSTEM_INSTRUCTION}]},
-        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json", "responseSchema": ANALYSIS_RESPONSE_SCHEMA},
-    }
+    body = {"systemInstruction": {"parts": [{"text": ANALYSIS_SYSTEM_INSTRUCTION}]},
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json", "responseSchema": ANALYSIS_RESPONSE_SCHEMA}}
+    last_error = None
     for attempt in range(1, MAX_RETRIES + 1):
-        request = urllib.request.Request(
-            API_URL, data=json.dumps(body).encode("utf-8"),
-            headers={"Content-Type": "application/json", "x-goog-api-key": api_key, "User-Agent": "Authtics/0.1.0"},
-            method="POST",
-        )
+        request = urllib.request.Request(API_URL, data=json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json", "x-goog-api-key": key, "User-Agent": "Authtics/0.1.0"}, method="POST")
         try:
             with urllib.request.urlopen(request, timeout=180) as response:
                 data = json.load(response)
             time.sleep(REQUEST_DELAY_SECONDS)
-            break
+            return data["candidates"][0]["content"]["parts"][0]["text"]
         except urllib.error.HTTPError as exc:
+            last_error = exc
             if exc.code == 429:
-                if attempt >= RATE_LIMIT_MAX_RETRIES:
-                    raise RuntimeError(f"Gemini rate limit persisted after {RATE_LIMIT_MAX_RETRIES} attempts") from exc
-                retry_after = exc.headers.get("Retry-After") if exc.headers else None
-                try:
-                    delay = max(1, float(retry_after)) if retry_after else min(60, 2 ** (attempt - 1) * 5)
-                except (TypeError, ValueError):
-                    delay = min(60, 2 ** (attempt - 1) * 5)
-                print(f"Gemini returned HTTP 429; retrying in {delay:g}s (attempt {attempt}/{RATE_LIMIT_MAX_RETRIES})", flush=True)
+                if attempt > RATE_LIMIT_MAX_RETRIES:
+                    raise
+                retry_after = exc.headers.get("Retry-After")
+                delay = int(retry_after) if retry_after and retry_after.isdigit() else min(5 * (2 ** (attempt - 1)), 60)
+                print(f"Gemini returned HTTP 429; retrying in {delay}s (attempt {attempt}/{RATE_LIMIT_MAX_RETRIES})")
                 time.sleep(delay)
                 continue
             if exc.code not in {500, 502, 503, 504} or attempt == MAX_RETRIES:
                 raise
-            delay = min(60, 2 ** (attempt - 1) * 5)
-            print(f"Gemini returned HTTP {exc.code}; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES})", flush=True)
+            delay = min(5 * (2 ** (attempt - 1)), 60)
+            print(f"Gemini returned HTTP {exc.code}; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES})")
             time.sleep(delay)
-        except urllib.error.URLError as exc:
+        except (urllib.error.URLError, TimeoutError) as exc:
+            last_error = exc
             if attempt == MAX_RETRIES:
                 raise
-            delay = min(60, 2 ** (attempt - 1) * 5)
-            print(f"Gemini network error: {exc}; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES})", flush=True)
+            delay = min(5 * (2 ** (attempt - 1)), 60)
+            print(f"Gemini request failed; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES}): {exc}")
             time.sleep(delay)
-    else:
-        raise RuntimeError("Gemini request exhausted all retries")
-    try:
-        return data["candidates"][0]["content"]["parts"][0]["text"]
-    except (KeyError, IndexError, TypeError) as exc:
-        raise RuntimeError(f"Unexpected Gemini response: {json.dumps(data)[:4000]}") from exc
+    raise RuntimeError(f"Gemini request failed after retries: {last_error}")
 
 
-def parse_json(text):
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        match = re.search(r"```(?:json)?\s*(\{.*\})\s*```", text, re.DOTALL)
-        if match:
-            return json.loads(match.group(1))
-        raise
-
-
-def validate_result(result):
+def parse_result(raw, package):
+    result = json.loads(raw)
     if not isinstance(result, dict):
-        raise RuntimeError(f"Unexpected Gemini analysis shape: expected JSON object, got {type(result).__name__}")
-    required = {"verdict", "severity", "confidence", "summary", "suspicious_behaviors", "evidence", "reviewer_notes", "draft_title"}
-    missing = sorted(required - result.keys())
-    if missing:
-        raise RuntimeError(f"Gemini analysis missing required fields: {', '.join(missing)}")
+        raise ValueError("Gemini response must be a JSON object")
+    required = set(ANALYSIS_RESPONSE_SCHEMA["required"])
+    if set(result) != required:
+        raise ValueError(f"Gemini response fields mismatch: expected {sorted(required)}, got {sorted(result)}")
     if result["verdict"] not in {"no_obvious_issue", "potential_finding", "insufficient_evidence"}:
-        raise RuntimeError(f"Invalid Gemini verdict: {result['verdict']!r}")
+        raise ValueError("Invalid verdict")
     if result["severity"] not in SEVERITIES:
-        raise RuntimeError(f"Invalid Gemini severity: {result['severity']!r}")
-    if not isinstance(result["confidence"], (int, float)) or isinstance(result["confidence"], bool) or not 0 <= result["confidence"] <= 1:
-        raise RuntimeError("Gemini confidence must be a number between 0 and 1")
+        raise ValueError("Invalid severity")
+    if not isinstance(result["confidence"], (int, float)) or not 0 <= result["confidence"] <= 1:
+        raise ValueError("Invalid confidence")
     for field in ("summary", "draft_title"):
         if not isinstance(result[field], str):
-            raise RuntimeError(f"Gemini field {field!r} must be a string")
-    for field in ("suspicious_behaviors", "reviewer_notes", "evidence"):
+            raise ValueError(f"Invalid {field}")
+    for field in ("suspicious_behaviors", "evidence", "reviewer_notes"):
         if not isinstance(result[field], list):
-            raise RuntimeError(f"Gemini field {field!r} must be an array")
-    for index, item in enumerate(result["evidence"]):
-        if not isinstance(item, dict) or not isinstance(item.get("file"), str) or not isinstance(item.get("reason"), str):
-            raise RuntimeError(f"Gemini evidence[{index}] must contain string 'file' and 'reason' fields")
-    if result["verdict"] in {"no_obvious_issue", "insufficient_evidence"} and result["severity"] != "n/a":
-        raise RuntimeError(f"A {result['verdict']} result must have severity n/a")
-    if result["verdict"] == "potential_finding" and result["severity"] == "n/a":
-        raise RuntimeError("A potential_finding result must have a real severity")
+            raise ValueError(f"Invalid {field}")
+    for item in result["evidence"]:
+        if not isinstance(item, dict) or set(item) != {"file", "reason"}:
+            raise ValueError("Invalid evidence item")
     return result
 
 
-def failed_result(package, error):
-    return {"package": package["name"], "version": package["version"], "published": package.get("published"),
-            "status": "ANALYSIS_FAILED", "verdict": "insufficient_evidence", "severity": "n/a", "confidence": 0,
-            "summary": "Gemini analysis could not be completed. This is not a security finding.",
-            "suspicious_behaviors": [], "evidence": [], "reviewer_notes": [f"Analysis engine error: {error}"],
-            "draft_title": "", "model": MODEL, "review": {"status": "PENDING"}}
-
-
-def next_advisory_id():
-    year = datetime.now(timezone.utc).year
-    maximum = 0
-    pattern = re.compile(rf"^AUTH-{year}-(\d{{5}})\.json$")
-    if FINDINGS_ROOT.exists():
-        for path in FINDINGS_ROOT.rglob(f"AUTH-{year}-*.json"):
-            match = pattern.match(path.name)
-            if match:
-                maximum = max(maximum, int(match.group(1)))
-    return f"AUTH-{year}-{maximum + 1:05d}"
-
-
-def package_path(name):
-    return FINDINGS_ROOT / ECOSYSTEM.key / Path(*name.split("/"))
-
-
-def package_reference(name, version):
-    if ECOSYSTEM.key == "npm":
-        return f"https://www.npmjs.com/package/{name}/v/{version}"
-    if ECOSYSTEM.key == "pypi":
-        normalized = re.sub(r"[-_.]+", "-", name).lower()
-        return f"https://pypi.org/project/{normalized}/{version}/"
-    raise ValueError(f"Unsupported ecosystem: {ECOSYSTEM.key}")
-
-
-def build_advisory(result, advisory_id, timestamp):
-    package = result["package"]
-    version = result["version"]
-    details = result["summary"]
-    if result.get("suspicious_behaviors"):
-        details += "\n\nObserved behaviors:\n" + "\n".join(f"- {item}" for item in result["suspicious_behaviors"])
-    if result.get("evidence"):
-        details += "\n\nEvidence:\n" + "\n".join(f"- `{item['file']}` — {item['reason']}" for item in result["evidence"])
-    return {
-        "schema_version": "1.0", "id": advisory_id, "published": timestamp, "modified": timestamp,
-        "summary": result["draft_title"] or f"Potential malicious or dangerous behavior in {package} ({ECOSYSTEM.display_name})",
-        "details": details, "severity": result["severity"],
-        "affected": [{"package": {"ecosystem": ECOSYSTEM.advisory_ecosystem, "name": package}, "versions": [version]}],
-        "references": [{"type": "PACKAGE", "url": package_reference(package, version)}],
-        "database_specific": {"source": "Authtics Advisories", "model": MODEL, "confidence": result["confidence"],
-                              "review": {"status": "PENDING", "human_review_required": True}},
-    }
-
-
 def metadata_path():
-    # Keep the established npm metadata filename for compatibility; ecosystem-specific
-    # workflows use their own filename so they can run independently.
     if ECOSYSTEM.key == "npm":
         return Path("metadata/recent-packages.json")
     return Path(f"metadata/{ECOSYSTEM.key}-recent-packages.json")
 
 
-def write_report(all_results, timestamp):
-    actionable = [r for r in all_results if r.get("severity") != "n/a" and r.get("status") == "PENDING_REVIEW"]
-    omitted = [r for r in all_results if r not in actionable]
-    if not actionable:
-        print("No actionable findings. All results are severity n/a; no report or advisory files will be committed.")
-        return []
+def failed_result(package, reason):
+    return {"package": package["name"], "version": package["version"], "verdict": "insufficient_evidence", "severity": "n/a", "confidence": 0.0,
+            "summary": reason, "suspicious_behaviors": [], "evidence": [], "reviewer_notes": [reason], "draft_title": ""}
 
+
+def write_outputs(results):
     REPORT_ROOT.mkdir(parents=True, exist_ok=True)
-    report_path = REPORT_ROOT / f"authtics-report-{timestamp.replace(':', '-').replace('+', '-')}.md"
-    lines = [f"# Authtics {ECOSYSTEM.display_name} Security Scan", "", f"Generated: {timestamp}", f"Model: `{MODEL}`", "", "## Findings", ""]
+    FINDINGS_ROOT.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(timezone.utc)
+    report_path = REPORT_ROOT / f"authtics-report-{now.strftime('%Y-%m-%dT%H-%M-%SZ')}.md"
     advisory_files = []
-    for result in actionable:
+    lines = [f"# Authtics {ECOSYSTEM.display_name} Security Scan", "", f"Generated: {now.isoformat()}", ""]
+    omitted = []
+    for result in results:
+        if result["severity"] == "n/a":
+            omitted.append(result)
+            continue
         advisory_id = next_advisory_id()
-        advisory = build_advisory(result, advisory_id, timestamp)
-        directory = package_path(result["package"])
-        directory.mkdir(parents=True, exist_ok=True)
-        path = directory / f"{advisory_id}.json"
+        package = result["package"]
+        version = result["version"]
+        ref = (f"https://www.npmjs.com/package/{package}/v/{version}" if ECOSYSTEM.key == "npm"
+               else f"https://pypi.org/project/{re.sub(r'[-_.]+', '-', package).lower()}/{version}/")
+        advisory = {
+            "schema_version": "1.0", "id": advisory_id, "published": now.isoformat(), "modified": now.isoformat(),
+            "summary": result["draft_title"] or result["summary"], "details": result["summary"], "severity": result["severity"],
+            "affected": [{"package": {"ecosystem": ECOSYSTEM.advisory_ecosystem, "name": package}, "versions": [version]}],
+            "references": [{"type": "PACKAGE", "url": ref}],
+            "database_specific": {"source": "Authtics Advisories", "model": MODEL, "confidence": result["confidence"],
+                "review": {"status": "PENDING", "human_review_required": True},
+                "suspicious_behaviors": result["suspicious_behaviors"], "evidence": result["evidence"], "reviewer_notes": result["reviewer_notes"]},
+        }
+        path = FINDINGS_ROOT / ECOSYSTEM.key / package / f"{advisory_id}.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(advisory, indent=2) + "\n", encoding="utf-8")
         advisory_files.append(str(path))
-        lines.extend([f"### {advisory['summary']}", f"- **Advisory:** `{advisory_id}`", f"- **Package:** `{result['package']}@{result['version']}`",
+        lines.extend([f"### {advisory['summary']}", f"- **Advisory:** `{advisory_id}`", f"- **Package:** `{package}@{version}`",
                       f"- **Severity:** `{result['severity']}`", f"- **Confidence:** `{result['confidence']}`", "- **Review:** `PENDING`", "",
                       result["summary"], ""])
         if result.get("evidence"):
@@ -302,9 +230,13 @@ def main():
     metadata = metadata_path()
     if not metadata.exists():
         raise RuntimeError(f"{metadata} does not exist")
-    packages = json.loads(metadata.read_text(encoding="utf-8"))
-    if not isinstance(packages, list):
-        raise RuntimeError(f"{metadata} must contain a JSON array")
+    metadata_data = json.loads(metadata.read_text(encoding="utf-8"))
+    if isinstance(metadata_data, list):
+        packages = metadata_data
+    elif isinstance(metadata_data, dict) and isinstance(metadata_data.get("packages"), list):
+        packages = metadata_data["packages"]
+    else:
+        raise RuntimeError(f"{metadata} must contain a JSON array or an object with a 'packages' array")
     all_results = []
     for package in packages:
         name, version = package["name"], package["version"]
@@ -323,52 +255,21 @@ Package: {name}@{version}
 Published: {package.get('published', 'unknown')}
 Ecosystem: {ECOSYSTEM.display_name}
 
-Return exactly one JSON object matching the supplied response schema. Do not return an array.
+Files discovered: {len(files)}
 
-Severity guidance:
-- critical: strong evidence of severe malicious behavior or remote code execution with major impact
-- high: serious security or malicious behavior with substantial impact
-- medium: meaningful security risk with limited scope or stronger mitigating factors
-- low: minor or lower-impact suspicious/security behavior
-- n/a: no actionable finding or insufficient evidence
-
-Historical issues must not be applied to this exact version without evidence that they still exist.
-Never invent files, behavior, vulnerabilities, CVEs, package ownership, or intent.
-Do not claim a package is safe or free of security issues.
-If the evidence does not establish an actionable finding, use verdict "no_obvious_issue" or "insufficient_evidence" and severity "n/a".
-If verdict is "potential_finding", severity MUST be critical/high/medium/low.
-
-OBFUSCATION AND SUSPICIOUS-DYNAMIC-BEHAVIOR GUIDANCE:
-- Flag eval(), Function(), dynamic imports, runtime-generated code, encoded strings,
-  Base64/hex payloads, runtime decryption, or similar techniques when they materially hinder
-  security analysis. For Python, also consider exec(), eval(), dynamic import mechanisms,
-  subprocess usage, shell execution, and suspicious package-install hooks.
-- Do NOT treat ordinary minification, bundling, transpilation, generated files, packaging metadata,
-  or normal build/install configuration as malicious by themselves.
-- If suspicious behavior is present but the final intent or payload cannot be established, it
-  may still be a potential_finding for human review.
-- Explain uncertainty clearly. Never claim a hidden payload is malicious without evidence showing harmful behavior.
-
-FILE INVENTORY:
-{json.dumps(files, indent=2)}
-
-SELECTED FILE CONTENT:
-{json.dumps(evidence, indent=2)}
+Evidence:
+{json.dumps([{'file': rel, 'content': text} for rel, text in evidence], indent=2)}
 """
         print(f"Analyzing {name}@{version} with {MODEL}...", flush=True)
         try:
-            result = validate_result(parse_json(call_gemini(prompt)))
-            result.update({"package": name, "version": version, "published": package.get("published"), "status": "PENDING_REVIEW", "model": MODEL, "review": {"status": "PENDING"}})
+            result = parse_result(call_gemini(prompt), package)
         except Exception as exc:
             print(f"Analysis failed for {name}@{version}: {exc}", flush=True)
-            result = failed_result(package, exc)
-        all_results.append(result)
-
-    timestamp = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-    advisory_files = write_report(all_results, timestamp)
+            result = failed_result(package, f"Analysis failed: {exc}")
+        all_results.append({**package, **result})
+    write_outputs(all_results)
     SCAN_STATE.parent.mkdir(parents=True, exist_ok=True)
-    SCAN_STATE.write_text(json.dumps({"last_scan": timestamp, "ecosystem": ECOSYSTEM.key, "model": MODEL,
-                                      "packages_scanned": len(packages), "advisories_written": len(advisory_files)}, indent=2) + "\n", encoding="utf-8")
+    SCAN_STATE.write_text(json.dumps({"ecosystem": ECOSYSTEM.key, "model": MODEL, "generated": datetime.now(timezone.utc).isoformat(), "packages": all_results}, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
