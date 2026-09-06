@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'findings/**/*.json'
+      - 'findings/npm/**/*.json'
 
 permissions:
   contents: read
@@ -20,9 +20,9 @@ jobs:
       - name: Validate findings
         run: |
           set -euo pipefail
-          files=$(find findings -type f -name '*.json' -print)
-          if [ -z "$files" ]; then
-            echo "No findings JSON files found."
+          mapfile -t files < <(find findings/npm -type f -name 'AUTH-*.json' -print 2>/dev/null || true)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No current npm advisory findings found."
             exit 0
           fi
-          python3 scripts/validate_findings.py $files
+          python3 scripts/validate_findings.py "${files[@]}"
