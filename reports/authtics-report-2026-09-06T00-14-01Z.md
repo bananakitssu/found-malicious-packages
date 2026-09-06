@@ -15,7 +15,7 @@
 - **CWE:** `CWE-284`, `CWE-306`
 - **Severity:** `medium`
 - **Confidence:** 0.7
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
@@ -40,7 +40,7 @@ The package includes administrative API endpoints that allow for server control,
 - **CWE:** `CWE-78`
 - **Severity:** `medium`
 - **Confidence:** 0.7
-- **Review:** `PENDING`
+- **Review:** `APPROVED`
 
 ### Summary
 
