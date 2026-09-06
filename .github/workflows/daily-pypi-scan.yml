@@ -11,9 +11,9 @@ permissions:
 
 env:
   GEMINI_MODEL: gemini-3.1-flash-lite
-  # Comma-separated fallback models. The analyzer skips unavailable models
-  # and moves to the next model when a model quota is exhausted.
-  GEMINI_FALLBACK_MODELS: gemini-3.1-flash
+  # Prefer models confirmed available to the configured Gemini account.
+  # The analyzer skips unavailable models and moves on when a model quota is exhausted.
+  GEMINI_FALLBACK_MODELS: gemini-2.5-flash,gemini-2.5-flash-lite,gemini-flash-lite-latest
   AUTHTICS_PYPI_PACKAGE_LIMIT: 100
   AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
 
@@ -70,9 +70,6 @@ jobs:
           candidates = []
           seen = set()
 
-          # PyPI's update feed is bounded, unlike the Simple API project index.
-          # Prefer the project/version URL from each feed entry and then verify
-          # the canonical package identity through the JSON API.
           for item in root.iter():
               if item.tag.rsplit("}", 1)[-1] != "item":
                   continue
