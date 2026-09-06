@@ -5,7 +5,7 @@
   "modified": "2026-09-06T00:14:01Z",
   "summary": "Potential Arbitrary Code Execution via Build Scripts",
   "details": "The package includes a CLI tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) via child_process.execSync. While this is intended for build automation, it poses a risk if the package is used in an untrusted environment or if the user's package.json contains malicious scripts.\n\nObserved behaviors:\n- Execution of arbitrary shell commands via child_process.execSync based on user-provided package.json scripts.\n\nEvidence:\n- `pt.js` \u2014 The build() function reads the 'prepublishOnly' or 'prepare' script from the local package.json and executes it using child_process.execSync without sanitization.",
-  "severity": "medium",
+  "severity": "low",
   "affected": [
     {
       "package": {
