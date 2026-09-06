@@ -51,7 +51,9 @@ jobs:
           python3 - <<'PY'
           import json
           import os
+          import re
           import time
+          from html.parser import HTMLParser
           from pathlib import Path
           from urllib.request import Request, urlopen
 
@@ -60,19 +62,50 @@ jobs:
           with urlopen(req, timeout=30) as response:
               html = response.read().decode("utf-8", errors="replace")
 
-          names = []
-          for line in html.splitlines():
-              if 'href=' not in line:
-                  continue
-              start = line.find('>')
-              end = line.find('</a>')
-              if start == -1 or end == -1 or end <= start:
-                  continue
-              name = line[start + 1:end].strip()
-              if name and name not in names:
-                  names.append(name)
-              if len(names) >= limit:
-                  break
+          class SimpleIndexParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.names = []
+                  self.in_anchor = False
+                  self.href = None
+
+              def handle_starttag(self, tag, attrs):
+                  if tag != "a":
+                      return
+                  self.in_anchor = True
+                  self.href = dict(attrs).get("href")
+
+              def handle_data(self, data):
+                  if not self.in_anchor:
+                      return
+                  text = data.strip()
+                  if not text or not self.href:
+                      return
+                  match = re.search(r"/simple/([^/]+)/?(?:#.*)?$", self.href)
+                  if not match:
+                      return
+                  href_name = match.group(1)
+                  name = text
+                  if name != href_name:
+                      print(f"Skipping malformed PyPI index entry: text={name!r} href={href_name!r}")
+                      return
+                  if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", name):
+                      print(f"Skipping invalid PyPI project name: {name!r}")
+                      return
+                  if re.fullmatch(r"[0-9]+(?:\\.[0-9]+){1,3}", name):
+                      print(f"Skipping version-looking PyPI project name: {name!r}")
+                      return
+                  if name not in self.names:
+                      self.names.append(name)
+
+              def handle_endtag(self, tag):
+                  if tag == "a":
+                      self.in_anchor = False
+                      self.href = None
+
+          parser = SimpleIndexParser()
+          parser.feed(html)
+          names = parser.names[:limit]
 
           targets = []
           for name in names:
@@ -151,7 +184,6 @@ jobs:
               version = item["version"]
               print(f"[{index}/{len(targets)}] Downloading {name}@{version}...")
               destination = root / name / version
-              archive = Path("/tmp") / item["filename"]
               try:
                   request = urllib.request.Request(item["url"], headers={"User-Agent": "Authtics/0.1.0"})
                   with urllib.request.urlopen(request, timeout=120) as response:
@@ -168,9 +200,7 @@ jobs:
                   print(f"Skipping {name}@{version}: artifact could not be extracted safely: {exc}")
                   import shutil
                   shutil.rmtree(destination, ignore_errors=True)
-              finally:
-                  archive.unlink(missing_ok=True)
-
+          
           metadata["packages"] = successful
           metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
           print(f"Successfully extracted {len(successful)}/{len(targets)} PyPI package releases.")
