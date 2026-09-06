@@ -1,0 +1,208 @@
+name: Daily Authtics PyPI Scan
+
+on:
+  schedule:
+    # Run two hours after the daily npm scan.
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  GEMINI_MODEL: gemini-3.1-flash-lite
+  AUTHTICS_PYPI_PACKAGE_LIMIT: 100
+  AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
+
+jobs:
+  scan:
+    name: Scan PyPI packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install scanner dependencies
+        run: python3 -m pip install --disable-pip-version-check requests
+
+      - name: Check Gemini API key
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "GEMINI_API_KEY is not configured."
+            exit 1
+          fi
+
+      - name: Prepare workspace
+        run: |
+          mkdir -p reports findings metadata "$AUTHTICS_PACKAGE_ROOT"
+          rm -rf "$AUTHTICS_PACKAGE_ROOT"/*
+
+      - name: Discover recent PyPI releases
+        env:
+          PYPI_LIMIT: ${{ env.AUTHTICS_PYPI_PACKAGE_LIMIT }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import time
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+
+          limit = int(os.environ.get("PYPI_LIMIT", "100"))
+          url = "https://pypi.org/simple/"
+          req = Request(url, headers={"User-Agent": "Authtics/0.1.0"})
+          with urlopen(req, timeout=30) as response:
+              html = response.read().decode("utf-8", errors="replace")
+
+          names = []
+          for line in html.splitlines():
+              if 'href=' not in line:
+                  continue
+              start = line.find('>')
+              end = line.find('</a>')
+              if start == -1 or end == -1 or end <= start:
+                  continue
+              name = line[start + 1:end].strip()
+              if name and name not in names:
+                  names.append(name)
+              if len(names) >= limit:
+                  break
+
+          targets = []
+          for index, name in enumerate(names, 1):
+              metadata_url = f"https://pypi.org/pypi/{name}/json"
+              try:
+                  req = Request(metadata_url, headers={"User-Agent": "Authtics/0.1.0"})
+                  with urlopen(req, timeout=20) as response:
+                      data = json.load(response)
+                  info = data.get("info", {})
+                  version = info.get("version")
+                  if not version:
+                      continue
+                  files = data.get("releases", {}).get(version, [])
+                  source = next((f for f in files if f.get("packagetype") == "sdist"), None)
+                  if source is None:
+                      source = next((f for f in files if f.get("packagetype") == "bdist_wheel"), None)
+                  if source is None:
+                      continue
+                  targets.append({
+                      "name": name,
+                      "version": version,
+                      "filename": source.get("filename"),
+                      "url": source.get("url"),
+                      "packagetype": source.get("packagetype"),
+                  })
+              except Exception as exc:
+                  print(f"Skipping {name}: {exc}")
+              time.sleep(0.05)
+
+          Path("metadata/pypi-recent-packages.json").write_text(
+              json.dumps({"ecosystem": "PyPI", "generated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "packages": targets}, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(f"Selected {len(targets)} PyPI package releases for analysis.")
+          PY
+
+      - name: Download and extract PyPI packages safely
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import tarfile
+          import urllib.request
+          import zipfile
+          from pathlib import Path
+
+          root = Path(os.environ["AUTHTICS_PACKAGE_ROOT"])
+          targets = json.loads(Path("metadata/pypi-recent-packages.json").read_text())["packages"]
+
+          def safe_member(name):
+              p = Path(name)
+              return not p.is_absolute() and ".." not in p.parts
+
+          for index, item in enumerate(targets, 1):
+              name = item["name"]
+              version = item["version"]
+              url = item["url"]
+              print(f"[{index}/{len(targets)}] Downloading {name}@{version}...")
+              destination = root / name / version
+              destination.mkdir(parents=True, exist_ok=True)
+              archive = Path("/tmp") / item["filename"]
+              urllib.request.urlretrieve(url, archive)
+              try:
+                  if archive.suffix == ".whl":
+                      with zipfile.ZipFile(archive) as zf:
+                          for member in zf.infolist():
+                              if member.is_dir() or not safe_member(member.filename):
+                                  continue
+                              target = destination / member.filename
+                              target.parent.mkdir(parents=True, exist_ok=True)
+                              with zf.open(member) as src, target.open("wb") as dst:
+                                  dst.write(src.read())
+                  else:
+                      with tarfile.open(archive, "r:*") as tf:
+                          for member in tf.getmembers():
+                              if not member.isfile() or not safe_member(member.name):
+                                  continue
+                              target = destination / member.name
+                              target.parent.mkdir(parents=True, exist_ok=True)
+                              src = tf.extractfile(member)
+                              if src is None:
+                                  continue
+                              with target.open("wb") as dst:
+                                  dst.write(src.read())
+              finally:
+                  archive.unlink(missing_ok=True)
+
+          print("PyPI package extraction complete. Package code was not executed.")
+          PY
+
+      - name: Run PyPI static analysis
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AUTHTICS_ECOSYSTEM: pypi
+        run: python3 scripts/run_gemini_analyze.py
+
+      - name: Classify CWE proposals
+        if: always()
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AUTHTICS_ECOSYSTEM: pypi
+        run: python3 scripts/classify_cwe.py
+
+      - name: Check for actionable findings
+        id: findings
+        run: |
+          if find findings/pypi -type f -name 'AUTH-*.json' -print -quit 2>/dev/null | grep -q .; then
+            echo "has_findings=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_findings=false" >> "$GITHUB_OUTPUT"
+            echo "No actionable PyPI findings. No report, commit, or PR will be created."
+          fi
+
+      - name: Create draft PR
+        if: steps.findings.outputs.has_findings == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="authtics/pypi-daily-scan-${GITHUB_RUN_ID}"
+          git config user.name "authtics-bot"
+          git config user.email "authtics-bot@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add findings/pypi reports metadata/pypi-recent-packages.json metadata/scan-state.json
+          git diff --cached --quiet || git commit -m "scan: daily PyPI security analysis"
+          git push origin "$branch"
+          gh pr create \
+            --draft \
+            --base main \
+            --head "$branch" \
+            --title "[PyPI] Daily security scan ${GITHUB_RUN_ID}" \
+            --body "## Authtics PyPI security scan\n\nThis is an automated **AI draft** for human review.\n\n- Ecosystem: PyPI\n- Package code was not executed.\n- Only exact analyzed releases are affected.\n- \\`n/a\\` results do not create advisories.\n- CWE classifications are AI-proposed and require human verification.\n- No advisory is considered published until the human review gate approves it."
