@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - 'findings/npm/**/*.json'
+      - 'findings/pypi/**/*.json'
 
 permissions:
   contents: read
@@ -20,9 +21,16 @@ jobs:
       - name: Validate findings
         run: |
           set -euo pipefail
-          mapfile -t files < <(find findings/npm -type f -name 'AUTH-*.json' -print 2>/dev/null || true)
+          files=()
+          for ecosystem in npm pypi; do
+            if [ -d "findings/$ecosystem" ]; then
+              while IFS= read -r file; do
+                files+=("$file")
+              done < <(find "findings/$ecosystem" -type f -name 'AUTH-*.json' -print)
+            fi
+          done
           if [ "${#files[@]}" -eq 0 ]; then
-            echo "No current npm advisory findings found."
+            echo "No current advisory findings found."
             exit 0
           fi
           python3 scripts/validate_findings.py "${files[@]}"
