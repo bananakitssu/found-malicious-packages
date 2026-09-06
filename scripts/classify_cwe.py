@@ -10,6 +10,10 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from scripts.ecosystem import get_ecosystem
 
 MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
@@ -113,9 +117,8 @@ def update_reports(advisories):
             if marker not in text:
                 continue
             cwe_line = f"- **CWE:** {', '.join(f'`{cwe}`' for cwe in cwe_ids) if cwe_ids else 'Not assigned'}"
-            if cwe_line in text:
-                continue
-            text = text.replace(marker, marker + "\n" + cwe_line, 1)
+            if cwe_line not in text:
+                text = text.replace(marker, marker + "\n" + cwe_line, 1)
         report.write_text(text, encoding="utf-8")
 
 
@@ -132,17 +135,19 @@ def main():
             continue
         try:
             ids, notes = classify(data)
-            data.setdefault("database_specific", {})["cwe_ids"] = ids
-            data["database_specific"]["cwe_notes"] = notes
-            data["database_specific"]["cwe_status"] = "AI_PROPOSED"
+            database_specific = data.setdefault("database_specific", {})
+            database_specific["cwe_ids"] = ids
+            database_specific["cwe_notes"] = notes
+            database_specific["cwe_status"] = "AI_PROPOSED"
             path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
             classified[data.get("id", path.stem)] = ids
             print(f"{path}: proposed CWE IDs: {', '.join(ids) if ids else 'none'}")
         except Exception as exc:
             print(f"{path}: CWE classification skipped: {exc}", file=sys.stderr)
-            data.setdefault("database_specific", {})["cwe_ids"] = []
-            data["database_specific"]["cwe_notes"] = [f"CWE classification unavailable: {exc}"]
-            data["database_specific"]["cwe_status"] = "UNAVAILABLE"
+            database_specific = data.setdefault("database_specific", {})
+            database_specific["cwe_ids"] = []
+            database_specific["cwe_notes"] = [f"CWE classification unavailable: {exc}"]
+            database_specific["cwe_status"] = "UNAVAILABLE"
             path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
             classified[data.get("id", path.stem)] = []
     update_reports(classified)
