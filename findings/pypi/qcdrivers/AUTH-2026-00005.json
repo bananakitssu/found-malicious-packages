@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-06T18:05:40.522980+00:00",
+  "modified": "2026-09-06T18:05:40.522980+00:00",
+  "summary": "Security and Reliability Review of qcdrivers Instrument Drivers",
+  "details": "The package contains several instances of hardcoded IP addresses and potentially insecure network communication practices, particularly in the 'BlueFors' and 'Entropy' drivers. Additionally, the 'Heater' class implements a custom PID loop that uses 'time.sleep(1)' inside a 'while True' loop, which could lead to blocking behavior in a QCoDeS measurement environment.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "qcdrivers"
+      },
+      "versions": [
+        "0.1.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/qcdrivers/0.1.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Hardcoded IP addresses and network configuration in instrument drivers.",
+      "Potential blocking behavior in instrument control loops (PID implementation).",
+      "Use of raw socket communication without explicit error handling or timeout management in some modules."
+    ],
+    "evidence": [
+      {
+        "file": "src/qcdrivers/bluefors/fridges/fridges.py",
+        "reason": "The driver uses hardcoded network parameters and performs HTTP requests to user-supplied IPs, which could be exploited if the instrument network is untrusted."
+      },
+      {
+        "file": "src/qcdrivers/entropy/adr/adr.py",
+        "reason": "The driver uses raw TCP socket communication with hardcoded command strings and lacks robust error handling for socket timeouts or connection drops."
+      },
+      {
+        "file": "src/qcdrivers/entropy/heater/heater.py",
+        "reason": "The 'set_T' method implements a PID loop with a blocking 'time.sleep(1)' call, which is generally discouraged in asynchronous QCoDeS instrument drivers."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be a collection of specialized laboratory instrument drivers. The identified issues are common in academic/research code but represent potential reliability and security concerns in a production environment.",
+      "The 'Heater' PID loop implementation should be reviewed for potential deadlocks or blocking issues during long-running measurements.",
+      "The use of 'requests' without session management or strict timeout enforcement in some methods could lead to resource exhaustion."
+    ],
+    "cwe_ids": [
+      "CWE-703",
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package contains hardcoded IP addresses and network configuration parameters within the instrument drivers.",
+      "The implementation of a blocking PID loop using time.sleep(1) and lack of robust error handling for socket operations represent improper input validation and inadequate error handling practices."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

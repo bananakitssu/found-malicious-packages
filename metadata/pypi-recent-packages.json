@@ -1,0 +1,706 @@
+{
+  "ecosystem": "PyPI",
+  "generated": "2026-09-06T16:51:37Z",
+  "packages": [
+    {
+      "name": "xberg-hermes-plugin",
+      "version": "1.1.0",
+      "filename": "xberg_hermes_plugin-1.1.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/26/74/79d66e97f905f1026a6628826962dcf3cc0308b947e54b917b4da5937a47/xberg_hermes_plugin-1.1.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "dyf",
+      "version": "0.13.1",
+      "filename": "dyf-0.13.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/15/20/5fba2a23bf2c1626b286146a8441b4aa2dcfd4d84b8d5a0b7f79bf571ab5/dyf-0.13.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "tasq-remote",
+      "version": "0.6.3",
+      "filename": "tasq_remote-0.6.3-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/bc/80/a1d64c409dba6a3253e198ffae91c83638fe9d0b0a43d7b34154521047af/tasq_remote-0.6.3-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "quant-agent",
+      "version": "0.3.0",
+      "filename": "quant_agent-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/60/2c/b6315eda3b450d053f9acf6506063e0116a45ef2382943e0a2acfdf5a56b/quant_agent-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "rnamotifs2",
+      "version": "0.1.0",
+      "filename": "rnamotifs2-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/80/5b/0fc75d584f9a8e450869f2a7bbbfe27279cf93aee6317fab137d3e130b52/rnamotifs2-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "omnicache-proxy",
+      "version": "2.7.1",
+      "filename": "omnicache_proxy-2.7.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/6a/c1/e7475a97fcf6f6c8ce6548853abbee8a71076cae1c4b9f074b272d0fb4fd/omnicache_proxy-2.7.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "cmcp-runtime",
+      "version": "0.5.0",
+      "filename": "cmcp_runtime-0.5.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/6d/14/56ae582a148d7f3e2a37bec59c924f830dcc8e4a828fc7e507c61ef8bbab/cmcp_runtime-0.5.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "iucn-redlist-api",
+      "version": "0.3.1",
+      "filename": "iucn_redlist_api-0.3.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/76/ce/3b018ffd43baa795c8ce1fe6d8ed51b18d7f42b18c58f629b7029eb04728/iucn_redlist_api-0.3.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zoraai",
+      "version": "1.2.1",
+      "filename": "zoraai-1.2.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/29/2b/51eed681a9bfb171b653c0693ee8580cf8b6167568425d88a8bf4d52d6f9/zoraai-1.2.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "outplayarena-sdk",
+      "version": "0.4.2",
+      "filename": "outplayarena_sdk-0.4.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/11/9c/6f4955ba0f9665a9cce44ad6129ea5ba0325d6b16fd0b8aac7ead2d717c4/outplayarena_sdk-0.4.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crowsnest",
+      "version": "0.0.4",
+      "filename": "crowsnest-0.0.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ed/13/3b39934f392f6e0c06c55064c34773a3b6c7024122ecb5febb8cf0122881/crowsnest-0.0.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "python-broadlink",
+      "version": "1.0.5",
+      "filename": "python_broadlink-1.0.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d0/03/0997e2a457ca1b9402c309de5eb3a22741e408d0fe62d273e207963985a8/python_broadlink-1.0.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "kodiag",
+      "version": "1.0",
+      "filename": "kodiag-1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/0b/7d/a8f78823ec207fa0bd476206db1eb62ab4a53e2f2c48f12f952de5d43e5a/kodiag-1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crowsnest",
+      "version": "0.0.4",
+      "filename": "crowsnest-0.0.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ed/13/3b39934f392f6e0c06c55064c34773a3b6c7024122ecb5febb8cf0122881/crowsnest-0.0.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "webhook-replay",
+      "version": "0.1.1",
+      "filename": "webhook_replay-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7f/21/8f53799f6f532bc58a76e8d6ecc13d378b1f70cac01a71249b6f13ad5f8c/webhook_replay-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "yousleep-common",
+      "version": "14.1.0",
+      "filename": "yousleep_common-14.1.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/f2/3d/9cffd250d5adc104d424ff442f4a6686c11d16a626518b5af717fe4bcba9/yousleep_common-14.1.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "yousleep-common",
+      "version": "14.1.0",
+      "filename": "yousleep_common-14.1.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/f2/3d/9cffd250d5adc104d424ff442f4a6686c11d16a626518b5af717fe4bcba9/yousleep_common-14.1.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "claimidx",
+      "version": "0.7.1",
+      "filename": "claimidx-0.7.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8a/01/2e645e3ef27179a97b4369399bf2407fc0d8a8346df53051c556f317cc51/claimidx-0.7.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pten",
+      "version": "0.4.9",
+      "filename": "pten-0.4.9.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e8/6b/de311ff2a233beeff246bf22abbd4c62a3f53e428ded3e59711c087eced1/pten-0.4.9.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "datavloot",
+      "version": "0.1.2",
+      "filename": "datavloot-0.1.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1b/d4/4ac1705d81a79d87c5faf6f59a73be1a8ca6097845997e2ab78595c1d063/datavloot-0.1.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "code-coordinator",
+      "version": "0.5.395",
+      "filename": "code_coordinator-0.5.395.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/88/d7/46abd9bce4138968f60c7b67a4f57f50f6954816d194993a83020a158c50/code_coordinator-0.5.395.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "fastnumparse",
+      "version": "0.3.0",
+      "filename": "fastnumparse-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/cd/d6/8dad04c745835d6d600af647d4b4d3b60000054ccfb888afed1d6733a59c/fastnumparse-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "synapsen",
+      "version": "0.1.1",
+      "filename": "synapsen-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d7/3e/6ea647430a339f96854b5a805dcdac5f9bb8ea12d19e9103e9589bdbfba6/synapsen-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "synapsen",
+      "version": "0.1.1",
+      "filename": "synapsen-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d7/3e/6ea647430a339f96854b5a805dcdac5f9bb8ea12d19e9103e9589bdbfba6/synapsen-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "workspace-mcp",
+      "version": "1.26.0",
+      "filename": "workspace_mcp-1.26.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/18/62/2646e54a96ec5ceeb7ff1cd70821f928bf300f2eacf1d00016cd18dfe10c/workspace_mcp-1.26.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "abmptools",
+      "version": "2.13.9",
+      "filename": "abmptools-2.13.9.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c2/ac/efdfaf474bc436d5c1daa2ace3e6257915f2e45126fa0f54ad2f8abbdd6b/abmptools-2.13.9.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "xybern",
+      "version": "2.3.0",
+      "filename": "xybern-2.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/10/d2/dbdc99bb07115a11d428c27576e1eb6fdf97ab9c4ea0dbb102b7b303c1b4/xybern-2.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "espp",
+      "version": "1.3.1",
+      "filename": "espp-1.3.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a6/45/31d29a3cd8efe1ca289e06adc6099acd6ceb84df246931ed718219053fc4/espp-1.3.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "django-otp",
+      "version": "1.7.3",
+      "filename": "django_otp-1.7.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/08/88/f98f860f5c209bfa1980c63ff38128b50166bf396d28c60d93c42bdb08de/django_otp-1.7.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "alcove-search",
+      "version": "0.5.0",
+      "filename": "alcove_search-0.5.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/58/48/736ae31936a40b69f3ffa054de85a8eb5b0520f5d1c01bd4d129b9c40504/alcove_search-0.5.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "monopyly",
+      "version": "1.7.1",
+      "filename": "monopyly-1.7.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b3/7d/a7e46bcf62057a3fde32c77b2f7ea14c6f57571bd2368f171e6bbeb98c13/monopyly-1.7.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "aggrete",
+      "version": "0.7.0",
+      "filename": "aggrete-0.7.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ea/45/ac7dd34b2d3eedbb05ffbce9dfd4ae8ac73e04ddab5db9735410f17a9b5f/aggrete-0.7.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "numvo",
+      "version": "0.3.0",
+      "filename": "numvo-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/6c/44/7a4e7a843efe915be9809ce5612f1b0d41cb0fdeb1dd7eb16a7241480d53/numvo-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "aicqwebbot",
+      "version": "0.4.5",
+      "filename": "aicqwebbot-0.4.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/48/bd/23a8f1614da4f50bc77747ed359c6e0d749a5e39677a9b9f1752aea12844/aicqwebbot-0.4.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "coolscanpy",
+      "version": "0.7.6",
+      "filename": "coolscanpy-0.7.6.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/38/27/6b2eac47ec9ce8dd86567409fcbb9089dfa7cf5c07ac91a422e95e5d3e5b/coolscanpy-0.7.6.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "semora-store-pg",
+      "version": "0.6.0",
+      "filename": "semora_store_pg-0.6.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/19/72/5819278164a7ae1e1f069aa4303241834898494888d1151f43c7371f54cc/semora_store_pg-0.6.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "semora-store",
+      "version": "0.6.0",
+      "filename": "semora_store-0.6.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a2/ae/3042d0d7b266b0188d5cbf339f0f7aaea76f8c2d6b3ee280b7f8bcfde950/semora_store-0.6.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "semora",
+      "version": "0.6.0",
+      "filename": "semora-0.6.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/54/47/b9d23aaf1ed0cc23620c541cf73dfd327ea0c9534e482ac3290ed570767a/semora-0.6.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "otorchmizer",
+      "version": "2.0.0",
+      "filename": "otorchmizer-2.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/28/6d/624191e6e7bb66cfda9dac86290c15adc50d4a78117cbd58b5e4488d5b4a/otorchmizer-2.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pyarxlab",
+      "version": "0.2.10",
+      "filename": "pyarxlab-0.2.10.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e1/5b/7ec6922ffd1e837522e539bd538a2487515e6f7743b031368b462e7389f6/pyarxlab-0.2.10.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mlx-quant-fidelity",
+      "version": "0.9.0",
+      "filename": "mlx_quant_fidelity-0.9.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ec/50/a06b45d7c4eae76f762fc4753cfaa1e863314248572ca339791e7c122824/mlx_quant_fidelity-0.9.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pyarxlab-max",
+      "version": "0.2.10",
+      "filename": "pyarxlab_max-0.2.10.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/02/3e/c8735f3f9dc8e4580ee88092915433cf43e346ced3148dfece3e1f5a28c7/pyarxlab_max-0.2.10.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "calibrequarry",
+      "version": "3.27.0",
+      "filename": "calibrequarry-3.27.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7f/f5/273590c1a3d1a9ec294006f83f83b0a5bc0c14aac339147645abe62fffa1/calibrequarry-3.27.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "typedout-py",
+      "version": "0.1.1",
+      "filename": "typedout_py-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ab/02/d662f4947efcc146e429978c84440ee740c7c4c65dba3f84410e14c1fffd/typedout_py-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "hexastack-tools",
+      "version": "0.3.4",
+      "filename": "hexastack_tools-0.3.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7b/4a/f2e58d34125bea9791aece0f883487bd9e4a18b19995774b43e017915a71/hexastack_tools-0.3.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "hexastack",
+      "version": "0.3.4",
+      "filename": "hexastack-0.3.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/74/10/3fcb662f4b16646c52ae2e8019a7c8e4aeba559caba16e65102c2df1a6a6/hexastack-0.3.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "jedi-codegraph",
+      "version": "0.1.0",
+      "filename": "jedi_codegraph-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/07/ef/b41a0948a5f540c5daa8449370f7a18f6646a09df90c5ecbdbcc2fb0cd1d/jedi_codegraph-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "aimailsdk",
+      "version": "0.1.4",
+      "filename": "aimailsdk-0.1.4-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/b0/f5/bb0b60aa0c8f2c7ba45408b79a9f516073c2eab6302a082fdc9d90692536/aimailsdk-0.1.4-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "tlsprint-python",
+      "version": "0.1.1",
+      "filename": "tlsprint_python-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/99/50/a64904160726bd6e2b1443e26ae8f4c0962c211f4f383795296c713c3dbb/tlsprint_python-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "python-google-drive-api",
+      "version": "0.2.0",
+      "filename": "python_google_drive_api-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a3/6e/4e79d2614222e2917475558194826f150ffc72bc93ab3ddb9148a45f51ee/python_google_drive_api-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sharelint",
+      "version": "1.3.0",
+      "filename": "sharelint-1.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b2/01/41a2e9e4215818712be70a464b96d8414411342cd3c5fb39278f4098e482/sharelint-1.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pdf-tooling",
+      "version": "0.3.0",
+      "filename": "pdf_tooling-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9d/cf/46d0c0f8019d66b325b1411951e2df34502e0ccdb8af692c1f6d4bbd267b/pdf_tooling-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "omnis-py",
+      "version": "0.2.13",
+      "filename": "omnis_py-0.2.13.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c2/5c/e23f9af46e30590d7a3a9ceb76659458cdf32fdec2075bc44c791c4da9c3/omnis_py-0.2.13.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dbrownell-resumetools",
+      "version": "0.13.0",
+      "filename": "dbrownell_resumetools-0.13.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/48/79/dc86f56a060ec6b50a56b81911e8f3ec6df62fe72f1b775692e6ba89f3a1/dbrownell_resumetools-0.13.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "autodmri",
+      "version": "0.2.8",
+      "filename": "autodmri-0.2.8-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/e3/86/484950ed371a04841061d6deb4dc97cd0d19901b1c6df8ce59a48f692661/autodmri-0.2.8-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "astra-pipeline",
+      "version": "1.11.0",
+      "filename": "astra_pipeline-1.11.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/54/18/9fed0080f3b3c0f1ce47a7440f3a63c57c8c60864f4e2b63a7c2e6768f6e/astra_pipeline-1.11.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "metagit-cli",
+      "version": "0.30.0",
+      "filename": "metagit_cli-0.30.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1e/56/fb7006bacdb24595fa3e9f4ed3c62d1787db4d004085b5a90db0070251b8/metagit_cli-0.30.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "specfact-cli",
+      "version": "0.55.4",
+      "filename": "specfact_cli-0.55.4-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/44/29/b4ea0255ab7d7ccd0ba13c021745275a6ab4151349b27f070c37f3412163/specfact_cli-0.55.4-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "zoraai",
+      "version": "1.2.1",
+      "filename": "zoraai-1.2.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/29/2b/51eed681a9bfb171b653c0693ee8580cf8b6167568425d88a8bf4d52d6f9/zoraai-1.2.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "uuid7-standard",
+      "version": "1.1.1",
+      "filename": "uuid7_standard-1.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/43/01/141c3c12c3c43911adc0d008e795eab449d47c3bcbed10b6a418822327aa/uuid7_standard-1.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agenomics",
+      "version": "0.7.3",
+      "filename": "agenomics-0.7.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/36/5d/2c867eeb96de205c0aab6f17ffa139923dd7c31e4d66362e4de31bb79974/agenomics-0.7.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "linear-tool-khoirun",
+      "version": "0.0.4",
+      "filename": "linear_tool_khoirun-0.0.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/79/a3/511f30b97696547f813ad6cc1a642d9bb119ade6de071901944f1a61f6f4/linear_tool_khoirun-0.0.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mnemosyne-lite",
+      "version": "0.6.0",
+      "filename": "mnemosyne_lite-0.6.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/53/1b/3f4d38a6b097dee9cdb51f284789f07a7f8f3467892b77bdfc97de315363/mnemosyne_lite-0.6.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "linear-tool-khoirunnina",
+      "version": "0.0.4",
+      "filename": "linear_tool_khoirunnina-0.0.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/82/fb/d6a1d53f2d875e046d3cffb1a403e1e5437d2f6f6fe91ec183f4153c5830/linear_tool_khoirunnina-0.0.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "qraken-remote-chatbot",
+      "version": "0.2.0",
+      "filename": "qraken_remote_chatbot-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/6e/93/e827fc6e897b73b45484a4f739b9fed88eac01e610e13a70e2ff6f15bfc6/qraken_remote_chatbot-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "bgt",
+      "version": "26.2.0",
+      "filename": "bgt-26.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9b/19/e179eb5269ec960e823dbbc3bdd0bbf661a52cc57fbbc93d0999289d3578/bgt-26.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "cquarry",
+      "version": "1.12.0",
+      "filename": "cquarry-1.12.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/34/36/85dfa65157c4ee41a60ec72ecc3724fbc1fbeec4dd431007b4295b9d3ab6/cquarry-1.12.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "swagsocial-py",
+      "version": "1.2.7",
+      "filename": "swagsocial_py-1.2.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/11/bb/210f0b7e3f6ef62108f9b58bebae62f3e0845d6ecfd53b80969e52e60a15/swagsocial_py-1.2.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "gitoon-frontend",
+      "version": "20260527.18",
+      "filename": "gitoon_frontend-20260527.18-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/1b/c8/38501714185acadeb28e07e9055c5fbb794877853f231ffd95aa2bdbced8/gitoon_frontend-20260527.18-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "gaard-api",
+      "version": "0.2.16",
+      "filename": "gaard_api-0.2.16.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/23/58/3b653ee5aa68862c11d6087c0e5b76c4b52a1ea43ea29f6d402992c9921d/gaard_api-0.2.16.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "qis",
+      "version": "5.22.3",
+      "filename": "qis-5.22.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d5/9c/04bd93c08e33a66592e2bf96368462ba2f55aafd935411c9eddddbcae786/qis-5.22.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "yousleep-common",
+      "version": "14.1.0",
+      "filename": "yousleep_common-14.1.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/f2/3d/9cffd250d5adc104d424ff442f4a6686c11d16a626518b5af717fe4bcba9/yousleep_common-14.1.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "rdpepper",
+      "version": "7.1.0",
+      "filename": "rdpepper-7.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e9/27/4b3aa128bf47d4d98dbff23490513b14094a92a6c0dfc421bf8060815245/rdpepper-7.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "tecana",
+      "version": "2.0.2",
+      "filename": "tecana-2.0.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9a/c1/ddc009e4ad4e9381e9bb8832f1c1ed4438ceca85e4e0778162aacd6f04bb/tecana-2.0.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dyf",
+      "version": "0.13.1",
+      "filename": "dyf-0.13.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/15/20/5fba2a23bf2c1626b286146a8441b4aa2dcfd4d84b8d5a0b7f79bf571ab5/dyf-0.13.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "tinyshift",
+      "version": "1.8.1",
+      "filename": "tinyshift-1.8.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/42/c1/80aef11219bc8aba20db186b04bf7d82d91a6bc23c59834441b41ab4ddaa/tinyshift-1.8.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "toanhoc",
+      "version": "0.1.0",
+      "filename": "toanhoc-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4e/18/dc61dd214bf91c75460bbdb2eabfd4295c1894787fd80f7da65d18000c6b/toanhoc-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zoraai",
+      "version": "1.2.1",
+      "filename": "zoraai-1.2.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/29/2b/51eed681a9bfb171b653c0693ee8580cf8b6167568425d88a8bf4d52d6f9/zoraai-1.2.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ryocryptoguard",
+      "version": "0.2.0",
+      "filename": "ryocryptoguard-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/fe/88/889a5da3b476fc61eb0c302f6d3b29445b87c68d3cf41acac0cc86d45af8/ryocryptoguard-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mostlyright-data",
+      "version": "0.15.3",
+      "filename": "mostlyright_data-0.15.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b6/f4/22370328cbcb5d5bf1d431d0972a56f1e965119b9a1edd52b61c81e4b9ed/mostlyright_data-0.15.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pyseshat",
+      "version": "0.1.0",
+      "filename": "pyseshat-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ad/ca/d08ad50ef26abc5bf31a8571653e43a6ed688dd767422a3c80b93a640e4f/pyseshat-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "musicflow-studioai",
+      "version": "1.0.0",
+      "filename": "musicflow_studioai-1.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/74/fc/11a508cc8c9abf6801d8e438b8f6cf4850d48a8e291dab2f1b0c057a1a43/musicflow_studioai-1.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "relayshield-mcp",
+      "version": "0.2.11",
+      "filename": "relayshield_mcp-0.2.11.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3e/66/6c49ab0fae7964b26caf40a2da3f7256529318620c99500e97eec436ded1/relayshield_mcp-0.2.11.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "kiss-editor",
+      "version": "0.4.0",
+      "filename": "kiss_editor-0.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/53/eb/9f8e169615367b5c00ff3923cdbb6e147145df990eb9b1a73e797d243772/kiss_editor-0.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "metergraph-core",
+      "version": "0.2.15",
+      "filename": "metergraph_core-0.2.15.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c2/15/b7520397eae042415d23d41a16c45b3f9ed6c8c00b1552711f40828826b9/metergraph_core-0.2.15.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zotero-pdf2zh-pro",
+      "version": "1.6.1",
+      "filename": "zotero_pdf2zh_pro-1.6.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/da/eb/399ebd3eb91ceca4082a5f4848d02562690844966cd8ef96efd3e3dbaa88/zotero_pdf2zh_pro-1.6.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "multiplayer",
+      "version": "2.3.0",
+      "filename": "multiplayer-2.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/09/e2/ce15214477b39e664fb9db2699aed0bf7d4a72edb2c301c40b3a2da0a0e8/multiplayer-2.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pybc365",
+      "version": "0.2.1",
+      "filename": "pybc365-0.2.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/19/5c/8712bc1f764d7aadd0ca64755258e5a6caf6096cbb894bfcf5785e1bc16a/pybc365-0.2.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "qcdrivers",
+      "version": "0.1.0",
+      "filename": "qcdrivers-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/fa/24/f05e65d40c263274de2bb4a519ec1895b533031d1baf007205343d8ad3e3/qcdrivers-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "telegram-userbot-cli",
+      "version": "0.3.0",
+      "filename": "telegram_userbot_cli-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d8/22/3c02f9a59a8e28e2e190b4fe5b6abb72cd9908b6ef9429b2759a8e798cdd/telegram_userbot_cli-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "eqbuilder",
+      "version": "0.1.5",
+      "filename": "eqbuilder-0.1.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9d/9e/55ee189708dcf98227c2fb471e92e8a213eda77d11368066ece40bde8ee4/eqbuilder-0.1.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zoraai",
+      "version": "1.2.1",
+      "filename": "zoraai-1.2.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/29/2b/51eed681a9bfb171b653c0693ee8580cf8b6167568425d88a8bf4d52d6f9/zoraai-1.2.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "entroly",
+      "version": "1.0.83",
+      "filename": "entroly-1.0.83.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/18/bd/0cd9f84ba7294c37adf8d9f419d4bc6f9c9ba90a954e446e1b9afe67ed9a/entroly-1.0.83.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agent-safety-bench",
+      "version": "0.1.0",
+      "filename": "agent_safety_bench-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/36/95/e74c37eae1597253b254a03a0ac9b21e40038f573502f64e2b4c38caaa68/agent_safety_bench-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "raztint",
+      "version": "0.10.0",
+      "filename": "raztint-0.10.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3a/5c/3e5e17b173c7725ffd8e4ff728194a3ee8627f2b9b0adad720a54da42495/raztint-0.10.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "fr24",
+      "version": "0.4.0",
+      "filename": "fr24-0.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/2d/7f/5ce98d21f87738b6be9f0445e2d357a0ea94dac50d8e43c85d6a3886b4c3/fr24-0.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "code-analysis-client",
+      "version": "1.6.168",
+      "filename": "code_analysis_client-1.6.168.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/57/98/56eb93163d709c2f4cb78a323307a98f4c0e07dc96f3008f6549b65bb962/code_analysis_client-1.6.168.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "tyxonq",
+      "version": "1.3.0",
+      "filename": "tyxonq-1.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/cf/39/7c6807452cbff73b1bf8241fb109f68abd770eb8bcc9c14816112fdcba3f/tyxonq-1.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "frankAllSkyCam",
+      "version": "27",
+      "filename": "frankallskycam-27.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/fd/54/da3173e9a5a11a18e3e37ac2fcae9e4780000d1246bf8604c30fc4f77ecb/frankallskycam-27.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sharelint",
+      "version": "1.3.0",
+      "filename": "sharelint-1.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b2/01/41a2e9e4215818712be70a464b96d8414411342cd3c5fb39278f4098e482/sharelint-1.3.0.tar.gz",
+      "packagetype": "sdist"
+    }
+  ]
+}

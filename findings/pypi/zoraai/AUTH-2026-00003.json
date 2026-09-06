@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-06T18:05:40.522980+00:00",
+  "modified": "2026-09-06T18:05:40.522980+00:00",
+  "summary": "High-Risk System Automation and Privilege Escalation in zoraai",
+  "details": "The package 'zoraai' contains extensive system-level automation capabilities, including keyboard/mouse control, file system manipulation, and browser automation. It includes a 'license' verification system that uses hardcoded Firebase credentials and attempts to elevate privileges to Administrator/Root. The package also includes obfuscated credentials for external services.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "zoraai"
+      },
+      "versions": [
+        "1.2.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/zoraai/1.2.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.9,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Privilege escalation attempt (ctypes.windll.shell32.ShellExecuteW with 'runas')",
+      "Hardcoded API keys and obfuscated credentials",
+      "Extensive system control (keyboard, mouse, file system, browser automation)",
+      "Background persistence mechanisms (PID files, hidden subprocesses)",
+      "Remote code execution potential via AI-driven system commands"
+    ],
+    "evidence": [
+      {
+        "file": "zoraai-1.2.1/nion_filesystem_agent.py",
+        "reason": "Explicitly checks for and attempts to elevate to Administrator/Root privileges using ShellExecuteW."
+      },
+      {
+        "file": "zoraai-1.2.1/agent.py",
+        "reason": "Uses XOR-based obfuscation (_d function) to hide API keys and credentials."
+      },
+      {
+        "file": "zoraai-1.2.1/nion_keyboard_mouse_CTRL.py",
+        "reason": "Provides tools for full keyboard and mouse control, including hotkey simulation and volume control."
+      },
+      {
+        "file": "zoraai-1.2.1/nion_auth.py",
+        "reason": "Contains hardcoded Firebase API keys and implements a license verification system that forces user interaction."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as an 'AI Girlfriend' assistant but includes dangerous capabilities like arbitrary file deletion, system command execution, and browser automation.",
+      "The use of 'runas' to elevate privileges is highly suspicious for a standard Python package.",
+      "The obfuscation of credentials suggests an attempt to hide the underlying service usage or prevent easy auditing of the API keys.",
+      "The package relies on external AI models (Gemini/OpenAI) to drive these system-level tools, creating a significant risk if the model is prompted to perform malicious actions."
+    ],
+    "cwe_ids": [
+      "CWE-250",
+      "CWE-312",
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package attempts to elevate privileges to Administrator/Root using ShellExecuteW with 'runas'.",
+      "The package contains hardcoded Firebase credentials.",
+      "The package uses obfuscation to hide API keys and credentials, which is a form of cleartext storage of sensitive information."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

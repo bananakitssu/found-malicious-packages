@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-06T18:05:40.522980+00:00",
+  "modified": "2026-09-06T18:05:40.522980+00:00",
+  "summary": "Security Analysis of zoraai: High-Privilege Autonomous Assistant",
+  "details": "The package 'zoraai' contains extensive system-level automation capabilities, including mouse/keyboard control, file system manipulation, and browser automation. It also includes an 'activation' mechanism that requires a license key verified against a Firebase backend, and it attempts to elevate its own privileges to Administrator/Root on the host machine.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "zoraai"
+      },
+      "versions": [
+        "1.2.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/zoraai/1.2.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.9,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Self-elevation of privileges to Administrator/Root using ctypes and ShellExecuteW.",
+      "Extensive use of GUI automation (PyAutoGUI, pynput) to control the user's desktop, mouse, and keyboard.",
+      "Hardcoded obfuscated credentials for third-party services (LiveKit, Google API).",
+      "Background process management with hidden windows (SW_HIDE).",
+      "Persistent browser automation (Playwright) that could be used to interact with authenticated user sessions.",
+      "Filesystem agent that allows arbitrary file creation, deletion, and command execution."
+    ],
+    "evidence": [
+      {
+        "file": "zoraai-1.2.1/nion_filesystem_agent.py",
+        "reason": "Explicitly checks for and attempts to elevate to Administrator/Root privileges using ctypes.windll.shell32.ShellExecuteW."
+      },
+      {
+        "file": "zoraai-1.2.1/agent.py",
+        "reason": "Contains obfuscated hardcoded API credentials and logic to run in the background as an invisible process."
+      },
+      {
+        "file": "zoraai-1.2.1/nion_keyboard_mouse_CTRL.py",
+        "reason": "Provides tools for full mouse and keyboard control, including hotkey simulation and cursor movement, which can be triggered by the AI agent."
+      },
+      {
+        "file": "zoraai-1.2.1/nion_auth.py",
+        "reason": "Implements a license verification system that communicates with a remote Firebase database, potentially tracking user activity or enforcing access control."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as a highly autonomous AI assistant with broad system access. The combination of privilege escalation, background execution, and full GUI control presents a significant security risk if the AI model is compromised or manipulated via prompt injection.",
+      "The 'activation' system and hardcoded credentials suggest a centralized control mechanism.",
+      "The code is clearly intended for personal use but possesses capabilities that could be abused for malicious purposes if the package is installed in an untrusted environment."
+    ],
+    "cwe_ids": [
+      "CWE-269",
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package explicitly attempts to elevate its own privileges to Administrator/Root using system-level calls.",
+      "The package contains hardcoded obfuscated credentials for third-party services."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

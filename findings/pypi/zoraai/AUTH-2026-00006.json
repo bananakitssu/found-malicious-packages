@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00006",
+  "published": "2026-09-06T18:05:40.522980+00:00",
+  "modified": "2026-09-06T18:05:40.522980+00:00",
+  "summary": "Security Analysis of zoraai: High-Risk System Automation and Privilege Escalation",
+  "details": "The package 'zoraai' contains extensive system-level automation capabilities, including mouse/keyboard control, file system manipulation, and browser automation, which are triggered by voice commands. It also includes an 'activation' mechanism that requires a license key, and it attempts to elevate its own privileges to Administrator/Root on the host machine.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "zoraai"
+      },
+      "versions": [
+        "1.2.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/zoraai/1.2.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.9,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Self-elevation of privileges (Administrator/Root) on startup.",
+      "Extensive system control (mouse, keyboard, file system, browser) via AI-driven tools.",
+      "Hardcoded obfuscated credentials for external services.",
+      "Background process management (PID files, invisible subprocesses).",
+      "Automated browser interaction with persistent user data directories."
+    ],
+    "evidence": [
+      {
+        "file": "nion_filesystem_agent.py",
+        "reason": "Contains explicit code to check for and elevate privileges to Administrator/Root using ctypes and ShellExecuteW."
+      },
+      {
+        "file": "nion_keyboard_mouse_CTRL.py",
+        "reason": "Implements a 'SafeController' that simulates mouse and keyboard input, which can be used to bypass user interaction for system tasks."
+      },
+      {
+        "file": "agent.py",
+        "reason": "Contains obfuscated credentials (using XOR and base64) for various APIs, which is a common pattern for hiding sensitive information."
+      },
+      {
+        "file": "nion_social_messenger.py",
+        "reason": "Uses Playwright with persistent user data directories to automate interactions with WhatsApp Web and Facebook, potentially exposing user sessions."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as an 'AI Girlfriend' assistant, but its capabilities are highly intrusive.",
+      "The use of 'nion_filesystem_agent.py' to force administrative privileges is a significant security risk.",
+      "The obfuscation in 'agent.py' for API keys is unnecessary and suspicious.",
+      "The package includes tools for automated email sending and social media posting, which could be abused if the AI is compromised."
+    ],
+    "cwe_ids": [
+      "CWE-269",
+      "CWE-312",
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package explicitly attempts to elevate its own privileges to Administrator/Root using system-level calls.",
+      "The use of obfuscation for API keys is a form of cleartext storage of sensitive information, as it does not provide actual security.",
+      "The presence of hardcoded credentials within the source code constitutes a credential management vulnerability."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
