@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00001",
+  "published": "2026-09-06T00:14:01Z",
+  "modified": "2026-09-06T00:14:01Z",
+  "summary": "Potential Unauthenticated Server Control via Administrative APIs",
+  "details": "The package includes administrative API endpoints that allow for server control, including restarting and shutting down the process, protected only by a 'dat' configuration check. While intended for development/management, these endpoints pose a risk if misconfigured or exposed in production.\n\nObserved behaviors:\n- Runtime process control (restart/shutdown) via HTTP endpoints\n- Dynamic code execution/reloading via internal API\n- Network traffic interception and monitoring in the browser\n\nEvidence:\n- `dist/cli.js` \u2014 The class App exposes POST endpoints like /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which use child_process.spawn and process.kill to manipulate the server lifecycle.\n- `dist/devPanel.js` \u2014 The function installNetworkInterceptor monkey-patches global fetch, WebSocket, and EventSource to monitor and log network activity, which is typical for dev tools but sensitive in nature.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "REVIEWED",
+      "human_review_required": false
+    },
+    "cwe_ids": [
+      "CWE-284",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints for server control lack proper authentication, allowing unauthorized access to sensitive functionality.",
+      "The application fails to perform authentication for critical administrative operations, relying on a weak configuration check."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
