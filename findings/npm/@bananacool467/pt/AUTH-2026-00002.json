@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00002",
+  "published": "2026-09-06T00:03:07Z",
+  "modified": "2026-09-06T00:03:07Z",
+  "summary": "Potential Arbitrary Code Execution via Build Scripts in @bananacool467/pt",
+  "details": "The package includes a 'pt.js' script that executes arbitrary commands defined in the 'prepublishOnly' or 'prepare' scripts of the user's package.json during the build process. While this is intended for local testing, it introduces a risk where malicious scripts defined in a package.json could be executed automatically when running 'pt build'.\n\nObserved behaviors:\n- Execution of arbitrary shell commands via child_process.execSync using scripts defined in package.json.\n\nEvidence:\n- `pt.js` \u2014 The 'build' function reads 'prepublishOnly' or 'prepare' scripts from the local package.json and executes them using 'child_process.execSync' without sanitization.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The application uses child_process.execSync to execute shell commands derived from user-controlled package.json scripts without sanitization, leading to OS command injection."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

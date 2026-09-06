@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00001",
+  "published": "2026-09-06T00:03:07Z",
+  "modified": "2026-09-06T00:03:07Z",
+  "summary": "Potential Unauthenticated Administrative API Exposure in @bananacool467/authtics-host",
+  "details": "The package contains administrative API endpoints that allow for server control (restart, shutdown) and information disclosure (CPU/memory usage, server info) without robust authentication, relying instead on a 'dat' configuration check which may be easily bypassed or misconfigured.\n\nObserved behaviors:\n- Unauthenticated administrative API endpoints\n- Server control capabilities (restart/shutdown) exposed via HTTP POST\n- Potential for information disclosure regarding server internals\n\nEvidence:\n- `dist/cli.js` \u2014 The class App defines multiple POST endpoints under '/__authtics_host_apis__/' such as '/restart', '/shutdown', and '/get-cpu_memory'. These endpoints perform sensitive actions like spawning new processes or killing the current process based on a simple 'dat' check that is easily spoofed if the configuration is not strictly managed.\n- `dist/cli.js` \u2014 The '/restart' endpoint uses 'child_process.spawn' with 'detached: true' and 'stdio: inherit' to restart the server, which is a powerful capability that should be protected by strong authentication.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The application exposes sensitive administrative endpoints for server control and information disclosure without requiring robust authentication.",
+      "The reliance on a weak, easily spoofable configuration check for access control constitutes an improper authentication mechanism."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
