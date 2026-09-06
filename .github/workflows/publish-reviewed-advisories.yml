@@ -28,7 +28,7 @@ jobs:
           from datetime import datetime, timezone
           from pathlib import Path
 
-          root = Path("findings/npm")
+          roots = [Path("findings/npm"), Path("findings/pypi")]
           reports = Path("reports/advisories")
           reports.mkdir(parents=True, exist_ok=True)
           generated = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -36,54 +36,55 @@ jobs:
           merge_sha = os.environ["MERGE_SHA"]
 
           count = 0
-          for advisory_path in sorted(root.rglob("AUTH-*.json")) if root.exists() else []:
-              data = json.loads(advisory_path.read_text(encoding="utf-8"))
-              database_specific = data.get("database_specific", {})
-              review = database_specific.get("review", {})
-              if review.get("status") != "APPROVED":
-                  continue
+          for root in roots:
+              for advisory_path in sorted(root.rglob("AUTH-*.json")) if root.exists() else []:
+                  data = json.loads(advisory_path.read_text(encoding="utf-8"))
+                  database_specific = data.get("database_specific", {})
+                  review = database_specific.get("review", {})
+                  if review.get("status") != "APPROVED":
+                      continue
 
-              advisory_id = data.get("id", advisory_path.stem)
-              package = data.get("affected", [{}])[0].get("package", {})
-              name = package.get("name", "unknown")
-              versions = package.get("versions", [])
-              cwe_ids = database_specific.get("cwe_ids", [])
-              if not isinstance(cwe_ids, list):
-                  cwe_ids = []
-              lines = [
-                  f"# {advisory_id}", "",
-                  f"**Package:** `{name}`",
-                  f"**Affected versions:** {', '.join(f'`{v}`' for v in versions) or 'Not specified'}",
-                  f"**Severity:** `{data.get('severity', 'n/a')}`",
-                  f"**Published:** {data.get('published', generated)}",
-                  f"**CWE:** {', '.join(f'`{cwe}`' for cwe in cwe_ids) if cwe_ids else 'Not assigned'}",
-                  "",
-                  "> This advisory was generated from an automated draft and published only after human review and approval.",
-                  "",
-                  "## Summary", "", data.get("summary", ""), "",
-                  "## Details", "", data.get("details", ""), "",
-                  "## References", "",
-              ]
-              refs = data.get("references", [])
-              if refs:
-                  lines.extend(f"- {ref.get('url', '')}" for ref in refs if ref.get("url"))
-              else:
-                  lines.append("- None")
-              lines += [
-                  "", "## Review", "",
-                  f"- **Reviewed by:** {review.get('reviewed_by', 'unknown')}",
-                  f"- **Reviewed at:** {review.get('reviewed_at', 'unknown')}",
-                  f"- **Published from PR:** #{pr}",
-                  f"- **Merge commit:** `{merge_sha}`", "",
-              ]
-              output = reports / f"{advisory_id}.md"
-              output.write_text("\n".join(lines), encoding="utf-8")
-
-              # Publication is the point at which the human-review gate is cleared.
-              database_specific["human_review_required"] = False
-              data["database_specific"] = database_specific
-              advisory_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-              count += 1
+                  advisory_id = data.get("id", advisory_path.stem)
+                  package = data.get("affected", [{}])[0].get("package", {})
+                  name = package.get("name", "unknown")
+                  ecosystem = package.get("ecosystem", root.name)
+                  versions = package.get("versions", [])
+                  cwe_ids = database_specific.get("cwe_ids", [])
+                  if not isinstance(cwe_ids, list):
+                      cwe_ids = []
+                  lines = [
+                      f"# {advisory_id}", "",
+                      f"**Ecosystem:** `{ecosystem}`",
+                      f"**Package:** `{name}`",
+                      f"**Affected versions:** {', '.join(f'`{v}`' for v in versions) or 'Not specified'}",
+                      f"**Severity:** `{data.get('severity', 'n/a')}`",
+                      f"**Published:** {data.get('published', generated)}",
+                      f"**CWE:** {', '.join(f'`{cwe}`' for cwe in cwe_ids) if cwe_ids else 'Not assigned'}",
+                      "",
+                      "> This advisory was generated from an automated draft and published only after human review and approval.",
+                      "",
+                      "## Summary", "", data.get("summary", ""), "",
+                      "## Details", "", data.get("details", ""), "",
+                      "## References", "",
+                  ]
+                  refs = data.get("references", [])
+                  if refs:
+                      lines.extend(f"- {ref.get('url', '')}" for ref in refs if ref.get("url"))
+                  else:
+                      lines.append("- None")
+                  lines += [
+                      "", "## Review", "",
+                      f"- **Reviewed by:** {review.get('reviewed_by', 'unknown')}",
+                      f"- **Reviewed at:** {review.get('reviewed_at', 'unknown')}",
+                      f"- **Published from PR:** #{pr}",
+                      f"- **Merge commit:** `{merge_sha}`", "",
+                  ]
+                  output = reports / f"{advisory_id}.md"
+                  output.write_text("\n".join(lines), encoding="utf-8")
+                  database_specific["human_review_required"] = False
+                  data["database_specific"] = database_specific
+                  advisory_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+                  count += 1
 
           print(f"Generated {count} reviewed advisory report(s).")
           PY
@@ -93,7 +94,7 @@ jobs:
           set -e
           git config user.name "Authtics Bot"
           git config user.email "authtics-bot@users.noreply.github.com"
-          git add reports/advisories/ findings/npm/
+          git add reports/advisories/ findings/npm/ findings/pypi/
           if git diff --cached --quiet; then
             echo "No newly approved advisory reports to publish."
             exit 0
