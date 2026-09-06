@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-06T16:01:43.464335+00:00",
+  "modified": "2026-09-06T16:01:43.464335+00:00",
+  "summary": "Unauthenticated Administrative API Endpoints in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown, and state modification) based on a 'dat' configuration parameter. While intended for development/management, these endpoints lack robust authentication, relying instead on a simple string or array match against a 'dat' value provided in the request body.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Unauthenticated administrative API endpoints",
+      "Remote server restart and shutdown capabilities",
+      "Runtime modification of server state (usersPaused)"
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "The class App defines multiple POST endpoints under '/__authtics_host_apis__/' (e.g., /restart, /shutdown, /set-users-paused) that execute sensitive operations based on a simple 'dat' match check."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The /restart endpoint uses 'child_process.spawn' to restart the server process and 'process.kill' to terminate the current instance, which could be abused if the 'dat' value is leaked or guessed."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' parameter appears to be a simple shared secret or identifier defined in the user's configuration. If this value is exposed or predictable, an attacker could potentially shut down or restart the server.",
+      "The implementation of these APIs is clearly intended for internal development tooling (as suggested by the path prefix), but they are exposed on the server without standard authentication middleware.",
+      "The use of 'eval' or similar dynamic execution is not present, but the dynamic spawning of the process is a significant control risk."
+    ],
+    "cwe_ids": [
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints lack robust authentication, relying only on a simple string or array match for a 'dat' parameter, which constitutes a missing authentication for critical function."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

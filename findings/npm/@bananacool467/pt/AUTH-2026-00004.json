@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-06T16:01:43.464335+00:00",
+  "modified": "2026-09-06T16:01:43.464335+00:00",
+  "summary": "Potential risk from arbitrary script execution and package.json modification in @bananacool467/pt",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) during the build process. While this is common for build tools, the tool also automatically modifies the user's package.json file to inject devDependencies, which could lead to unexpected state changes in the user's project.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Executes arbitrary shell commands from package.json scripts using child_process.execSync",
+      "Automatically modifies the user's package.json file to inject dependencies"
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build function executes scripts defined in the user's package.json (prepublishOnly or prepare) using child_process.execSync, which allows arbitrary code execution."
+      },
+      {
+        "file": "pt.js",
+        "reason": "The link function automatically writes to the user's package.json file to add devDependencies, which is a high-impact action that could be misused."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as a local development utility, which explains the need for file system access and script execution. However, the automatic modification of package.json and execution of arbitrary scripts are high-risk behaviors that warrant caution.",
+      "The use of 'file:pack&bananacool467:pt' in devDependencies is unusual and suggests a custom protocol or naming convention that might be fragile."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package executes arbitrary scripts defined in the user's package.json via child_process.execSync, which constitutes improper control of generation of code."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
