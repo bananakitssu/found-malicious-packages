@@ -28,8 +28,8 @@
     "model": "gemini-3.1-flash-lite",
     "confidence": 0.7,
     "review": {
-      "status": "PENDING",
-      "human_review_required": true
+      "status": "REVIEWED",
+      "human_review_required": false
     },
     "cwe_ids": [
       "CWE-78"
