@@ -10,10 +10,13 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+from scripts.ecosystem import get_ecosystem
+
 MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 CWE_RE = re.compile(r"^CWE-[0-9]+$")
 MAX_RETRIES = 5
+ECOSYSTEM = get_ecosystem(os.environ.get("AUTHTICS_ECOSYSTEM", "npm"))
 
 CWE_SYSTEM_INSTRUCTION = """
 You are the strict JSON CWE-classification engine for Authtics Advisories.
@@ -31,50 +34,23 @@ NON-NEGOTIABLE OUTPUT RULES:
 9. Never invent a CWE ID. Do not infer a CWE merely because behavior sounds suspicious.
 """
 
-CWE_RESPONSE_SCHEMA = {
-    "type": "OBJECT",
-    "properties": {
-        "cwe_ids": {
-            "type": "ARRAY",
-            "items": {"type": "STRING"},
-        },
-        "cwe_notes": {
-            "type": "ARRAY",
-            "items": {"type": "STRING"},
-        },
-    },
-    "required": ["cwe_ids", "cwe_notes"],
-}
+CWE_RESPONSE_SCHEMA = {"type": "OBJECT", "properties": {
+    "cwe_ids": {"type": "ARRAY", "items": {"type": "STRING"}},
+    "cwe_notes": {"type": "ARRAY", "items": {"type": "STRING"}},
+}, "required": ["cwe_ids", "cwe_notes"]}
 
 
 def call_gemini(prompt):
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
         raise RuntimeError("GEMINI_API_KEY is not configured")
-
-    body = {
-        "systemInstruction": {"parts": [{"text": CWE_SYSTEM_INSTRUCTION}]},
-        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {
-            "temperature": 0.0,
-            "responseMimeType": "application/json",
-            "responseSchema": CWE_RESPONSE_SCHEMA,
-        },
-    }
-
-    request = urllib.request.Request(
-        API_URL,
-        data=json.dumps(body).encode("utf-8"),
-        headers={
-            "Content-Type": "application/json",
-            "x-goog-api-key": key,
-            "User-Agent": "Authtics/0.1.0",
-        },
-        method="POST",
-    )
-
+    body = {"systemInstruction": {"parts": [{"text": CWE_SYSTEM_INSTRUCTION}]},
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.0, "responseMimeType": "application/json", "responseSchema": CWE_RESPONSE_SCHEMA}}
     last_error = None
     for attempt in range(1, MAX_RETRIES + 1):
+        request = urllib.request.Request(API_URL, data=json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json", "x-goog-api-key": key, "User-Agent": "Authtics/0.1.0"}, method="POST")
         try:
             with urllib.request.urlopen(request, timeout=180) as response:
                 data = json.load(response)
@@ -83,27 +59,19 @@ def call_gemini(prompt):
             last_error = exc
             if exc.code not in {429, 500, 502, 503, 504} or attempt == MAX_RETRIES:
                 raise
-            print(
-                f"Gemini CWE request returned HTTP {exc.code}; retrying "
-                f"({attempt}/{MAX_RETRIES})...",
-                file=sys.stderr,
-            )
+            print(f"Gemini CWE request returned HTTP {exc.code}; retrying ({attempt}/{MAX_RETRIES})...", file=sys.stderr)
         except (urllib.error.URLError, TimeoutError) as exc:
             last_error = exc
             if attempt == MAX_RETRIES:
                 raise
-            print(
-                f"Gemini CWE request failed; retrying ({attempt}/{MAX_RETRIES}): {exc}",
-                file=sys.stderr,
-            )
+            print(f"Gemini CWE request failed; retrying ({attempt}/{MAX_RETRIES}): {exc}", file=sys.stderr)
         time.sleep(min(2 ** (attempt - 1), 16))
-
     raise RuntimeError(f"Gemini CWE request failed after retries: {last_error}")
 
 
 def classify(advisory):
     prompt = f"""
-Classify the security behavior described in this ONE advisory.
+Classify the security behavior described in this ONE {ECOSYSTEM.display_name} advisory.
 
 Return exactly one JSON object matching the supplied response schema.
 The only fields are:
@@ -119,24 +87,18 @@ Advisory:
     result = json.loads(call_gemini(prompt))
     if not isinstance(result, dict):
         raise ValueError(f"CWE response must be a JSON object, got {type(result).__name__}")
-
-    expected_fields = {"cwe_ids", "cwe_notes"}
-    extra_fields = set(result) - expected_fields
+    extra_fields = set(result) - {"cwe_ids", "cwe_notes"}
     if extra_fields:
         raise ValueError(f"CWE response contains unexpected fields: {', '.join(sorted(extra_fields))}")
-
-    ids = result.get("cwe_ids")
-    notes = result.get("cwe_notes")
+    ids, notes = result.get("cwe_ids"), result.get("cwe_notes")
     if not isinstance(ids, list) or not isinstance(notes, list):
         raise ValueError("CWE response fields must be arrays")
-
     if any(not isinstance(item, str) or not CWE_RE.fullmatch(item) for item in ids):
         raise ValueError("CWE response contains an invalid CWE ID")
     if any(not isinstance(item, str) for item in notes):
         raise ValueError("CWE response contains a non-string note")
     if len(ids) > 5:
         raise ValueError("CWE response contains more than 5 CWE IDs")
-
     return sorted(set(ids)), notes
 
 
@@ -153,15 +115,14 @@ def update_reports(advisories):
             cwe_line = f"- **CWE:** {', '.join(f'`{cwe}`' for cwe in cwe_ids) if cwe_ids else 'Not assigned'}"
             if cwe_line in text:
                 continue
-            replacement = marker + "\n" + cwe_line
-            text = text.replace(marker, replacement, 1)
+            text = text.replace(marker, marker + "\n" + cwe_line, 1)
         report.write_text(text, encoding="utf-8")
 
 
 def main():
-    root = Path("findings/npm")
+    root = Path("findings") / ECOSYSTEM.key
     if not root.exists():
-        print("No npm findings directory; nothing to classify.")
+        print(f"No {ECOSYSTEM.display_name} findings directory; nothing to classify.")
         return
     classified = {}
     for path in sorted(root.rglob("AUTH-*.json")):
@@ -178,8 +139,6 @@ def main():
             classified[data.get("id", path.stem)] = ids
             print(f"{path}: proposed CWE IDs: {', '.join(ids) if ids else 'none'}")
         except Exception as exc:
-            # CWE classification is enrichment, so a classifier failure must not turn
-            # a security finding into a different verdict or prevent human review.
             print(f"{path}: CWE classification skipped: {exc}", file=sys.stderr)
             data.setdefault("database_specific", {})["cwe_ids"] = []
             data["database_specific"]["cwe_notes"] = [f"CWE classification unavailable: {exc}"]
