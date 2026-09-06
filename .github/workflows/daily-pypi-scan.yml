@@ -2,7 +2,6 @@ name: Daily Authtics PyPI Scan
 
 on:
   schedule:
-    # Run two hours after the daily npm scan.
     - cron: '0 14 * * *'
   workflow_dispatch:
 
@@ -57,8 +56,7 @@ jobs:
           from urllib.request import Request, urlopen
 
           limit = int(os.environ.get("PYPI_LIMIT", "100"))
-          url = "https://pypi.org/simple/"
-          req = Request(url, headers={"User-Agent": "Authtics/0.1.0"})
+          req = Request("https://pypi.org/simple/", headers={"User-Agent": "Authtics/0.1.0"})
           with urlopen(req, timeout=30) as response:
               html = response.read().decode("utf-8", errors="replace")
 
@@ -77,10 +75,9 @@ jobs:
                   break
 
           targets = []
-          for index, name in enumerate(names, 1):
-              metadata_url = f"https://pypi.org/pypi/{name}/json"
+          for name in names:
               try:
-                  req = Request(metadata_url, headers={"User-Agent": "Authtics/0.1.0"})
+                  req = Request(f"https://pypi.org/pypi/{name}/json", headers={"User-Agent": "Authtics/0.1.0"})
                   with urlopen(req, timeout=20) as response:
                       data = json.load(response)
                   info = data.get("info", {})
@@ -91,15 +88,9 @@ jobs:
                   source = next((f for f in files if f.get("packagetype") == "sdist"), None)
                   if source is None:
                       source = next((f for f in files if f.get("packagetype") == "bdist_wheel"), None)
-                  if source is None:
+                  if not source or not source.get("url") or not source.get("filename"):
                       continue
-                  targets.append({
-                      "name": name,
-                      "version": version,
-                      "filename": source.get("filename"),
-                      "url": source.get("url"),
-                      "packagetype": source.get("packagetype"),
-                  })
+                  targets.append({"name": name, "version": version, "filename": source["filename"], "url": source["url"], "packagetype": source["packagetype"]})
               except Exception as exc:
                   print(f"Skipping {name}: {exc}")
               time.sleep(0.05)
@@ -114,6 +105,7 @@ jobs:
       - name: Download and extract PyPI packages safely
         run: |
           python3 - <<'PY'
+          import io
           import json
           import os
           import tarfile
@@ -122,46 +114,66 @@ jobs:
           from pathlib import Path
 
           root = Path(os.environ["AUTHTICS_PACKAGE_ROOT"])
-          targets = json.loads(Path("metadata/pypi-recent-packages.json").read_text())["packages"]
+          metadata_path = Path("metadata/pypi-recent-packages.json")
+          metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+          targets = metadata["packages"]
+          successful = []
 
           def safe_member(name):
               p = Path(name)
               return not p.is_absolute() and ".." not in p.parts
 
+          def extract_tar(data, destination):
+              with tarfile.open(fileobj=io.BytesIO(data), mode="r:*") as tf:
+                  for member in tf.getmembers():
+                      if not member.isfile() or not safe_member(member.name):
+                          continue
+                      target = destination / member.name
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      src = tf.extractfile(member)
+                      if src is None:
+                          continue
+                      with target.open("wb") as dst:
+                          dst.write(src.read())
+
+          def extract_zip(data, destination):
+              with zipfile.ZipFile(io.BytesIO(data)) as zf:
+                  for member in zf.infolist():
+                      if member.is_dir() or not safe_member(member.filename):
+                          continue
+                      target = destination / member.filename
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      with zf.open(member) as src, target.open("wb") as dst:
+                          dst.write(src.read())
+
           for index, item in enumerate(targets, 1):
               name = item["name"]
               version = item["version"]
-              url = item["url"]
               print(f"[{index}/{len(targets)}] Downloading {name}@{version}...")
               destination = root / name / version
-              destination.mkdir(parents=True, exist_ok=True)
               archive = Path("/tmp") / item["filename"]
-              urllib.request.urlretrieve(url, archive)
               try:
-                  if archive.suffix == ".whl":
-                      with zipfile.ZipFile(archive) as zf:
-                          for member in zf.infolist():
-                              if member.is_dir() or not safe_member(member.filename):
-                                  continue
-                              target = destination / member.filename
-                              target.parent.mkdir(parents=True, exist_ok=True)
-                              with zf.open(member) as src, target.open("wb") as dst:
-                                  dst.write(src.read())
+                  request = urllib.request.Request(item["url"], headers={"User-Agent": "Authtics/0.1.0"})
+                  with urllib.request.urlopen(request, timeout=120) as response:
+                      data = response.read()
+                  if not data:
+                      raise ValueError("empty download")
+                  destination.mkdir(parents=True, exist_ok=True)
+                  if zipfile.is_zipfile(io.BytesIO(data)):
+                      extract_zip(data, destination)
                   else:
-                      with tarfile.open(archive, "r:*") as tf:
-                          for member in tf.getmembers():
-                              if not member.isfile() or not safe_member(member.name):
-                                  continue
-                              target = destination / member.name
-                              target.parent.mkdir(parents=True, exist_ok=True)
-                              src = tf.extractfile(member)
-                              if src is None:
-                                  continue
-                              with target.open("wb") as dst:
-                                  dst.write(src.read())
+                      extract_tar(data, destination)
+                  successful.append(item)
+              except Exception as exc:
+                  print(f"Skipping {name}@{version}: artifact could not be extracted safely: {exc}")
+                  import shutil
+                  shutil.rmtree(destination, ignore_errors=True)
               finally:
                   archive.unlink(missing_ok=True)
 
+          metadata["packages"] = successful
+          metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
+          print(f"Successfully extracted {len(successful)}/{len(targets)} PyPI package releases.")
           print("PyPI package extraction complete. Package code was not executed.")
           PY
 
