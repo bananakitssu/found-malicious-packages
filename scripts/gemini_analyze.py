@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
+"""Run the Gemini security analyzer for a configured package ecosystem."""
+
 import json
 import os
 import re
-import sys
 import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+
+from scripts.ecosystem import get_ecosystem
 
 MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
@@ -21,6 +24,8 @@ MAX_RETRIES = 5
 RATE_LIMIT_MAX_RETRIES = 3
 REQUEST_DELAY_SECONDS = 1
 SEVERITIES = {"critical", "high", "medium", "low", "n/a"}
+ECOSYSTEM_NAME = os.environ.get("AUTHTICS_ECOSYSTEM", "npm")
+ECOSYSTEM = get_ecosystem(ECOSYSTEM_NAME)
 
 ANALYSIS_SYSTEM_INSTRUCTION = """
 You are the strict JSON security-analysis engine for Authtics Advisories.
@@ -56,17 +61,8 @@ ANALYSIS_RESPONSE_SCHEMA = {
         "confidence": {"type": "NUMBER", "minimum": 0, "maximum": 1},
         "summary": {"type": "STRING"},
         "suspicious_behaviors": {"type": "ARRAY", "items": {"type": "STRING"}},
-        "evidence": {
-            "type": "ARRAY",
-            "items": {
-                "type": "OBJECT",
-                "properties": {
-                    "file": {"type": "STRING"},
-                    "reason": {"type": "STRING"},
-                },
-                "required": ["file", "reason"],
-            },
-        },
+        "evidence": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
+            "file": {"type": "STRING"}, "reason": {"type": "STRING"}}, "required": ["file", "reason"]}},
         "reviewer_notes": {"type": "ARRAY", "items": {"type": "STRING"}},
         "draft_title": {"type": "STRING"},
     },
@@ -88,8 +84,13 @@ def collect_evidence(package_dir):
             continue
         files.append({"path": rel, "size": size})
 
-    extensions = {".js", ".mjs", ".cjs", ".ts", ".tsx", ".jsx", ".json", ".sh", ".bash", ".py", ".rb", ".php", ".ps1", ".yml", ".yaml"}
-    interesting_names = {"package.json", "install.js", "postinstall.js", "preinstall.js", "index.js", "index.mjs", "cli.js"}
+    extensions = set(ECOSYSTEM.source_extensions)
+    extensions.update({".yml", ".yaml"})
+    interesting_names = {
+        ECOSYSTEM.package_manifest,
+        *ECOSYSTEM.install_script_names,
+        "index.js", "index.mjs", "index.py", "cli.js", "cli.py",
+    }
     preferred = [item for item in files if Path(item["path"]).name in interesting_names or Path(item["path"]).suffix.lower() in extensions]
 
     evidence = []
@@ -116,16 +117,11 @@ def call_gemini(prompt):
     body = {
         "systemInstruction": {"parts": [{"text": ANALYSIS_SYSTEM_INSTRUCTION}]},
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {
-            "temperature": 0.1,
-            "responseMimeType": "application/json",
-            "responseSchema": ANALYSIS_RESPONSE_SCHEMA,
-        },
+        "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json", "responseSchema": ANALYSIS_RESPONSE_SCHEMA},
     }
     for attempt in range(1, MAX_RETRIES + 1):
         request = urllib.request.Request(
-            API_URL,
-            data=json.dumps(body).encode("utf-8"),
+            API_URL, data=json.dumps(body).encode("utf-8"),
             headers={"Content-Type": "application/json", "x-goog-api-key": api_key, "User-Agent": "Authtics/0.1.0"},
             method="POST",
         )
@@ -159,7 +155,6 @@ def call_gemini(prompt):
             time.sleep(delay)
     else:
         raise RuntimeError("Gemini request exhausted all retries")
-
     try:
         return data["candidates"][0]["content"]["parts"][0]["text"]
     except (KeyError, IndexError, TypeError) as exc:
@@ -198,23 +193,19 @@ def validate_result(result):
     for index, item in enumerate(result["evidence"]):
         if not isinstance(item, dict) or not isinstance(item.get("file"), str) or not isinstance(item.get("reason"), str):
             raise RuntimeError(f"Gemini evidence[{index}] must contain string 'file' and 'reason' fields")
-    if result["verdict"] == "no_obvious_issue" and result["severity"] != "n/a":
-        raise RuntimeError("A no_obvious_issue result must have severity n/a")
-    if result["verdict"] == "insufficient_evidence" and result["severity"] != "n/a":
-        raise RuntimeError("An insufficient_evidence result must have severity n/a")
+    if result["verdict"] in {"no_obvious_issue", "insufficient_evidence"} and result["severity"] != "n/a":
+        raise RuntimeError(f"A {result['verdict']} result must have severity n/a")
     if result["verdict"] == "potential_finding" and result["severity"] == "n/a":
         raise RuntimeError("A potential_finding result must have a real severity")
     return result
 
 
 def failed_result(package, error):
-    return {
-        "package": package["name"], "version": package["version"], "published": package.get("published"),
-        "status": "ANALYSIS_FAILED", "verdict": "insufficient_evidence", "severity": "n/a", "confidence": 0,
-        "summary": "Gemini analysis could not be completed. This is not a security finding.",
-        "suspicious_behaviors": [], "evidence": [], "reviewer_notes": [f"Analysis engine error: {error}"],
-        "draft_title": "", "model": MODEL, "review": {"status": "PENDING"},
-    }
+    return {"package": package["name"], "version": package["version"], "published": package.get("published"),
+            "status": "ANALYSIS_FAILED", "verdict": "insufficient_evidence", "severity": "n/a", "confidence": 0,
+            "summary": "Gemini analysis could not be completed. This is not a security finding.",
+            "suspicious_behaviors": [], "evidence": [], "reviewer_notes": [f"Analysis engine error: {error}"],
+            "draft_title": "", "model": MODEL, "review": {"status": "PENDING"}}
 
 
 def next_advisory_id():
@@ -230,7 +221,16 @@ def next_advisory_id():
 
 
 def package_path(name):
-    return FINDINGS_ROOT / "npm" / Path(*name.split("/"))
+    return FINDINGS_ROOT / ECOSYSTEM.key / Path(*name.split("/"))
+
+
+def package_reference(name, version):
+    if ECOSYSTEM.key == "npm":
+        return f"https://www.npmjs.com/package/{name}/v/{version}"
+    if ECOSYSTEM.key == "pypi":
+        normalized = re.sub(r"[-_.]+", "-", name).lower()
+        return f"https://pypi.org/project/{normalized}/{version}/"
+    raise ValueError(f"Unsupported ecosystem: {ECOSYSTEM.key}")
 
 
 def build_advisory(result, advisory_id, timestamp):
@@ -242,34 +242,72 @@ def build_advisory(result, advisory_id, timestamp):
     if result.get("evidence"):
         details += "\n\nEvidence:\n" + "\n".join(f"- `{item['file']}` — {item['reason']}" for item in result["evidence"])
     return {
-        "schema_version": "1.0",
-        "id": advisory_id,
-        "published": timestamp,
-        "modified": timestamp,
-        "summary": result["draft_title"] or f"Potential malicious or dangerous behavior in {package} (npm)",
-        "details": details,
-        "severity": result["severity"],
-        "affected": [{"package": {"ecosystem": "npm", "name": package}, "versions": [version]}],
-        "references": [{"type": "PACKAGE", "url": f"https://www.npmjs.com/package/{package}/v/{version}"}],
-        "database_specific": {
-            "source": "Authtics Advisories",
-            "model": MODEL,
-            "confidence": result["confidence"],
-            "review": {"status": "PENDING", "human_review_required": True},
-        },
+        "schema_version": "1.0", "id": advisory_id, "published": timestamp, "modified": timestamp,
+        "summary": result["draft_title"] or f"Potential malicious or dangerous behavior in {package} ({ECOSYSTEM.display_name})",
+        "details": details, "severity": result["severity"],
+        "affected": [{"package": {"ecosystem": ECOSYSTEM.advisory_ecosystem, "name": package}, "versions": [version]}],
+        "references": [{"type": "PACKAGE", "url": package_reference(package, version)}],
+        "database_specific": {"source": "Authtics Advisories", "model": MODEL, "confidence": result["confidence"],
+                              "review": {"status": "PENDING", "human_review_required": True}},
     }
 
 
-def main():
-    metadata_path = Path("metadata/recent-packages.json")
-    if not metadata_path.exists():
-        raise RuntimeError("metadata/recent-packages.json does not exist")
-    packages = json.loads(metadata_path.read_text())
-    all_results = []
+def metadata_path():
+    # Keep the established npm metadata filename for compatibility; ecosystem-specific
+    # workflows use their own filename so they can run independently.
+    if ECOSYSTEM.key == "npm":
+        return Path("metadata/recent-packages.json")
+    return Path(f"metadata/{ECOSYSTEM.key}-recent-packages.json")
 
+
+def write_report(all_results, timestamp):
+    actionable = [r for r in all_results if r.get("severity") != "n/a" and r.get("status") == "PENDING_REVIEW"]
+    omitted = [r for r in all_results if r not in actionable]
+    if not actionable:
+        print("No actionable findings. All results are severity n/a; no report or advisory files will be committed.")
+        return []
+
+    REPORT_ROOT.mkdir(parents=True, exist_ok=True)
+    report_path = REPORT_ROOT / f"authtics-report-{timestamp.replace(':', '-').replace('+', '-')}.md"
+    lines = [f"# Authtics {ECOSYSTEM.display_name} Security Scan", "", f"Generated: {timestamp}", f"Model: `{MODEL}`", "", "## Findings", ""]
+    advisory_files = []
+    for result in actionable:
+        advisory_id = next_advisory_id()
+        advisory = build_advisory(result, advisory_id, timestamp)
+        directory = package_path(result["package"])
+        directory.mkdir(parents=True, exist_ok=True)
+        path = directory / f"{advisory_id}.json"
+        path.write_text(json.dumps(advisory, indent=2) + "\n", encoding="utf-8")
+        advisory_files.append(str(path))
+        lines.extend([f"### {advisory['summary']}", f"- **Advisory:** `{advisory_id}`", f"- **Package:** `{result['package']}@{result['version']}`",
+                      f"- **Severity:** `{result['severity']}`", f"- **Confidence:** `{result['confidence']}`", "- **Review:** `PENDING`", "",
+                      result["summary"], ""])
+        if result.get("evidence"):
+            lines.append("**Evidence:**")
+            lines.extend(f"- `{item['file']}` — {item['reason']}" for item in result["evidence"])
+            lines.append("")
+        if result.get("reviewer_notes"):
+            lines.append("**Reviewer notes:**")
+            lines.extend(f"- {note}" for note in result["reviewer_notes"])
+            lines.append("")
+    if omitted:
+        lines.extend(["## Omitted Results", "", f"{len(omitted)} result(s) were non-actionable, insufficient, or failed analysis and were not emitted as advisories.", ""])
+    report_path.write_text("\n".join(lines), encoding="utf-8")
+    print(f"Wrote {report_path}")
+    print(f"Wrote {len(advisory_files)} advisory file(s) under findings/{ECOSYSTEM.key}/")
+    return advisory_files
+
+
+def main():
+    metadata = metadata_path()
+    if not metadata.exists():
+        raise RuntimeError(f"{metadata} does not exist")
+    packages = json.loads(metadata.read_text(encoding="utf-8"))
+    if not isinstance(packages, list):
+        raise RuntimeError(f"{metadata} must contain a JSON array")
+    all_results = []
     for package in packages:
-        name = package["name"]
-        version = package["version"]
+        name, version = package["name"], package["version"]
         package_dir = PACKAGE_ROOT / name / version
         if not package_dir.exists():
             print(f"Skipping {name}@{version}: package directory not found", flush=True)
@@ -277,12 +315,13 @@ def main():
             continue
         files, evidence = collect_evidence(package_dir)
         prompt = f"""
-Analyze the exact npm package version below using only the supplied evidence.
+Analyze the exact {ECOSYSTEM.display_name} package version below using only the supplied evidence.
 Do not execute code. Distinguish legitimate functionality, dangerous functionality, and actual evidence of malicious intent.
 The result is a DRAFT for a human security reviewer.
 
 Package: {name}@{version}
 Published: {package.get('published', 'unknown')}
+Ecosystem: {ECOSYSTEM.display_name}
 
 Return exactly one JSON object matching the supplied response schema. Do not return an array.
 
@@ -300,15 +339,15 @@ If the evidence does not establish an actionable finding, use verdict "no_obviou
 If verdict is "potential_finding", severity MUST be critical/high/medium/low.
 
 OBFUSCATION AND SUSPICIOUS-DYNAMIC-BEHAVIOR GUIDANCE:
-- Flag eval(), Function(), dynamic require/import, runtime-generated code, encoded strings,
+- Flag eval(), Function(), dynamic imports, runtime-generated code, encoded strings,
   Base64/hex payloads, runtime decryption, or similar techniques when they materially hinder
-  security analysis.
-- Do NOT treat ordinary minification, bundling, transpilation, or generated files as malicious
-  by themselves.
+  security analysis. For Python, also consider exec(), eval(), dynamic import mechanisms,
+  subprocess usage, shell execution, and suspicious package-install hooks.
+- Do NOT treat ordinary minification, bundling, transpilation, generated files, packaging metadata,
+  or normal build/install configuration as malicious by themselves.
 - If suspicious behavior is present but the final intent or payload cannot be established, it
   may still be a potential_finding for human review.
-- Explain uncertainty clearly. Never claim a hidden payload is malicious without evidence showing
-  harmful behavior.
+- Explain uncertainty clearly. Never claim a hidden payload is malicious without evidence showing harmful behavior.
 
 FILE INVENTORY:
 {json.dumps(files, indent=2)}
@@ -321,63 +360,16 @@ SELECTED FILE CONTENT:
             result = validate_result(parse_json(call_gemini(prompt)))
             result.update({"package": name, "version": version, "published": package.get("published"), "status": "PENDING_REVIEW", "model": MODEL, "review": {"status": "PENDING"}})
         except Exception as exc:
-            print(f"Gemini analysis failed for {name}@{version}: {exc}", file=sys.stderr, flush=True)
-            result = failed_result(package, str(exc))
+            print(f"Analysis failed for {name}@{version}: {exc}", flush=True)
+            result = failed_result(package, exc)
         all_results.append(result)
 
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    findings = [r for r in all_results if r.get("severity") != "n/a" and r.get("status") == "PENDING_REVIEW"]
-    omitted = [r for r in all_results if r not in findings]
-
-    REPORT_ROOT.mkdir(parents=True, exist_ok=True)
-    FINDINGS_ROOT.mkdir(parents=True, exist_ok=True)
-    Path("metadata").mkdir(parents=True, exist_ok=True)
-    state = {"generated": timestamp, "model": MODEL, "packages_analyzed": len(all_results), "findings_count": len(findings), "omitted_n_a": len(omitted)}
-    SCAN_STATE.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
-
-    if not findings:
-        print("No actionable findings. All results are severity n/a; no report or advisory files will be committed.")
-        return
-
-    advisory_records = []
-    for result in findings:
-        advisory_id = next_advisory_id()
-        advisory = build_advisory(result, advisory_id, timestamp)
-        destination = package_path(result["package"]) / f"{advisory_id}.json"
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_text(json.dumps(advisory, indent=2) + "\n", encoding="utf-8")
-        result["advisory_id"] = advisory_id
-        result["advisory_path"] = destination.as_posix()
-        advisory_records.append(result)
-
-    report_path = REPORT_ROOT / f"authtics-report-{datetime.now(timezone.utc).strftime('%Y-%m-%dT%H-%M-%SZ')}.md"
-    lines = [
-        "# Authtics Advisories — Package Scan Report", "", f"**Generated:** {timestamp}", f"**Model:** `{MODEL}`",
-        f"**Packages analyzed:** {len(all_results)}", f"**Actionable findings:** {len(findings)}", "",
-        "> AI-generated draft. Every advisory requires human review before publication.", "",
-    ]
-    for index, result in enumerate(advisory_records, 1):
-        lines += [
-            "---", "", f"## {index}. `{result['package']}@{result['version']}`", "",
-            f"- **Advisory:** `{result['advisory_id']}`", f"- **Severity:** `{result['severity']}`",
-            f"- **Confidence:** {result['confidence']}", "- **Review:** `PENDING`", "",
-            "### Summary", "", result["summary"], "", "### Evidence", "",
-        ]
-        if result["evidence"]:
-            lines += [f"- `{item['file']}` — {item['reason']}" for item in result["evidence"]]
-        else:
-            lines.append("- None reported.")
-        lines += ["", "### Reviewer Notes", ""]
-        lines += [f"- {item}" for item in (result.get("reviewer_notes") or ["None."])]
-        lines += [""]
-    report_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"Wrote {report_path}")
-    print(f"Wrote {len(findings)} advisory file(s) under findings/npm/")
+    timestamp = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    advisory_files = write_report(all_results, timestamp)
+    SCAN_STATE.parent.mkdir(parents=True, exist_ok=True)
+    SCAN_STATE.write_text(json.dumps({"last_scan": timestamp, "ecosystem": ECOSYSTEM.key, "model": MODEL,
+                                      "packages_scanned": len(packages), "advisories_written": len(advisory_files)}, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as exc:
-        print(f"Gemini analysis failed: {exc}", file=sys.stderr)
-        sys.exit(1)
+    main()
