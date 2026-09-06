@@ -1,0 +1,211 @@
+name: Daily Authtics Owned Package Check
+
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  GEMINI_MODEL: gemini-3.1-flash-lite
+  AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
+
+jobs:
+  check-owned-packages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create working directories
+        run: mkdir -p reports findings metadata /tmp/authtics-packages/extracted
+
+      - name: Check Gemini API key
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "GEMINI_API_KEY is not configured."
+            exit 1
+          fi
+          echo "Gemini API key is configured."
+
+      - name: Fetch latest owned package versions
+        run: |
+          python3 - <<'PY'
+          import json
+          import urllib.request
+          from pathlib import Path
+
+          packages = [
+              "@bananacool467/ui-tools",
+              "@bananacool467/authtics-host",
+              "@bananacool467/pt",
+          ]
+
+          selected = []
+          for name in packages:
+              url = "https://registry.npmjs.org/" + name.replace("/", "%2F")
+              request = urllib.request.Request(
+                  url,
+                  headers={"Accept": "application/json", "User-Agent": "Authtics/0.1.0"},
+              )
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  metadata = json.load(response)
+
+              version = metadata.get("dist-tags", {}).get("latest")
+              if not version:
+                  raise RuntimeError(f"No latest version found for {name}")
+
+              version_data = metadata.get("versions", {}).get(version, {})
+              published = metadata.get("time", {}).get(version)
+              tarball = version_data.get("dist", {}).get("tarball")
+              if not tarball:
+                  raise RuntimeError(f"Tarball metadata not found for {name}@{version}")
+
+              selected.append({
+                  "name": name,
+                  "version": version,
+                  "published": published,
+                  "tarball": tarball,
+              })
+
+          Path("metadata/recent-packages.json").write_text(json.dumps(selected, indent=2))
+          print("Owned package versions selected for analysis:")
+          for package in selected:
+              print(f"- {package['name']}@{package['version']} ({package['published']})")
+          PY
+
+      - name: Download owned package sources
+        run: |
+          set -e
+          rm -rf /tmp/authtics-packages/extracted
+          mkdir -p /tmp/authtics-packages/extracted
+          python3 - <<'PY'
+          import json
+          import tarfile
+          import urllib.request
+          from pathlib import Path
+
+          packages = json.loads(Path("metadata/recent-packages.json").read_text())
+          root = Path("/tmp/authtics-packages/extracted")
+
+          for index, package in enumerate(packages, 1):
+              name, version = package["name"], package["version"]
+              destination = root / name / version
+              destination.mkdir(parents=True, exist_ok=True)
+              tarball_path = Path("/tmp/authtics-packages") / f"{name.replace('/', '__')}-{version}.tgz"
+
+              print(f"[{index}/{len(packages)}] Downloading {name}@{version}...")
+              request = urllib.request.Request(
+                  package["tarball"],
+                  headers={"Accept": "application/octet-stream", "User-Agent": "Authtics/0.1.0"},
+              )
+              with urllib.request.urlopen(request, timeout=120) as response:
+                  tarball_path.write_bytes(response.read())
+
+              with tarfile.open(tarball_path, "r:gz") as archive:
+                  archive_root = Path("package")
+                  for member in archive.getmembers():
+                      member_path = Path(member.name)
+                      if not member_path.parts or member_path.parts[0] != "package":
+                          continue
+                      relative = member_path.relative_to(archive_root)
+                      if any(part in {"..", ""} for part in relative.parts):
+                          continue
+                      target = destination / relative
+                      if member.isdir():
+                          target.mkdir(parents=True, exist_ok=True)
+                          continue
+                      if not member.isfile():
+                          continue
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      source = archive.extractfile(member)
+                      if source is not None:
+                          target.write_bytes(source.read())
+
+              tarball_path.unlink(missing_ok=True)
+              print(f"Stored for analysis: {destination}")
+          PY
+
+      - name: Analyze owned packages with Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python3 scripts/run_gemini_analyze.py
+
+      - name: Remove package workspace after static analysis
+        if: always()
+        run: |
+          echo "Removing downloaded package sources and temporary analysis files..."
+          rm -rf /tmp/authtics-packages/extracted
+          rm -f /tmp/authtics-packages/*.tgz
+          mkdir -p /tmp/authtics-packages/extracted
+          echo "Package workspace cleaned."
+
+      - name: Classify CWE candidates
+        if: always()
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python3 scripts/classify_cwe.py
+
+      - name: Check for actionable findings
+        id: findings
+        run: |
+          if [ -z "$(find findings/npm -type f -name 'AUTH-*.json' -print -quit 2>/dev/null)" ]; then
+            echo "has_findings=false" >> "$GITHUB_OUTPUT"
+            echo "No actionable findings in owned packages. Nothing will be committed or submitted as a PR."
+          else
+            echo "has_findings=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Show generated report and advisories
+        if: steps.findings.outputs.has_findings == 'true'
+        run: |
+          find reports -type f -name '*.md' -print -exec cat {} \;
+          echo "================================"
+          find findings/npm -type f -name 'AUTH-*.json' -print -exec cat {} \;
+
+      - name: Create review branch and pull request
+        if: steps.findings.outputs.has_findings == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          git config user.name "Authtics Bot"
+          git config user.email "authtics-bot@users.noreply.github.com"
+          BASE_BRANCH="${{ github.event.repository.default_branch }}"
+          BRANCH="authtics/owned-package-check-${GITHUB_RUN_ID}"
+          git checkout -b "$BRANCH"
+          git add reports/*.md findings/npm metadata/recent-packages.json metadata/scan-state.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "security: add owned package findings for review"
+          git push --set-upstream origin "$BRANCH"
+          REPORT=$(find reports -type f -name '*.md' | sort | tail -n 1)
+          printf '%s\n' \
+            '## Authtics Advisories — Owned Package Human Review Required' \
+            '' \
+            'This draft was generated by the dedicated daily check for Authtics-owned npm packages.' \
+            '' \
+            '- AI analysis is a draft only.' \
+            '- Results rated `n/a` never create advisory files, commits, or pull requests.' \
+            '- CWE IDs are AI-proposed classifications and must be verified by the human reviewer.' \
+            '- No package code was executed during analysis.' \
+            '- Verify the exact published package version before publication.' \
+            '' \
+            "### Report" \
+            "- \`$REPORT\`" \
+            > /tmp/authtics-pr-body.md
+          gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --base "$BASE_BRANCH" \
+            --head "$BRANCH" \
+            --title "security: owned package check findings" \
+            --body-file /tmp/authtics-pr-body.md \
+            --draft
