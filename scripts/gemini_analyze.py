@@ -13,7 +13,11 @@ from pathlib import Path
 from scripts.ecosystem import get_ecosystem
 
 MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
-API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
+FALLBACK_MODELS = [
+    model.strip()
+    for model in os.environ.get("GEMINI_FALLBACK_MODELS", "").split(",")
+    if model.strip() and model.strip() != MODEL
+]
 PACKAGE_ROOT = Path(os.environ.get("AUTHTICS_PACKAGE_ROOT", "/tmp/authtics-packages/extracted"))
 FINDINGS_ROOT = Path("findings")
 REPORT_ROOT = Path("reports")
@@ -100,16 +104,33 @@ def collect_evidence(package_dir):
     return files, evidence
 
 
-def call_gemini(prompt):
+def _model_candidates():
+    return [MODEL, *FALLBACK_MODELS]
+
+
+def _is_model_unavailable(exc):
+    if not isinstance(exc, urllib.error.HTTPError):
+        return False
+    if exc.code not in {400, 404}:
+        return False
+    try:
+        message = exc.read().decode("utf-8", errors="replace").lower()
+    except Exception:
+        message = str(exc).lower()
+    return any(term in message for term in ("model", "not found", "not supported", "unsupported"))
+
+
+def _call_model(prompt, model):
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
         raise RuntimeError("GEMINI_API_KEY is not configured")
+    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     body = {"systemInstruction": {"parts": [{"text": ANALYSIS_SYSTEM_INSTRUCTION}]},
             "contents": [{"role": "user", "parts": [{"text": prompt}]}],
             "generationConfig": {"temperature": 0.1, "responseMimeType": "application/json", "responseSchema": ANALYSIS_RESPONSE_SCHEMA}}
     last_error = None
     for attempt in range(1, MAX_RETRIES + 1):
-        request = urllib.request.Request(API_URL, data=json.dumps(body).encode("utf-8"),
+        request = urllib.request.Request(api_url, data=json.dumps(body).encode("utf-8"),
             headers={"Content-Type": "application/json", "x-goog-api-key": key, "User-Agent": "Authtics/0.1.0"}, method="POST")
         try:
             with urllib.request.urlopen(request, timeout=180) as response:
@@ -123,22 +144,54 @@ def call_gemini(prompt):
                     raise
                 retry_after = exc.headers.get("Retry-After")
                 delay = int(retry_after) if retry_after and retry_after.isdigit() else min(5 * (2 ** (attempt - 1)), 60)
-                print(f"Gemini returned HTTP 429; retrying in {delay}s (attempt {attempt}/{RATE_LIMIT_MAX_RETRIES})")
+                print(f"Gemini model {model} returned HTTP 429; retrying in {delay}s (attempt {attempt}/{RATE_LIMIT_MAX_RETRIES})")
                 time.sleep(delay)
                 continue
             if exc.code not in {500, 502, 503, 504} or attempt == MAX_RETRIES:
                 raise
             delay = min(5 * (2 ** (attempt - 1)), 60)
-            print(f"Gemini returned HTTP {exc.code}; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES})")
+            print(f"Gemini model {model} returned HTTP {exc.code}; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES})")
             time.sleep(delay)
         except (urllib.error.URLError, TimeoutError) as exc:
             last_error = exc
             if attempt == MAX_RETRIES:
                 raise
             delay = min(5 * (2 ** (attempt - 1)), 60)
-            print(f"Gemini request failed; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES}): {exc}")
+            print(f"Gemini model {model} request failed; retrying in {delay}s (attempt {attempt}/{MAX_RETRIES}): {exc}")
             time.sleep(delay)
-    raise RuntimeError(f"Gemini request failed after retries: {last_error}")
+    raise RuntimeError(f"Gemini model {model} request failed after retries: {last_error}")
+
+
+def call_gemini(prompt):
+    errors = []
+    models = _model_candidates()
+    for index, model in enumerate(models):
+        try:
+            result = _call_model(prompt, model)
+            if model != MODEL:
+                print(f"Gemini fallback succeeded with {model}.", flush=True)
+            return result, model
+        except urllib.error.HTTPError as exc:
+            if _is_model_unavailable(exc):
+                print(f"Gemini model {model} is unavailable; trying next configured model.", flush=True)
+                errors.append(f"{model}: HTTP {exc.code} model unavailable")
+                continue
+            if exc.code == 429:
+                print(f"Gemini model {model} exhausted its quota; trying next configured model.", flush=True)
+                errors.append(f"{model}: HTTP 429 quota exhausted")
+                continue
+            errors.append(f"{model}: HTTP {exc.code}")
+            if index < len(models) - 1:
+                print(f"Gemini model {model} failed; trying next configured model.", flush=True)
+                continue
+            raise
+        except Exception as exc:
+            errors.append(f"{model}: {exc}")
+            if index < len(models) - 1:
+                print(f"Gemini model {model} failed; trying next configured model.", flush=True)
+                continue
+            raise
+    raise RuntimeError("All configured Gemini models failed: " + "; ".join(errors))
 
 
 def parse_result(raw, package):
@@ -212,7 +265,7 @@ def write_outputs(results):
             "summary": result["draft_title"] or result["summary"], "details": result["summary"], "severity": result["severity"],
             "affected": [{"package": {"ecosystem": ECOSYSTEM.advisory_ecosystem, "name": package}, "versions": [version]}],
             "references": [{"type": "PACKAGE", "url": ref}],
-            "database_specific": {"source": "Authtics Advisories", "model": MODEL, "confidence": result["confidence"],
+            "database_specific": {"source": "Authtics Advisories", "model": result.get("model", MODEL), "confidence": result["confidence"],
                 "review": {"status": "PENDING", "human_review_required": True},
                 "suspicious_behaviors": result["suspicious_behaviors"], "evidence": result["evidence"], "reviewer_notes": result["reviewer_notes"]},
         }
@@ -266,7 +319,9 @@ def main():
                     prompt += f"FILE: {rel}\n{text}\n\n"
             else:
                 prompt += "No supported source files were available for analysis.\n"
-            result = parse_result(call_gemini(prompt), package)
+            raw, model_used = call_gemini(prompt)
+            result = parse_result(raw, package)
+            result["model"] = model_used
         except Exception as exc:
             print(f"Analysis failed for {name}@{version}: {exc}", flush=True)
             result = failed_result(package, f"Analysis failed: {exc}")
