@@ -6,6 +6,8 @@ import pathlib
 import re
 import sys
 
+from scripts.ecosystem import ECOSYSTEMS
+
 ALLOWED = {"PENDING", "APPROVED", "REJECTED", "NEEDS_EDIT"}
 SEVERITIES = {"critical", "high", "medium", "low"}
 CWE_RE = re.compile(r"^CWE-[0-9]+$")
@@ -35,14 +37,19 @@ def validate(path):
     if not isinstance(data.get("details"), str):
         errors.append(f"{path}: details must be a string")
 
+    ecosystem = None
     affected = data.get("affected")
     if not isinstance(affected, list) or not affected:
         errors.append(f"{path}: affected must be a non-empty array")
     else:
         for index, item in enumerate(affected):
             package = item.get("package") if isinstance(item, dict) else None
-            if not isinstance(package, dict) or package.get("ecosystem") != "npm" or not nonempty(package.get("name")):
-                errors.append(f"{path}: affected[{index}] must identify an npm package")
+            if not isinstance(package, dict) or not nonempty(package.get("ecosystem")) or not nonempty(package.get("name")):
+                errors.append(f"{path}: affected[{index}] must identify a supported package ecosystem and package name")
+            else:
+                ecosystem = package["ecosystem"]
+                if ecosystem not in {config.advisory_ecosystem for config in ECOSYSTEMS.values()}:
+                    errors.append(f"{path}: affected[{index}] uses unsupported ecosystem: {ecosystem!r}")
             if not isinstance(item.get("versions"), list) or not item["versions"]:
                 errors.append(f"{path}: affected[{index}].versions must be a non-empty array")
 
@@ -82,7 +89,6 @@ def validate(path):
     if status not in ALLOWED:
         errors.append(f"{path}: invalid review.status: {status!r}")
         return errors
-
     if status == "PENDING":
         errors.append(f"{path}: human review is still pending")
     elif status in {"APPROVED", "REJECTED", "NEEDS_EDIT"}:
@@ -92,10 +98,8 @@ def validate(path):
             errors.append(f"{path}: reviewed_at is required for {status}")
     if status in {"REJECTED", "NEEDS_EDIT"} and not nonempty(review.get("notes")):
         errors.append(f"{path}: notes are required for {status}")
-
     if database_specific.get("human_review_required") is not True:
         errors.append(f"{path}: human_review_required must remain true until publication tooling clears it")
-
     return errors
 
 
@@ -104,17 +108,14 @@ def main():
     if not files:
         print("No findings files supplied; nothing to validate.")
         return 0
-
     errors = []
     for path in files:
         errors.extend(validate(path))
-
     if errors:
         print("Authtics advisory validation FAILED:")
         for error in errors:
             print(f"- {error}")
         return 1
-
     print(f"Authtics advisory validation passed for {len(files)} file(s).")
     return 0
 
