@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "id": "AUTH-2026-00001",
   "published": "2026-09-06T00:14:01Z",
-  "modified": "2026-09-06T00:14:01Z",
-  "summary": "Potential Unauthenticated Server Control via Administrative APIs",
-  "details": "The package includes administrative API endpoints that allow for server control, including restarting and shutting down the process, protected only by a 'dat' configuration check. While intended for development/management, these endpoints pose a risk if misconfigured or exposed in production.\n\nObserved behaviors:\n- Runtime process control (restart/shutdown) via HTTP endpoints\n- Dynamic code execution/reloading via internal API\n- Network traffic interception and monitoring in the browser\n\nEvidence:\n- `dist/cli.js` \u2014 The class App exposes POST endpoints like /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which use child_process.spawn and process.kill to manipulate the server lifecycle.\n- `dist/devPanel.js` \u2014 The function installNetworkInterceptor monkey-patches global fetch, WebSocket, and EventSource to monitor and log network activity, which is typical for dev tools but sensitive in nature.",
+  "modified": "2026-09-06T00:38:00Z",
+  "summary": "Potential Unauthorized Server Control if DAT Credential Is Compromised",
+  "details": "The package includes administrative API endpoints that can restart or shut down the server. These endpoints are protected by a DAT credential configured by the developer and sent as a cookie. The security of these administrative operations therefore depends on the confidentiality and proper configuration of the DAT. If the DAT is leaked, exposed, or otherwise compromised, an attacker who can reach the administrative endpoints may be able to perform privileged server actions.\n\nObserved behaviors:\n- Runtime process control (restart/shutdown) via HTTP endpoints\n- Administrative access protected by a developer-configured DAT credential\n- Browser network traffic interception and monitoring for development tooling\n\nEvidence:\n- `dist/cli.js` — The class App exposes POST endpoints such as /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which use child_process.spawn and process.kill to manipulate the server lifecycle.\n- `dist/devPanel.js` — The function installNetworkInterceptor monkey-patches global fetch, WebSocket, and EventSource to monitor and log network activity, which is consistent with development tooling.",
   "severity": "medium",
   "affected": [
     {
@@ -28,16 +28,14 @@
     "model": "gemini-3.1-flash-lite",
     "confidence": 0.7,
     "review": {
-      "status": "REVIEWED",
+      "status": "APPROVED",
       "human_review_required": false
     },
     "cwe_ids": [
-      "CWE-284",
-      "CWE-306"
+      "CWE-284"
     ],
     "cwe_notes": [
-      "The administrative API endpoints for server control lack proper authentication, allowing unauthorized access to sensitive functionality.",
-      "The application fails to perform authentication for critical administrative operations, relying on a weak configuration check."
+      "The administrative endpoints use a shared DAT credential for access control. The security concern is dependent on protecting that credential; compromise or exposure of the DAT could allow unauthorized administrative actions."
     ],
     "cwe_status": "AI_PROPOSED"
   }

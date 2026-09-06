@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "id": "AUTH-2026-00002",
   "published": "2026-09-06T00:14:01Z",
-  "modified": "2026-09-06T00:14:01Z",
-  "summary": "Potential Arbitrary Code Execution via Build Scripts",
-  "details": "The package includes a CLI tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) via child_process.execSync. While this is intended for build automation, it poses a risk if the package is used in an untrusted environment or if the user's package.json contains malicious scripts.\n\nObserved behaviors:\n- Execution of arbitrary shell commands via child_process.execSync based on user-provided package.json scripts.\n\nEvidence:\n- `pt.js` \u2014 The build() function reads the 'prepublishOnly' or 'prepare' script from the local package.json and executes it using child_process.execSync without sanitization.",
+  "modified": "2026-09-06T00:40:00Z",
+  "summary": "Security consideration when executing project build scripts",
+  "details": "The package's `pt build` command reads the local project's `prepublishOnly` or `prepare` script from package.json and executes it with child_process.execSync. This behavior is part of the build automation workflow and is not, by itself, evidence that the package injects or secretly executes attacker-controlled code. However, running `pt build` on an untrusted project can execute commands intentionally defined by that project's package.json. Developers should treat build commands from untrusted projects as executable code and review the project's scripts before running them.\n\nObserved behavior:\n- `pt build` executes the local project's `prepublishOnly` or `prepare` script via child_process.execSync.\n\nEvidence:\n- `pt.js` — The build() function reads the `prepublishOnly` or `prepare` script from the local package.json and executes it.",
   "severity": "low",
   "affected": [
     {
@@ -28,14 +28,12 @@
     "model": "gemini-3.1-flash-lite",
     "confidence": 0.7,
     "review": {
-      "status": "REVIEWED",
+      "status": "APPROVED",
       "human_review_required": false
     },
-    "cwe_ids": [
-      "CWE-78"
-    ],
+    "cwe_ids": [],
     "cwe_notes": [
-      "The application uses child_process.execSync to execute commands derived from user-controlled input (package.json scripts) without proper sanitization, leading to OS command injection."
+      "No CWE is assigned because executing the project's explicitly configured build script is expected build-tool behavior and does not by itself establish OS command injection."
     ],
     "cwe_status": "AI_PROPOSED"
   }
