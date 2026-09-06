@@ -177,6 +177,19 @@ def failed_result(package, reason):
             "summary": reason, "suspicious_behaviors": [], "evidence": [], "reviewer_notes": [reason], "draft_title": ""}
 
 
+def next_advisory_id():
+    """Return the next globally unused AUTH advisory ID for the current year."""
+    year = datetime.now(timezone.utc).year
+    maximum = 0
+    pattern = re.compile(rf"^AUTH-{year}-(\d{{5}})\.json$")
+    if FINDINGS_ROOT.exists():
+        for path in FINDINGS_ROOT.rglob(f"AUTH-{year}-*.json"):
+            match = pattern.match(path.name)
+            if match:
+                maximum = max(maximum, int(match.group(1)))
+    return f"AUTH-{year}-{maximum + 1:05d}"
+
+
 def write_outputs(results):
     REPORT_ROOT.mkdir(parents=True, exist_ok=True)
     FINDINGS_ROOT.mkdir(parents=True, exist_ok=True)
@@ -229,7 +242,7 @@ def write_outputs(results):
 def main():
     metadata = metadata_path()
     if not metadata.exists():
-        raise RuntimeError(f"{metadata} does not exist")
+        raise FileNotFoundError(f"Missing metadata file: {metadata}")
     metadata_data = json.loads(metadata.read_text(encoding="utf-8"))
     if isinstance(metadata_data, list):
         packages = metadata_data
@@ -237,39 +250,31 @@ def main():
         packages = metadata_data["packages"]
     else:
         raise RuntimeError(f"{metadata} must contain a JSON array or an object with a 'packages' array")
+
     all_results = []
     for package in packages:
-        name, version = package["name"], package["version"]
+        name = package["name"]
+        version = package["version"]
         package_dir = PACKAGE_ROOT / name / version
-        if not package_dir.exists():
-            print(f"Skipping {name}@{version}: package directory not found", flush=True)
-            all_results.append(failed_result(package, "package directory not found"))
-            continue
-        files, evidence = collect_evidence(package_dir)
-        prompt = f"""
-Analyze the exact {ECOSYSTEM.display_name} package version below using only the supplied evidence.
-Do not execute code. Distinguish legitimate functionality, dangerous functionality, and actual evidence of malicious intent.
-The result is a DRAFT for a human security reviewer.
-
-Package: {name}@{version}
-Published: {package.get('published', 'unknown')}
-Ecosystem: {ECOSYSTEM.display_name}
-
-Files discovered: {len(files)}
-
-Evidence:
-{json.dumps([{'file': rel, 'content': text} for rel, text in evidence], indent=2)}
-"""
         print(f"Analyzing {name}@{version} with {MODEL}...", flush=True)
         try:
+            _, evidence = collect_evidence(package_dir)
+            prompt = f"Analyze the exact {ECOSYSTEM.display_name} package {name}@{version}.\n\n"
+            prompt += "Do not execute package code. Analyze only the supplied static evidence.\n\n"
+            if evidence:
+                for rel, text in evidence:
+                    prompt += f"FILE: {rel}\n{text}\n\n"
+            else:
+                prompt += "No supported source files were available for analysis.\n"
             result = parse_result(call_gemini(prompt), package)
         except Exception as exc:
             print(f"Analysis failed for {name}@{version}: {exc}", flush=True)
             result = failed_result(package, f"Analysis failed: {exc}")
-        all_results.append({**package, **result})
+        result["package"] = name
+        result["version"] = version
+        all_results.append(result)
+
     write_outputs(all_results)
-    SCAN_STATE.parent.mkdir(parents=True, exist_ok=True)
-    SCAN_STATE.write_text(json.dumps({"ecosystem": ECOSYSTEM.key, "model": MODEL, "generated": datetime.now(timezone.utc).isoformat(), "packages": all_results}, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
