@@ -11,6 +11,8 @@ permissions:
 
 env:
   AUTHTICS_PACKAGE_LIMIT: 100
+  GEMINI_MODEL: gemini-3.1-flash-lite
+  GEMINI_FALLBACK_MODELS: gemini-2.5-flash,gemini-2.5-flash-lite,gemini-flash-lite-latest
 
 jobs:
   scan:
@@ -105,14 +107,14 @@ jobs:
                       if source is not None: target.write_bytes(source.read())
               print(f"Stored for analysis: {destination}")
               tarball_path.unlink(missing_ok=True)
-              if index % 25 == 0:
-                  time.sleep(1)
+              if index % 25 == 0: time.sleep(1)
           PY
 
       - name: Analyze packages with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.1-flash-lite
+          GEMINI_FALLBACK_MODELS: gemini-2.5-flash,gemini-2.5-flash-lite,gemini-flash-lite-latest
           AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
         run: python3 scripts/run_gemini_analyze.py
 
@@ -130,6 +132,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.1-flash-lite
+          GEMINI_FALLBACK_MODELS: gemini-2.5-flash,gemini-2.5-flash-lite,gemini-flash-lite-latest
         run: python3 scripts/classify_cwe.py
 
       - name: Check for actionable findings
