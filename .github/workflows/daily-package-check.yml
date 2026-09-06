@@ -11,6 +11,7 @@ permissions:
 
 env:
   GEMINI_MODEL: gemini-3.1-flash-lite
+  GEMINI_FALLBACK_MODELS: gemini-2.5-flash,gemini-2.5-flash-lite,gemini-flash-lite-latest
   AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
 
 jobs:
@@ -50,29 +51,18 @@ jobs:
           selected = []
           for name in packages:
               url = "https://registry.npmjs.org/" + name.replace("/", "%2F")
-              request = urllib.request.Request(
-                  url,
-                  headers={"Accept": "application/json", "User-Agent": "Authtics/0.1.0"},
-              )
+              request = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "Authtics/0.1.0"})
               with urllib.request.urlopen(request, timeout=60) as response:
                   metadata = json.load(response)
-
               version = metadata.get("dist-tags", {}).get("latest")
               if not version:
                   raise RuntimeError(f"No latest version found for {name}")
-
               version_data = metadata.get("versions", {}).get(version, {})
               published = metadata.get("time", {}).get(version)
               tarball = version_data.get("dist", {}).get("tarball")
               if not tarball:
                   raise RuntimeError(f"Tarball metadata not found for {name}@{version}")
-
-              selected.append({
-                  "name": name,
-                  "version": version,
-                  "published": published,
-                  "tarball": tarball,
-              })
+              selected.append({"name": name, "version": version, "published": published, "tarball": tarball})
 
           Path("metadata/recent-packages.json").write_text(json.dumps(selected, indent=2))
           print("Owned package versions selected for analysis:")
@@ -86,48 +76,32 @@ jobs:
           rm -rf /tmp/authtics-packages/extracted
           mkdir -p /tmp/authtics-packages/extracted
           python3 - <<'PY'
-          import json
-          import tarfile
-          import urllib.request
+          import json, tarfile, urllib.request
           from pathlib import Path
-
           packages = json.loads(Path("metadata/recent-packages.json").read_text())
           root = Path("/tmp/authtics-packages/extracted")
-
           for index, package in enumerate(packages, 1):
               name, version = package["name"], package["version"]
               destination = root / name / version
               destination.mkdir(parents=True, exist_ok=True)
               tarball_path = Path("/tmp/authtics-packages") / f"{name.replace('/', '__')}-{version}.tgz"
-
               print(f"[{index}/{len(packages)}] Downloading {name}@{version}...")
-              request = urllib.request.Request(
-                  package["tarball"],
-                  headers={"Accept": "application/octet-stream", "User-Agent": "Authtics/0.1.0"},
-              )
+              request = urllib.request.Request(package["tarball"], headers={"Accept": "application/octet-stream", "User-Agent": "Authtics/0.1.0"})
               with urllib.request.urlopen(request, timeout=120) as response:
                   tarball_path.write_bytes(response.read())
-
               with tarfile.open(tarball_path, "r:gz") as archive:
                   archive_root = Path("package")
                   for member in archive.getmembers():
                       member_path = Path(member.name)
-                      if not member_path.parts or member_path.parts[0] != "package":
-                          continue
+                      if not member_path.parts or member_path.parts[0] != "package": continue
                       relative = member_path.relative_to(archive_root)
-                      if any(part in {"..", ""} for part in relative.parts):
-                          continue
+                      if any(part in {"..", ""} for part in relative.parts): continue
                       target = destination / relative
-                      if member.isdir():
-                          target.mkdir(parents=True, exist_ok=True)
-                          continue
-                      if not member.isfile():
-                          continue
+                      if member.isdir(): target.mkdir(parents=True, exist_ok=True); continue
+                      if not member.isfile(): continue
                       target.parent.mkdir(parents=True, exist_ok=True)
                       source = archive.extractfile(member)
-                      if source is not None:
-                          target.write_bytes(source.read())
-
+                      if source is not None: target.write_bytes(source.read())
               tarball_path.unlink(missing_ok=True)
               print(f"Stored for analysis: {destination}")
           PY
@@ -135,6 +109,8 @@ jobs:
       - name: Analyze owned packages with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.1-flash-lite
+          GEMINI_FALLBACK_MODELS: gemini-2.5-flash,gemini-2.5-flash-lite,gemini-flash-lite-latest
         run: python3 scripts/run_gemini_analyze.py
 
       - name: Remove package workspace after static analysis
@@ -150,6 +126,8 @@ jobs:
         if: always()
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.1-flash-lite
+          GEMINI_FALLBACK_MODELS: gemini-2.5-flash,gemini-2.5-flash-lite,gemini-flash-lite-latest
         run: python3 scripts/classify_cwe.py
 
       - name: Check for actionable findings
