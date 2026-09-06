@@ -51,88 +51,77 @@ jobs:
           python3 - <<'PY'
           import json
           import os
-          import re
           import time
-          from html.parser import HTMLParser
+          import xml.etree.ElementTree as ET
           from pathlib import Path
+          from urllib.parse import urlparse
           from urllib.request import Request, urlopen
 
           limit = int(os.environ.get("PYPI_LIMIT", "100"))
-          req = Request("https://pypi.org/simple/", headers={"User-Agent": "Authtics/0.1.0"})
+          rss_url = "https://pypi.org/rss/updates.xml"
+          req = Request(rss_url, headers={"User-Agent": "Authtics/0.1.0"})
           with urlopen(req, timeout=30) as response:
-              html = response.read().decode("utf-8", errors="replace")
+              rss = response.read()
 
-          class SimpleIndexParser(HTMLParser):
-              def __init__(self):
-                  super().__init__()
-                  self.names = []
-                  self.in_anchor = False
-                  self.href = None
+          root = ET.fromstring(rss)
+          candidates = []
+          seen = set()
 
-              def handle_starttag(self, tag, attrs):
-                  if tag != "a":
-                      return
-                  self.in_anchor = True
-                  self.href = dict(attrs).get("href")
-
-              def handle_data(self, data):
-                  if not self.in_anchor:
-                      return
-                  text = data.strip()
-                  if not text or not self.href:
-                      return
-                  match = re.search(r"/simple/([^/]+)/?(?:#.*)?$", self.href)
-                  if not match:
-                      return
-                  href_name = match.group(1)
-                  name = text
-                  if name != href_name:
-                      print(f"Skipping malformed PyPI index entry: text={name!r} href={href_name!r}")
-                      return
-                  if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", name):
-                      print(f"Skipping invalid PyPI project name: {name!r}")
-                      return
-                  if re.fullmatch(r"[0-9]+(?:\\.[0-9]+){1,3}", name):
-                      print(f"Skipping version-looking PyPI project name: {name!r}")
-                      return
-                  if name not in self.names:
-                      self.names.append(name)
-
-              def handle_endtag(self, tag):
-                  if tag == "a":
-                      self.in_anchor = False
-                      self.href = None
-
-          parser = SimpleIndexParser()
-          parser.feed(html)
-          names = parser.names[:limit]
+          # PyPI's update feed is bounded, unlike the Simple API project index.
+          # Prefer the project/version URL from each feed entry and then verify
+          # the canonical package identity through the JSON API.
+          for item in root.iter():
+              if item.tag.rsplit("}", 1)[-1] != "item":
+                  continue
+              link = None
+              for child in item:
+                  if child.tag.rsplit("}", 1)[-1] == "link" and child.text:
+                      link = child.text.strip()
+                      break
+              if not link:
+                  continue
+              parsed = urlparse(link)
+              parts = [part for part in parsed.path.split("/") if part]
+              if len(parts) < 3 or parts[0] != "project":
+                  continue
+              name = parts[1]
+              version = parts[2]
+              key = (name.lower(), version)
+              if key not in seen:
+                  seen.add(key)
+                  candidates.append((name, version))
+              if len(candidates) >= limit:
+                  break
 
           targets = []
-          for name in names:
+          for name, feed_version in candidates:
               try:
                   req = Request(f"https://pypi.org/pypi/{name}/json", headers={"User-Agent": "Authtics/0.1.0"})
                   with urlopen(req, timeout=20) as response:
                       data = json.load(response)
                   info = data.get("info", {})
+                  canonical_name = info.get("name")
                   version = info.get("version")
-                  if not version:
+                  if not canonical_name or not version:
+                      print(f"Skipping {name}@{feed_version}: missing canonical PyPI metadata")
                       continue
                   files = data.get("releases", {}).get(version, [])
                   source = next((f for f in files if f.get("packagetype") == "sdist"), None)
                   if source is None:
                       source = next((f for f in files if f.get("packagetype") == "bdist_wheel"), None)
                   if not source or not source.get("url") or not source.get("filename"):
+                      print(f"Skipping {canonical_name}@{version}: no usable source artifact")
                       continue
-                  targets.append({"name": name, "version": version, "filename": source["filename"], "url": source["url"], "packagetype": source["packagetype"]})
+                  targets.append({"name": canonical_name, "version": version, "filename": source["filename"], "url": source["url"], "packagetype": source["packagetype"]})
               except Exception as exc:
-                  print(f"Skipping {name}: {exc}")
+                  print(f"Skipping {name}@{feed_version}: {exc}")
               time.sleep(0.05)
 
           Path("metadata/pypi-recent-packages.json").write_text(
               json.dumps({"ecosystem": "PyPI", "generated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "packages": targets}, indent=2) + "\n",
               encoding="utf-8",
           )
-          print(f"Selected {len(targets)} PyPI package releases for analysis.")
+          print(f"Selected {len(targets)} recent PyPI package releases for analysis from the bounded update feed.")
           PY
 
       - name: Download and extract PyPI packages safely
@@ -200,7 +189,7 @@ jobs:
                   print(f"Skipping {name}@{version}: artifact could not be extracted safely: {exc}")
                   import shutil
                   shutil.rmtree(destination, ignore_errors=True)
-          
+
           metadata["packages"] = successful
           metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
           print(f"Successfully extracted {len(successful)}/{len(targets)} PyPI package releases.")
