@@ -11,6 +11,9 @@ permissions:
 
 env:
   GEMINI_MODEL: gemini-3.1-flash-lite
+  # Comma-separated fallback models. The analyzer skips unavailable models
+  # and moves to the next model when a model quota is exhausted.
+  GEMINI_FALLBACK_MODELS: gemini-3.1-flash
   AUTHTICS_PYPI_PACKAGE_LIMIT: 100
   AUTHTICS_PACKAGE_ROOT: /tmp/authtics-packages/extracted
 
