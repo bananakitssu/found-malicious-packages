@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-07T18:10:52.814315+00:00",
+  "modified": "2026-09-07T18:10:52.814315+00:00",
+  "summary": "Potential Unauthenticated Administrative Access in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state manipulation (pause users). While these are intended for development/management, they lack robust authentication, relying only on a 'dat' (data) token check which may be insufficient depending on the implementation.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Implementation of administrative API endpoints (/__authtics_host_apis__/restart, /__authtics_host_apis__/shutdown) that can terminate the server process.",
+      "Use of child_process.spawn to restart the server process, which could be abused if the 'dat' token is leaked or guessed.",
+      "Runtime modification of global objects (window.fetch, window.WebSocket, window.EventSource) in the devPanel to intercept network traffic."
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "Contains POST handlers for /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown that execute process.kill(process.pid, 'SIGTERM')."
+      },
+      {
+        "file": "dist/devPanel.js",
+        "reason": "Overrides native browser APIs (fetch, WebSocket, EventSource) to intercept and monitor network requests, which is typical for dev tools but requires careful handling."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' token mechanism appears to be a simple shared secret or identifier. If this is exposed in the client-side code or configuration, it provides no real security for the administrative endpoints.",
+      "The use of 'jiti' and dynamic imports for server-side rendering is standard for this type of framework, but the administrative endpoints should be restricted to local-only or authenticated access.",
+      "The package is intended for development use, but if deployed in production without disabling these endpoints, it presents a significant security risk."
+    ],
+    "cwe_ids": [
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints lack robust authentication, relying on a potentially insufficient token check, which allows unauthorized access to sensitive server control functions."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

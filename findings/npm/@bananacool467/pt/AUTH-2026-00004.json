@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-07T18:10:52.814315+00:00",
+  "modified": "2026-09-07T18:10:52.814315+00:00",
+  "summary": "Potential Arbitrary Code Execution via Build Lifecycle Scripts",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) during the build process. While this is intended functionality for a build tool, it poses a security risk if the package is used in an untrusted environment or if the build process is triggered unexpectedly.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary shell commands via child_process.execSync using scripts defined in the user's package.json."
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build() function retrieves 'prepublishOnly' or 'prepare' scripts from the local package.json and executes them using child_process.execSync without sanitization."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to facilitate local testing of NPM packages by copying files to a temporary directory and linking them. The execution of lifecycle scripts is a common pattern in build tools, but it requires caution as it runs code from the project being built.",
+      "The regex logic in __generatePackageTestName is somewhat fragile but does not appear inherently malicious.",
+      "The package.json contains a circular dependency in devDependencies: '@bananacool467/pt': 'file:pack&bananacool467:pt', which is likely a result of the tool's own logic being applied to itself."
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The package executes arbitrary scripts from package.json using child_process.execSync without sanitization, which constitutes OS command injection."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
