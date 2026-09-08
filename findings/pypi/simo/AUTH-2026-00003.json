@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-08T18:20:27.446605+00:00",
+  "modified": "2026-09-08T18:20:27.446605+00:00",
+  "summary": "Potential Remote Code Execution via AI-Generated Automation Scripts",
+  "details": "The package contains functionality to dynamically execute Python code provided by an external AI service, which poses a significant security risk if the service is compromised or if the input is not properly sanitized.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "simo"
+      },
+      "versions": [
+        "3.5.65"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/simo/3.5.65/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic execution of code (exec()) received from an external API endpoint (simo.io/ai/scripts/)",
+      "Potential for remote code execution if the AI service returns malicious payloads",
+      "Use of multiprocessing to run user-defined scripts, which is a common pattern for isolating potentially dangerous code but does not eliminate the risk of malicious logic execution"
+    ],
+    "evidence": [
+      {
+        "file": "src/simo/automation/controllers.py",
+        "reason": "The ai_assistant method sends user intent to an external URL and expects a Python script in return, which is then presumably used in the system."
+      },
+      {
+        "file": "src/simo/automation/gateways.py",
+        "reason": "The run_code method uses exec() to execute code stored in the component configuration, which is populated by the AI assistant."
+      }
+    ],
+    "reviewer_notes": [
+      "The use of exec() on data retrieved from an external API is inherently dangerous. While the system appears to be designed for smart home automation, the ability to inject arbitrary Python code via the AI assistant feature is a high-risk vector.",
+      "The implementation uses multiprocessing for script isolation, which is a good practice, but it does not prevent the execution of malicious code within the isolated process.",
+      "The package relies on a proprietary AI service (simo.io) to generate automation scripts. The security of this feature depends entirely on the integrity of that service."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The application uses exec() to execute code retrieved from an external API, which constitutes improper control of generation of code and leads to arbitrary code execution."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
