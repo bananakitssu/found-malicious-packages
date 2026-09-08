@@ -1,8 +1,23 @@
 [
   {
+    "name": "@supabase/supabase-js",
+    "version": "2.116.0",
+    "published": "2026-09-07T16:26:56.729Z"
+  },
+  {
+    "name": "oxfmt",
+    "version": "0.67.0",
+    "published": "2026-09-07T15:01:12.469Z"
+  },
+  {
+    "name": "oxlint",
+    "version": "1.82.0",
+    "published": "2026-09-07T14:59:19.174Z"
+  },
+  {
     "name": "workerd",
-    "version": "1.20260906.1",
-    "published": "2026-09-06T01:23:44.846Z"
+    "version": "1.20260907.1",
+    "published": "2026-09-07T01:20:47.268Z"
   },
   {
     "name": "eslint",
@@ -15,11 +30,6 @@
     "published": "2026-09-03T23:17:10.278Z"
   },
   {
-    "name": "@supabase/supabase-js",
-    "version": "2.115.0",
-    "published": "2026-09-03T16:21:48.106Z"
-  },
-  {
     "name": "motion",
     "version": "13.2.0",
     "published": "2026-09-02T15:25:47.792Z"
@@ -28,16 +38,6 @@
     "name": "bare-url",
     "version": "2.5.4",
     "published": "2026-09-02T10:34:54.169Z"
-  },
-  {
-    "name": "oxlint",
-    "version": "1.81.0",
-    "published": "2026-09-01T15:22:06.857Z"
-  },
-  {
-    "name": "oxfmt",
-    "version": "0.66.0",
-    "published": "2026-09-01T15:21:23.576Z"
   },
   {
     "name": "globals",
