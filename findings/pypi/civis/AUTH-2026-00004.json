@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-08T18:20:27.446605+00:00",
+  "modified": "2026-09-08T18:20:27.446605+00:00",
+  "summary": "Use of eval() in civis/_retries.py",
+  "details": "The package uses `eval()` in `src/civis/_retries.py` to instantiate a `tenacity.Retrying` object from a string constant. While the string constant is hardcoded and appears safe, the use of `eval()` is a dangerous pattern that should be replaced with direct instantiation.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "civis"
+      },
+      "versions": [
+        "2.10.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/civis/2.10.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of eval() for object instantiation"
+    ],
+    "evidence": [
+      {
+        "file": "src/civis/_retries.py",
+        "reason": "The function `get_default_retrying` uses `eval()` to parse and execute a string representation of a `tenacity.Retrying` object. Although the string is a hardcoded constant, this is a risky practice."
+      }
+    ],
+    "reviewer_notes": [
+      "The use of eval() is restricted to a hardcoded string constant `DEFAULT_RETRYING_STR` within the same module. The globals and locals are explicitly restricted, which mitigates the risk of arbitrary code execution. However, this remains a poor security practice that should be refactored to direct object instantiation."
+    ],
+    "cwe_ids": [
+      "CWE-95"
+    ],
+    "cwe_notes": [
+      "The use of eval() to instantiate objects, even with hardcoded strings, constitutes improper neutralization of directives in dynamically evaluated code."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
