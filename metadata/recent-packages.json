@@ -1,5 +1,20 @@
 [
   {
+    "name": "lago-javascript-client",
+    "version": "1.53.0",
+    "published": "2026-09-08T14:39:36.302Z"
+  },
+  {
+    "name": "javascript-obfuscator",
+    "version": "5.7.0",
+    "published": "2026-09-08T08:10:54.881Z"
+  },
+  {
+    "name": "workerd",
+    "version": "1.20260908.1",
+    "published": "2026-09-08T01:23:05.202Z"
+  },
+  {
     "name": "@supabase/supabase-js",
     "version": "2.116.0",
     "published": "2026-09-07T16:26:56.729Z"
@@ -15,9 +30,9 @@
     "published": "2026-09-07T14:59:19.174Z"
   },
   {
-    "name": "workerd",
-    "version": "1.20260907.1",
-    "published": "2026-09-07T01:20:47.268Z"
+    "name": "@base44/sdk",
+    "version": "0.8.48",
+    "published": "2026-09-07T11:28:45.039Z"
   },
   {
     "name": "eslint",
@@ -100,11 +115,6 @@
     "published": "2026-08-27T00:03:40.592Z"
   },
   {
-    "name": "lago-javascript-client",
-    "version": "1.52.1",
-    "published": "2026-08-26T17:04:55.918Z"
-  },
-  {
     "name": "bare-events",
     "version": "2.9.2",
     "published": "2026-08-26T09:36:15.776Z"
@@ -115,19 +125,14 @@
     "published": "2026-08-26T08:03:51.074Z"
   },
   {
-    "name": "@daypilot/daypilot-lite-javascript",
-    "version": "5.10.1",
-    "published": "2026-08-25T18:14:07.387Z"
-  },
-  {
     "name": "onnxruntime-common",
     "version": "1.29.0",
     "published": "2026-08-24T19:12:45.842Z"
   },
   {
-    "name": "javascript-obfuscator",
-    "version": "5.6.0",
-    "published": "2026-08-23T05:17:58.871Z"
+    "name": "cropperjs",
+    "version": "2.2.0",
+    "published": "2026-08-23T12:13:58.161Z"
   },
   {
     "name": "@atomicfi/transact-javascript",
@@ -203,11 +208,6 @@
     "name": "@dagrejs/dagre",
     "version": "3.1.1",
     "published": "2026-08-08T15:10:12.165Z"
-  },
-  {
-    "name": "launchdarkly-js-client-sdk",
-    "version": "3.9.5",
-    "published": "2026-08-06T15:40:16.956Z"
   },
   {
     "name": "npm",
@@ -445,6 +445,11 @@
     "published": "2022-01-22T16:43:10.060Z"
   },
   {
+    "name": "jmespath",
+    "version": "0.16.0",
+    "published": "2022-01-19T20:39:39.257Z"
+  },
+  {
     "name": "jsprim",
     "version": "2.0.2",
     "published": "2021-11-17T00:47:36.240Z"
@@ -453,11 +458,6 @@
     "name": "verror",
     "version": "1.10.1",
     "published": "2021-11-02T20:29:16.342Z"
-  },
-  {
-    "name": "fast-safe-stringify",
-    "version": "2.1.1",
-    "published": "2021-09-08T07:19:16.545Z"
   },
   {
     "name": "tmpl",
