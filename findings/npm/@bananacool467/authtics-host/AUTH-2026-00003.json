@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-08T17:07:29.693244+00:00",
+  "modified": "2026-09-08T17:07:29.693244+00:00",
+  "summary": "Potential Insecure Administrative Endpoints in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state modification (pause users). While these are intended for development/management, they lack robust authentication, relying on a 'dat' parameter check which may be insufficient depending on implementation.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Implementation of administrative API endpoints (/__authtics_host_apis__/restart, /__authtics_host_apis__/shutdown) that can terminate the server process.",
+      "Use of child_process.spawn to restart the server process, which could be abused if the 'dat' parameter is leaked or guessed.",
+      "Dynamic runtime code execution via jiti and esbuild for SSR/rendering, which is standard for dev frameworks but requires careful handling."
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "The server exposes POST endpoints under /__authtics_host_apis__/ that perform sensitive actions like process.kill(process.pid, 'SIGTERM') for restart and shutdown, protected only by a simple 'dat' parameter check."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The restart functionality uses child_process.spawn to re-execute the current process, which is a powerful capability that should be strictly guarded."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' parameter check is a weak form of authentication. If this package is used in a production environment without additional layers of security, these endpoints could be exploited.",
+      "The package is clearly intended as a development framework, but the inclusion of these administrative endpoints in the core 'cli.js' logic warrants caution.",
+      "No evidence of malicious obfuscation or hidden payloads was found; the code appears to be a functional web framework."
+    ],
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative endpoints lack robust authentication, relying on a weak 'dat' parameter check, which constitutes missing authentication for critical functions.",
+      "The reliance on a simple parameter check for sensitive administrative actions represents improper authentication."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
