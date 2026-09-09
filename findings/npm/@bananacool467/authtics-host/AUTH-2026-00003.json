@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-09T17:04:46.088333+00:00",
+  "modified": "2026-09-09T17:04:46.088333+00:00",
+  "summary": "Potential Administrative API Exposure in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state modification (pause users). While these endpoints include a 'dat' (data/token) check, the implementation relies on a simple equality check against a configuration value, which could be vulnerable if the 'dat' value is leaked or predictable.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Implementation of administrative API endpoints (/restart, /shutdown) that execute system-level commands.",
+      "Runtime modification of server state (usersPaused) via unauthenticated-looking POST requests.",
+      "Use of 'child_process.spawn' to restart the server process, which is a high-privilege operation."
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "The /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown endpoints allow remote triggering of process termination and spawning, protected only by a simple 'dat' token check."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The /__authtics_host_apis__/set-users-paused endpoint allows modifying internal server state based on the same 'dat' token."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' token mechanism appears to be a custom authentication/authorization scheme. If 'dat' is not properly secured or is exposed in client-side code, these endpoints could be exploited.",
+      "The use of 'child_process.spawn' with 'detached: true' and 'process.kill' for restarts is a common pattern in development tools but carries risks if exposed to the public internet.",
+      "The package is intended as a development/hosting framework, so these features might be intentional, but they require careful configuration by the end user."
+    ],
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The use of a single, potentially predictable or leakable 'dat' token for administrative actions constitutes improper authentication.",
+      "The administrative endpoints are missing sufficient authentication controls, allowing unauthorized access to sensitive system-level operations."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
