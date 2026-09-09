@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-09T18:18:51.782730+00:00",
+  "modified": "2026-09-09T18:18:51.782730+00:00",
+  "summary": "Runtime Dependency Fetching from External CDN",
+  "details": "The package implements a dynamic dependency management system that downloads JavaScript modules from a CDN (jsdelivr.net) at runtime. While this is a common pattern for self-hosted web applications to avoid bundling large dependencies, it introduces a supply-chain risk where the application's functionality depends on external, unpinned (or loosely pinned) remote content.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "tinyleaf"
+      },
+      "versions": [
+        "0.6.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/tinyleaf/0.6.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Runtime downloading of external code from a CDN (jsdelivr.net).",
+      "Dynamic rewriting of import paths in downloaded JavaScript files.",
+      "Support for user-configured HTTP proxies for external network requests."
+    ],
+    "evidence": [
+      {
+        "file": "src/tinyleaf/vendor.py",
+        "reason": "The module contains logic to download ESM bundles from jsdelivr.net, rewrite import paths, and save them to a local vendor directory. This behavior is triggered by the CLI or API."
+      },
+      {
+        "file": "src/tinyleaf/cli.py",
+        "reason": "The CLI automatically triggers the vendor download process if the vendor directory is not ready, potentially executing network requests without explicit user confirmation during the first run."
+      }
+    ],
+    "reviewer_notes": [
+      "The package uses a 'zerodep' philosophy, which explains the inclusion of vendor-specific code. The risk is primarily related to the trust placed in the CDN and the lack of cryptographic verification (e.g., SRI hashes) for the downloaded files.",
+      "The code does not appear to be intentionally malicious, but the design pattern of fetching and executing remote code at runtime is a significant security consideration for self-hosted applications."
+    ],
+    "cwe_ids": [
+      "CWE-829"
+    ],
+    "cwe_notes": [
+      "The package fetches and executes code from an external CDN without cryptographic verification (SRI), leading to potential inclusion of untrusted control elements."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

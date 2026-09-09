@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-09T18:18:51.782730+00:00",
+  "modified": "2026-09-09T18:18:51.782730+00:00",
+  "summary": "Dynamic Python Tracing via Process Injection",
+  "details": "The package implements a dynamic Python tracing tool that uses process injection techniques (ptrace-like behavior on Linux/Darwin) to execute arbitrary Python code within a target process. While the intent is debugging, the mechanism of injecting code into running processes is inherently high-risk and requires elevated privileges (e.g., sudo/ptrace capabilities).",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pymontrace"
+      },
+      "versions": [
+        "0.1.0.dev14"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/pymontrace/0.1.0.dev14/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Process injection: The package uses C extensions to attach to and execute arbitrary Python code in external processes.",
+      "Dynamic code execution: The package constructs and executes Python snippets (bootstrap, tracee setup) via injection.",
+      "Privilege escalation requirement: The documentation and code imply the need for root/sudo privileges to attach to processes on macOS and Linux.",
+      "Filesystem manipulation: The package creates temporary directories and files in /tmp or /proc/<pid>/root/tmp to facilitate communication between the tracer and tracee."
+    ],
+    "evidence": [
+      {
+        "file": "pymontrace-0.1.0.dev14/setup.py",
+        "reason": "Defines C extensions (attacher, _tracebuffer) that interface with OS-level process manipulation APIs (mach_excServer on Darwin, attacher_linux_64bit on Linux)."
+      },
+      {
+        "file": "pymontrace-0.1.0.dev14/src/pymontrace/attacher.pyi",
+        "reason": "Exposes 'attach_and_exec' and 'exec_in_threads', which are the primary primitives for injecting code into a target process."
+      },
+      {
+        "file": "pymontrace-0.1.0.dev14/src/pymontrace/tracer.py",
+        "reason": "Contains 'format_bootstrap_snippet' which generates Python code to be executed inside the target process, including dynamic sys.path manipulation and module importing."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is a sophisticated debugging tool. The use of process injection is consistent with its stated purpose (dynamic tracing).",
+      "The code is well-structured, but the capability to inject code into arbitrary processes is a significant security vector if misused.",
+      "The use of 'py_limited_api' and C extensions suggests a focus on performance for tracing, which is common in this domain.",
+      "The package requires careful review of the C source code (not fully provided in the snippet) to ensure the injection mechanism is robust and does not introduce memory corruption vulnerabilities."
+    ],
+    "cwe_ids": [
+      "CWE-250"
+    ],
+    "cwe_notes": [
+      "The package requires elevated privileges (root/sudo) to perform process injection, which is a form of execution with excessive privileges."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

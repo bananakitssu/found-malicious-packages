@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-09T18:18:51.782730+00:00",
+  "modified": "2026-09-09T18:18:51.782730+00:00",
+  "summary": "Dynamic Code Execution in AppManager Sub-App Loader",
+  "details": "The package implements a dynamic sub-application loading mechanism that executes arbitrary Python code from uploaded ZIP files or Git repositories. While it includes security checks like AST parsing and path validation, the dynamic execution of code via importlib and exec_module poses a significant risk if these controls are bypassed or misconfigured.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "appmanager-server"
+      },
+      "versions": [
+        "0.4.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/appmanager-server/0.4.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic execution of arbitrary code from user-provided packages using importlib.util.exec_module.",
+      "Potential for path traversal or insecure file handling during ZIP extraction and normalization.",
+      "Dynamic mounting of Flask blueprints from external sub-apps, which could lead to unauthorized access if the admin guard is bypassed."
+    ],
+    "evidence": [
+      {
+        "file": "appmanager_server-0.4.1/appmanager/admin/app_installer.py",
+        "reason": "The function 'load_wsgi_app_from_path' uses 'importlib.util.spec_from_file_location' and 'exec_module' to load and execute Python code from arbitrary paths within the installed apps directory."
+      },
+      {
+        "file": "appmanager_server-0.4.1/appmanager/admin/registry.py",
+        "reason": "The function '_resolve_blueprint' uses 'importlib.import_module' to dynamically load Flask blueprints from sub-apps, which are then registered into the main application."
+      },
+      {
+        "file": "appmanager_server-0.4.1/appmanager/admin/app_installer.py",
+        "reason": "The 'normalize_and_flatten_app_dir' function performs file system operations (shutil.move, shutil.rmtree) on user-provided content, which requires careful validation to prevent directory traversal."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as a host portal for sub-applications, making dynamic code loading a core feature rather than a typical vulnerability. However, the security of this architecture relies entirely on the robustness of the 'validate_entrypoint_path' and 'extract_zip_safely' functions.",
+      "The use of 'ast.parse' in 'validate_subapp_package' is a good defensive practice to detect syntax errors, but it does not prevent malicious logic execution.",
+      "The 'admin_guard' in 'registry.py' correctly attempts to enforce admin-only access for mounted blueprints, which mitigates some risks of unauthorized access to sub-app admin panels."
+    ],
+    "cwe_ids": [
+      "CWE-22",
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The application uses importlib and exec_module to dynamically load and execute code from user-provided packages, which constitutes improper control of generation of code.",
+      "The file handling operations during ZIP extraction and path normalization present a risk of path traversal if input validation is bypassed."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
