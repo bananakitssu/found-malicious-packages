@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-09T17:04:46.088333+00:00",
+  "modified": "2026-09-09T17:04:46.088333+00:00",
+  "summary": "Potential risk from automatic execution of build scripts in @bananacool467/pt",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) during the build process. While this is a common pattern for build tools, it poses a risk if the tool is used in an untrusted environment or if the user is unaware that these scripts will be executed automatically when running 'pt build'.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary scripts from package.json using child_process.execSync"
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build() function automatically executes 'prepublishOnly' or 'prepare' scripts from the local package.json using child_process.execSync without explicit user confirmation."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to facilitate local testing of NPM packages by copying files to a temporary directory. The execution of build scripts is a functional requirement for many packages, but it should be noted that this tool runs these scripts in the context of the current user.",
+      "The code does not appear to contain malicious obfuscation or hidden payloads; it is a straightforward utility script."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package automatically executes arbitrary scripts defined in package.json via child_process.execSync, which constitutes improper control of generation of code or code execution."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
