@@ -1,5 +1,85 @@
 [
   {
+    "name": "workerd",
+    "version": "1.20260910.1",
+    "published": "2026-09-10T01:18:46.998Z"
+  },
+  {
+    "name": "@sentry/core",
+    "version": "10.74.0",
+    "published": "2026-09-09T15:55:03.112Z"
+  },
+  {
+    "name": "@sentry/types",
+    "version": "10.74.0",
+    "published": "2026-09-09T15:53:32.605Z"
+  },
+  {
+    "name": "@algolia/client-abtesting",
+    "version": "5.59.0",
+    "published": "2026-09-09T15:35:10.199Z"
+  },
+  {
+    "name": "@algolia/client-personalization",
+    "version": "5.59.0",
+    "published": "2026-09-09T15:34:12.041Z"
+  },
+  {
+    "name": "@algolia/recommend",
+    "version": "5.59.0",
+    "published": "2026-09-09T15:33:18.883Z"
+  },
+  {
+    "name": "@algolia/monitoring",
+    "version": "1.59.0",
+    "published": "2026-09-09T15:31:16.264Z"
+  },
+  {
+    "name": "@algolia/client-analytics",
+    "version": "5.59.0",
+    "published": "2026-09-09T15:31:10.480Z"
+  },
+  {
+    "name": "@algolia/ingestion",
+    "version": "1.59.0",
+    "published": "2026-09-09T15:30:44.884Z"
+  },
+  {
+    "name": "@algolia/client-search",
+    "version": "5.59.0",
+    "published": "2026-09-09T15:29:39.263Z"
+  },
+  {
+    "name": "@algolia/client-insights",
+    "version": "5.59.0",
+    "published": "2026-09-09T15:29:35.025Z"
+  },
+  {
+    "name": "@algolia/abtesting",
+    "version": "1.25.0",
+    "published": "2026-09-09T15:29:11.933Z"
+  },
+  {
+    "name": "three",
+    "version": "0.186.0",
+    "published": "2026-09-08T19:25:22.027Z"
+  },
+  {
+    "name": "@solana/web3.js",
+    "version": "1.99.0",
+    "published": "2026-09-08T16:22:13.468Z"
+  },
+  {
+    "name": "lago-javascript-client",
+    "version": "1.53.0",
+    "published": "2026-09-08T14:39:36.302Z"
+  },
+  {
+    "name": "javascript-obfuscator",
+    "version": "5.7.0",
+    "published": "2026-09-08T08:10:54.881Z"
+  },
+  {
     "name": "@supabase/supabase-js",
     "version": "2.116.0",
     "published": "2026-09-07T16:26:56.729Z"
@@ -15,9 +95,9 @@
     "published": "2026-09-07T14:59:19.174Z"
   },
   {
-    "name": "workerd",
-    "version": "1.20260907.1",
-    "published": "2026-09-07T01:20:47.268Z"
+    "name": "@base44/sdk",
+    "version": "0.8.48",
+    "published": "2026-09-07T11:28:45.039Z"
   },
   {
     "name": "eslint",
@@ -75,16 +155,6 @@
     "published": "2026-09-01T07:14:42.842Z"
   },
   {
-    "name": "@sentry/core",
-    "version": "10.73.0",
-    "published": "2026-08-31T16:57:41.195Z"
-  },
-  {
-    "name": "@sentry/types",
-    "version": "10.73.0",
-    "published": "2026-08-31T16:55:59.405Z"
-  },
-  {
     "name": "serialize-javascript",
     "version": "7.1.1",
     "published": "2026-08-29T13:50:28.545Z"
@@ -100,11 +170,6 @@
     "published": "2026-08-27T00:03:40.592Z"
   },
   {
-    "name": "lago-javascript-client",
-    "version": "1.52.1",
-    "published": "2026-08-26T17:04:55.918Z"
-  },
-  {
     "name": "bare-events",
     "version": "2.9.2",
     "published": "2026-08-26T09:36:15.776Z"
@@ -115,19 +180,14 @@
     "published": "2026-08-26T08:03:51.074Z"
   },
   {
-    "name": "@daypilot/daypilot-lite-javascript",
-    "version": "5.10.1",
-    "published": "2026-08-25T18:14:07.387Z"
-  },
-  {
     "name": "onnxruntime-common",
     "version": "1.29.0",
     "published": "2026-08-24T19:12:45.842Z"
   },
   {
-    "name": "javascript-obfuscator",
-    "version": "5.6.0",
-    "published": "2026-08-23T05:17:58.871Z"
+    "name": "cropperjs",
+    "version": "2.2.0",
+    "published": "2026-08-23T12:13:58.161Z"
   },
   {
     "name": "@atomicfi/transact-javascript",
@@ -138,51 +198,6 @@
     "name": "@thunderid/javascript",
     "version": "1.0.6",
     "published": "2026-08-20T12:20:15.775Z"
-  },
-  {
-    "name": "@algolia/monitoring",
-    "version": "1.57.0",
-    "published": "2026-08-18T12:49:02.402Z"
-  },
-  {
-    "name": "@algolia/client-search",
-    "version": "5.57.0",
-    "published": "2026-08-18T12:49:01.532Z"
-  },
-  {
-    "name": "@algolia/abtesting",
-    "version": "1.23.0",
-    "published": "2026-08-18T12:48:50.887Z"
-  },
-  {
-    "name": "@algolia/recommend",
-    "version": "5.57.0",
-    "published": "2026-08-18T12:48:06.608Z"
-  },
-  {
-    "name": "@algolia/ingestion",
-    "version": "1.57.0",
-    "published": "2026-08-18T12:48:01.105Z"
-  },
-  {
-    "name": "@algolia/client-personalization",
-    "version": "5.57.0",
-    "published": "2026-08-18T12:47:56.017Z"
-  },
-  {
-    "name": "@algolia/client-analytics",
-    "version": "5.57.0",
-    "published": "2026-08-18T12:47:54.103Z"
-  },
-  {
-    "name": "@algolia/client-insights",
-    "version": "5.57.0",
-    "published": "2026-08-18T12:47:53.888Z"
-  },
-  {
-    "name": "@algolia/client-abtesting",
-    "version": "5.57.0",
-    "published": "2026-08-18T12:47:50.728Z"
   },
   {
     "name": "sa-sdk-javascript",
@@ -203,11 +218,6 @@
     "name": "@dagrejs/dagre",
     "version": "3.1.1",
     "published": "2026-08-08T15:10:12.165Z"
-  },
-  {
-    "name": "launchdarkly-js-client-sdk",
-    "version": "3.9.5",
-    "published": "2026-08-06T15:40:16.956Z"
   },
   {
     "name": "npm",
@@ -243,11 +253,6 @@
     "name": "typescript",
     "version": "7.0.2",
     "published": "2026-07-08T15:55:18.431Z"
-  },
-  {
-    "name": "three",
-    "version": "0.185.1",
-    "published": "2026-07-01T14:04:30.373Z"
   },
   {
     "name": "@azure/storage-blob",
@@ -333,11 +338,6 @@
     "name": "tree-sitter-javascript",
     "version": "0.25.0",
     "published": "2025-09-01T07:14:24.995Z"
-  },
-  {
-    "name": "@solana/web3.js",
-    "version": "1.98.4",
-    "published": "2025-07-31T19:13:57.896Z"
   },
   {
     "name": "decimal.js",
@@ -445,6 +445,11 @@
     "published": "2022-01-22T16:43:10.060Z"
   },
   {
+    "name": "jmespath",
+    "version": "0.16.0",
+    "published": "2022-01-19T20:39:39.257Z"
+  },
+  {
     "name": "jsprim",
     "version": "2.0.2",
     "published": "2021-11-17T00:47:36.240Z"
@@ -453,11 +458,6 @@
     "name": "verror",
     "version": "1.10.1",
     "published": "2021-11-02T20:29:16.342Z"
-  },
-  {
-    "name": "fast-safe-stringify",
-    "version": "2.1.1",
-    "published": "2021-09-08T07:19:16.545Z"
   },
   {
     "name": "tmpl",
