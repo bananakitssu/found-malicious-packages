@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-10T16:55:58.610273+00:00",
+  "modified": "2026-09-10T16:55:58.610273+00:00",
+  "summary": "Potential Arbitrary Code Execution via Build Scripts",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) during the build process. While this is intended functionality for a build tool, it poses a security risk if the package is used in an untrusted environment or if the user's own scripts are compromised.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary shell commands via child_process.execSync using scripts defined in the user's package.json."
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build() function retrieves 'prepublishOnly' or 'prepare' scripts from the user's package.json and executes them using child_process.execSync without sanitization."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to facilitate local testing of NPM packages by copying files to a temporary directory. The execution of 'prepublishOnly' or 'prepare' scripts is a common pattern in build tools, but it effectively grants the tool the ability to run arbitrary code on the developer's machine based on the contents of their own package.json.",
+      "The code is not inherently malicious, but the pattern of executing user-defined scripts during a build process is a common vector for supply chain attacks if the tool is used in CI/CD pipelines or on untrusted projects."
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The package executes user-defined scripts from package.json using child_process.execSync without sanitization, leading to potential OS command injection."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
