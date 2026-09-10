@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-10T16:55:58.610273+00:00",
+  "modified": "2026-09-10T16:55:58.610273+00:00",
+  "summary": "Potential Unauthenticated Administrative API Exposure in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state manipulation (pause users). While these are intended for development/management, they lack robust authentication, relying only on a 'dat' (data) token check which may be insufficient depending on the implementation.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Implementation of administrative API endpoints (/__authtics_host_apis__/restart, /__authtics_host_apis__/shutdown) that can terminate the server process.",
+      "Use of child_process.spawn to restart the server process, which could be abused if the 'dat' token is leaked or guessed.",
+      "Runtime modification of server state (usersPaused) via unauthenticated POST requests."
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "The class App defines multiple POST routes under /__authtics_host_apis__/ that perform sensitive actions like process.kill(process.pid, 'SIGTERM') and spawning new processes without standard authentication middleware."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The 'dat' token check is a simple equality check against a config value, which is not a secure authentication mechanism for administrative endpoints."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be a development-focused framework. The administrative endpoints are likely intended for local development environments.",
+      "The risk is elevated if this package is accidentally deployed to a production environment without proper firewalling or if the 'dat' token is exposed.",
+      "The use of 'jiti' and dynamic imports is consistent with a development-oriented framework and does not appear inherently malicious."
+    ],
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints perform sensitive actions without requiring robust authentication, relying only on a weak token check.",
+      "The authentication mechanism is insufficient for protecting administrative functionality, as it relies on a simple equality check that may be easily bypassed or guessed."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
