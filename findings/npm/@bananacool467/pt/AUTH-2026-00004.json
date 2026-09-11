@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-11T16:57:17.339262+00:00",
+  "modified": "2026-09-11T16:57:17.339262+00:00",
+  "summary": "Potential risk from arbitrary script execution in @bananacool467/pt",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) via child_process.execSync. While this is common for build tools, the tool automatically copies files to a new directory and modifies the local package.json, which could lead to unexpected side effects or persistence of malicious scripts if the user is not careful.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary shell commands from package.json scripts using child_process.execSync",
+      "Automatic modification of the local package.json file during the 'link' process"
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build function uses child_process.execSync to run 'prepublishOnly' or 'prepare' scripts from the user's package.json, which can execute arbitrary code."
+      },
+      {
+        "file": "pt.js",
+        "reason": "The link function modifies the local package.json by adding or updating devDependencies, which is a sensitive operation."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is intended to be a local development utility for testing NPM packages. The execution of 'prepublishOnly' or 'prepare' scripts is standard behavior for many build tools, but it poses a security risk if the user runs this tool in an untrusted environment.",
+      "The code does not appear to contain obfuscated payloads or malicious network activity, but the ability to execute arbitrary scripts and modify project configuration files warrants caution."
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The package uses child_process.execSync to execute arbitrary scripts defined in package.json, which constitutes an OS command injection vulnerability if the input is not properly sanitized."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
