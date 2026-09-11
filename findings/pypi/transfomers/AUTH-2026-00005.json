@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-11T17:57:39.565736+00:00",
+  "modified": "2026-09-11T17:57:39.565736+00:00",
+  "summary": "Typosquatting detected in package transfomers",
+  "details": "The package 'transfomers' (note the typo in the name, missing the 's' after 'n') appears to be a typosquatting attempt targeting the legitimate 'transformers' library by Hugging Face.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "transfomers"
+      },
+      "versions": [
+        "4.44.2"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/transfomers/4.44.2/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Typosquatting: Package name is a common misspelling of a popular library.",
+      "Dynamic import/proxying: The package attempts to import from 'transformers', suggesting it acts as a wrapper or a malicious proxy for the legitimate package."
+    ],
+    "evidence": [
+      {
+        "file": "transfomers/__init__.py",
+        "reason": "The package name 'transfomers' is a clear typosquat of 'transformers'. The code attempts to import from the legitimate library, which is a common pattern for malicious packages to maintain functionality while potentially intercepting data or executing arbitrary code."
+      }
+    ],
+    "reviewer_notes": [
+      "The package name 'transfomers' is highly suspicious due to the missing 's'. This is a classic typosquatting technique. The implementation in __init__.py confirms it is attempting to shadow or wrap the legitimate 'transformers' library.",
+      "No malicious payload was found in the provided snippet, but the intent to impersonate a major library is high-risk."
+    ],
+    "cwe_ids": [
+      "CWE-1037"
+    ],
+    "cwe_notes": [
+      "The package name 'transfomers' is a typosquat of the legitimate 'transformers' library, which is a form of supply chain attack via package name impersonation."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

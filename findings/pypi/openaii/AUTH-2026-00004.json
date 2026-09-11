@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-11T17:57:39.565736+00:00",
+  "modified": "2026-09-11T17:57:39.565736+00:00",
+  "summary": "Potential Typosquatting: openaii package",
+  "details": "The package 'openaii' appears to be a typosquatting attempt targeting the legitimate 'openai' library. It imports all symbols from the 'openai' package, likely to act as a transparent wrapper or proxy for the legitimate library while masquerading under a similar name.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "openaii"
+      },
+      "versions": [
+        "1.55.3"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/openaii/1.55.3/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "typosquatting",
+      "package masquerading"
+    ],
+    "evidence": [
+      {
+        "file": "openaii/__init__.py",
+        "reason": "The package attempts to import and expose the entire namespace of the 'openai' library, which is a common pattern for malicious packages attempting to intercept or proxy traffic for legitimate libraries."
+      }
+    ],
+    "reviewer_notes": [
+      "The package name 'openaii' is a clear attempt to mimic 'openai'. While the code itself is a simple import wrapper, the intent is highly suspicious as it provides no unique functionality and relies entirely on the presence of the legitimate library."
+    ],
+    "cwe_ids": [
+      "CWE-1037"
+    ],
+    "cwe_notes": [
+      "The package 'openaii' is identified as a typosquatting attempt, which is a form of malicious package distribution designed to deceive users into installing a package with a name similar to a legitimate one."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

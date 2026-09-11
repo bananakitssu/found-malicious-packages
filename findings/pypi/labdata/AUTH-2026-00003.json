@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-11T17:57:39.565736+00:00",
+  "modified": "2026-09-11T17:57:39.565736+00:00",
+  "summary": "Potential Arbitrary Code Execution via Configuration and Cloud Infrastructure Risks",
+  "details": "The package uses 'eval()' to dynamically load analysis classes from user-defined preferences, which could lead to arbitrary code execution if the preference file is tampered with. Additionally, the package includes functionality to generate and execute shell scripts for cloud infrastructure (EC2/SLURM) that involve handling credentials and executing commands, which requires careful configuration to avoid security risks.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "labdata"
+      },
+      "versions": [
+        "0.1.17"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/labdata/0.1.17/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of eval() to instantiate classes based on configuration strings.",
+      "Dynamic generation and execution of shell scripts for cloud infrastructure (EC2/SLURM).",
+      "Handling of sensitive credentials (AWS keys, database passwords) in configuration files and environment variables."
+    ],
+    "evidence": [
+      {
+        "file": "labdata-0.1.17/labdata/compute/utils.py",
+        "reason": "The function 'load_analysis_object' uses 'eval(prefs['compute']['analysis'][analysis])' to instantiate classes, which is a security risk if the configuration file is compromised."
+      },
+      {
+        "file": "labdata-0.1.17/labdata/compute/ec2.py",
+        "reason": "The function 'ec2_cmd_for_launch' generates shell scripts for EC2 user-data that include AWS credentials and execute commands, potentially exposing sensitive information if not handled securely."
+      },
+      {
+        "file": "labdata-0.1.17/labdata/compute/schedulers.py",
+        "reason": "The function 'slurm_schedule_remote' injects database credentials into environment variables for remote SLURM jobs, which could be exposed if the remote environment is not secure."
+      }
+    ],
+    "reviewer_notes": [
+      "The use of eval() is limited to loading classes defined in a local configuration file (prefs). While this is a common pattern in some scientific software, it is inherently risky if the configuration file is writable by an attacker.",
+      "The cloud infrastructure management features (EC2/SLURM) are powerful and require the user to manage credentials securely. The package provides mechanisms to store these, but the security of the storage depends on the user's environment.",
+      "The code appears to be designed for a research lab environment where users are expected to have trusted access to the configuration files and infrastructure."
+    ],
+    "cwe_ids": [
+      "CWE-522",
+      "CWE-78",
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The use of eval() on user-controlled configuration data allows for arbitrary code execution.",
+      "The generation and execution of shell scripts for cloud infrastructure introduces potential command injection risks.",
+      "The handling of sensitive credentials in configuration files and environment variables without explicit secure storage mechanisms poses a risk of credential exposure."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

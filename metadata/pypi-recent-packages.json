@@ -1,0 +1,706 @@
+{
+  "ecosystem": "PyPI",
+  "generated": "2026-09-11T17:42:24Z",
+  "packages": [
+    {
+      "name": "xian-tech-contracting",
+      "version": "1.1.3",
+      "filename": "xian_tech_contracting-1.1.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e8/ca/0f4ff051875be9ac0877078fb5a3a0b2912b6105589824983b3d80630f17/xian_tech_contracting-1.1.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "heaserver-keychain",
+      "version": "1.16.0",
+      "filename": "heaserver_keychain-1.16.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7a/c5/4825ce69468dcfa8d71be319e4700e24bee96eb3e1e8826536c066a6466a/heaserver_keychain-1.16.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "atemwire",
+      "version": "0.15.0.dev0",
+      "filename": "atemwire-0.15.0.dev0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e4/e0/0c35a817a765dea25bf09fd04bb180d40eb08cc7197477821782a3c59c14/atemwire-0.15.0.dev0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "graviton-sdk",
+      "version": "0.1.10",
+      "filename": "graviton_sdk-0.1.10.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9e/a2/10631717ff1f888bdc5ac77e3202a67c49d6417c5717ee53050b6be6c40a/graviton_sdk-0.1.10.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "biomedical-knowledge-lookup",
+      "version": "1.2.0",
+      "filename": "biomedical_knowledge_lookup-1.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4b/2c/c0ca1d3958493b04be825d38e118106d22459b225c366da3f89c98ec4009/biomedical_knowledge_lookup-1.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "claix-ai",
+      "version": "1.0.0",
+      "filename": "claix_ai-1.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/40/66/6b7db9f15b1d5ddb9ddc94e8b628a658a44ac96df3c3b992051930667977/claix_ai-1.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "trw-memory",
+      "version": "0.17.0",
+      "filename": "trw_memory-0.17.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9a/73/f240d707b5f942969deccad8f562d3628aac2c4b823374e11d89793aa0a2/trw_memory-0.17.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "kglite-datasets",
+      "version": "0.1.17",
+      "filename": "kglite_datasets-0.1.17.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/2c/79/e1241cbc74bc6abfda17ddbc4c8a4a8d174dfad871b60f58ca3997be8f64/kglite_datasets-0.1.17.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "airbyte-agent-sdk",
+      "version": "0.1.341",
+      "filename": "airbyte_agent_sdk-0.1.341-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/7b/7e/5a0ea2927cc8965825ead27f8a37ca752e9817a09b65bcbb49522280578f/airbyte_agent_sdk-0.1.341-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "cli-market-core",
+      "version": "1.12.74",
+      "filename": "cli_market_core-1.12.74.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a6/f1/8f0acd6f169f1fc34df2be81a775caff6ab137c88c9f115186f2859f8304/cli_market_core-1.12.74.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lare",
+      "version": "1.3.0",
+      "filename": "lare-1.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/69/de/9cc73238e77bb18606b82c322c8e3e3c65865ce3fc3f2d7760386e67b589/lare-1.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "docent-python",
+      "version": "0.1.86",
+      "filename": "docent_python-0.1.86.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d4/e1/8e6c26f8c637af46e3b79b59ec5c15e74f6eb9124158610efb744d227e1c/docent_python-0.1.86.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "docent",
+      "version": "0.1.86",
+      "filename": "docent-0.1.86.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/37/fb/59ba7f2bbff3cc6b901ae6dd02957cfa133d5d620d7f0aa54af5ba03ec8d/docent-0.1.86.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "hedra-sdk",
+      "version": "5.3.1",
+      "filename": "hedra_sdk-5.3.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3f/25/9aed7cd976d8b2dbf309d583a6769ef8f4b780f16ccdb5d8ec42829fb6c4/hedra_sdk-5.3.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pokerbotsallstars",
+      "version": "1.0.0",
+      "filename": "pokerbotsallstars-1.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a6/6d/c27b784a05c7d3144e44a528b5779a298f4870d5b50344f8fe7d718bb356/pokerbotsallstars-1.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "loom-py-rt-metal",
+      "version": "1.0.0rc9",
+      "filename": "loom_py_rt_metal-1.0.0rc9-py3-none-macosx_14_0_arm64.whl",
+      "url": "https://files.pythonhosted.org/packages/bd/69/2135dfb2ddaae921d0ee87922d8c890f9d92b311984296a881c70d9809b3/loom_py_rt_metal-1.0.0rc9-py3-none-macosx_14_0_arm64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "scorpio-cli",
+      "version": "0.1.0.9",
+      "filename": "scorpio_cli-0.1.0.9.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b1/6f/517bc86ddbb173ff444c422030c69c0ee09aa3241d4a17aecf0bf8719c5d/scorpio_cli-0.1.0.9.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "langgrap",
+      "version": "0.2.45",
+      "filename": "langgrap-0.2.45-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/a2/c3/3e1ede40d982f429cc66dd2c4555a25052a98d2b32e574c230058d9fd10c/langgrap-0.2.45-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "linkarchivetools",
+      "version": "1.0.10",
+      "filename": "linkarchivetools-1.0.10.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/08/39/c12d7bc56a2d9b1f62897f90269539b32ccc324db2127c9ada3c32d9c80e/linkarchivetools-1.0.10.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "labdata",
+      "version": "0.1.17",
+      "filename": "labdata-0.1.17.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/19/8c/628b1bd44b54e4279997a66187b671214cc24e7db3b30d5b1852bcae2cdc/labdata-0.1.17.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "loom-py-rt-vulkan",
+      "version": "1.0.0rc9",
+      "filename": "loom_py_rt_vulkan-1.0.0rc9-py3-none-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "url": "https://files.pythonhosted.org/packages/b1/fd/20545da92f8e56d2e1be0fc3630f31137b5cbe56b49ca831907c6b628846/loom_py_rt_vulkan-1.0.0rc9-py3-none-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "ultimattewire",
+      "version": "0.1.0.dev0",
+      "filename": "ultimattewire-0.1.0.dev0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3c/10/8d040f951fa42d13417a91e05f63895da7c07c7ac40f4602c47356d7ac3c/ultimattewire-0.1.0.dev0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "memory-arbiter-mcp",
+      "version": "0.15.14",
+      "filename": "memory_arbiter_mcp-0.15.14.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/84/07/e1e5f4f4c6ebf0f693d3dafcc5d744f2de0f9da10f63d642efc37fd54a74/memory_arbiter_mcp-0.15.14.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ollamaa",
+      "version": "0.4.2",
+      "filename": "ollamaa-0.4.2-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/94/27/c2f8174aacc4125f45085f7bf27b671d4aacb84b242835c250d2276c78ad/ollamaa-0.4.2-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "telekinesis-dataengine",
+      "version": "0.0.12",
+      "filename": "telekinesis_dataengine-0.0.12.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/97/42/ea810b8572a2143ef607f588e83adb8eede3ea5a0cbb9d3f7ca55a70d211/telekinesis_dataengine-0.0.12.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "openaii",
+      "version": "1.55.3",
+      "filename": "openaii-1.55.3-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/b0/31/543796b08747507d754c0538b10a0add741eea4342766010d999203449ea/openaii-1.55.3-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "hyperdeckwire",
+      "version": "0.1.0.dev0",
+      "filename": "hyperdeckwire-0.1.0.dev0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/48/4e/8af5ac3f51328c1a4c52c6bd991f1225345e4e7fbb894b94e07e8137c4a4/hyperdeckwire-0.1.0.dev0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "transfomers",
+      "version": "4.44.2",
+      "filename": "transfomers-4.44.2-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/f2/78/33fcdfdf0eb1339c07c51b1e06921aef22d149ac3f7e1f31e2cbe3ed1d7a/transfomers-4.44.2-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "libella",
+      "version": "0.1.8.7.1",
+      "filename": "libella-0.1.8.7.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b3/dd/f50b4cbb50d26801f59837b5d251ab9b3b339aed8cd25652129fbdae5670/libella-0.1.8.7.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "regscale-cli",
+      "version": "6.45.10.0",
+      "filename": "regscale_cli-6.45.10.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/e7/6a/0dcd327267751770db611c781868de30aeeb1ee2c73cc18de7ec1ca4dd78/regscale_cli-6.45.10.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "loom-py-rt-cuda",
+      "version": "1.0.0rc9",
+      "filename": "loom_py_rt_cuda-1.0.0rc9-py3-none-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "url": "https://files.pythonhosted.org/packages/16/a0/0b20018471a4aa04f9247fd5856a225fd2628801254cf454d749b0db45ef/loom_py_rt_cuda-1.0.0rc9-py3-none-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "decayangle",
+      "version": "1.1.5",
+      "filename": "decayangle-1.1.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/6f/38/60ab3035e6b52b61fdca2d45e575fa41e813caafe4d81d4ddc112abb313c/decayangle-1.1.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pushary",
+      "version": "2.1.0",
+      "filename": "pushary-2.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e6/d8/38ac311c885baed143c450245563c881b93e1936948ef936506701d5c5bf/pushary-2.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "geocif",
+      "version": "0.4.1024",
+      "filename": "geocif-0.4.1024.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7b/ea/952a3e5169885f19b0d5b72c5eac9854d304bf827af462948cd08a6125bd/geocif-0.4.1024.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "decayangle-rs",
+      "version": "1.1.5",
+      "filename": "decayangle_rs-1.1.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/56/fc/39f0d00fb150ad72d9b2ed2456efc2568fbb7e8749aa60b72eb5d0b7b569/decayangle_rs-1.1.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "codingest",
+      "version": "0.2.18",
+      "filename": "codingest-0.2.18.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/bc/6b/874c883744bab23ef8263b0510ae29029644965183129b20987a5b5038bc/codingest-0.2.18.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "loom-py-rt",
+      "version": "1.0.0rc9",
+      "filename": "loom_py_rt-1.0.0rc9.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b6/6a/6b5195aae14645ac9d81661abf72a6dc0b055db11164892f73d104a69ff4/loom_py_rt-1.0.0rc9.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "langchain-core",
+      "version": "1.6.3",
+      "filename": "langchain_core-1.6.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/06/d7/1482670ccebc863166852516a08a1956fc50da40fbe2fe7dd218abfef4a1/langchain_core-1.6.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "tablinum",
+      "version": "0.2.6",
+      "filename": "tablinum-0.2.6.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7b/0d/188d399058f5ced864d9cd25623cf1bb58ab97d77bc082926f4a74906662/tablinum-0.2.6.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "rypipe",
+      "version": "0.3.1",
+      "filename": "rypipe-0.3.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/23/52/095638528fe44f339d9397a7e018e7d3fe1e693b569d01c9c03228e71bbe/rypipe-0.3.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "updl",
+      "version": "3.0.2",
+      "filename": "updl-3.0.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/64/6f/f2146cb7c881b211de1a4638064260a93bf13cbca02a803eed44065d9889/updl-3.0.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sogni-client",
+      "version": "5.42.0",
+      "filename": "sogni_client-5.42.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8a/7c/fd1110fc35d21f7120b1d93bf21ab6eb3f95fca5351fcb1b5414f3f96116/sogni_client-5.42.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dexr-filters",
+      "version": "1.3.0",
+      "filename": "dexr_filters-1.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/bd/04/4a83a3c7d2ee1a2d52cf81bfe22449865d77a89d523d8dca6c815e7ee6ce/dexr_filters-1.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "algorithm-discovery-engine",
+      "version": "1.0.1",
+      "filename": "algorithm_discovery_engine-1.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/58/24/6d53f5d3516d7ab3a74d7678366ae2e27cdfc05845d80543d349cce6750a/algorithm_discovery_engine-1.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "miniapppolis-common-utils",
+      "version": "5.8.0",
+      "filename": "miniapppolis_common_utils-5.8.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/41/7e/7378332005372f3dd7c1f7b3f83d299df3eb3d675eb54296cc42ba96b389/miniapppolis_common_utils-5.8.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agent-topology-spec",
+      "version": "0.1.0b2",
+      "filename": "agent_topology_spec-0.1.0b2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a9/32/aa351a51f6ba0cb94244e9bdd09d9160d59fb0289716fe13604decea0cdd/agent_topology_spec-0.1.0b2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ccp4i2",
+      "version": "3.0.1",
+      "filename": "ccp4i2-3.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8d/6c/5d55210b55da1bbcbdf33896e24aea988c04b28d3798b70191b847184aa9/ccp4i2-3.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "neutron-os",
+      "version": "1.11.2",
+      "filename": "neutron_os-1.11.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/82/ca/42b09dfdc4a2b2e3dc146bd0def687a5c01bfaa974abe99f83edd0b90b3f/neutron_os-1.11.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "nvidia-cutlass-operators",
+      "version": "0.2.0",
+      "filename": "nvidia_cutlass_operators-0.2.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/44/cf/4c349a9ca8ba31540189b590835e905447e3c918bbdc433389a522f6fc0d/nvidia_cutlass_operators-0.2.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "athena-llm",
+      "version": "0.3.3",
+      "filename": "athena_llm-0.3.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a7/d5/87eaa6513ba5ca8bb38900ff53d3bea9a986db4672180c70cf4ba2d4246a/athena_llm-0.3.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "quaveo-guardrail",
+      "version": "0.1.0",
+      "filename": "quaveo_guardrail-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5e/ca/7312c418588cd207ee299e2c4f25a3cbdcfbf53492f666a48b1b3eaa0fac/quaveo_guardrail-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "opentide",
+      "version": "0.1.3",
+      "filename": "opentide-0.1.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a6/35/68427eaaa12ebd7307206d3e0df85dae40f79fa26de719a0385dcb126c48/opentide-0.1.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "vexy-pdf3md",
+      "version": "1.0.4",
+      "filename": "vexy_pdf3md-1.0.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1d/bb/efc1353ef93e1e08a90c68b9b7c5cf595133fb0fc7fcce1ed2868035afcf/vexy_pdf3md-1.0.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "nominal-api-protos",
+      "version": "0.1441.0",
+      "filename": "nominal_api_protos-0.1441.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/b0/ae/23be3bba076f244d4665a4350b5d6707c3cb34cefacd410543b47b5c2929/nominal_api_protos-0.1441.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "nominal-api",
+      "version": "0.1441.0",
+      "filename": "nominal_api-0.1441.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/08/d2/dd9fcf65bf55310d534cc476de2118c48575b1c95dfd40cd03d81a699d14/nominal_api-0.1441.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "semafide-seal",
+      "version": "0.0.1",
+      "filename": "semafide_seal-0.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3c/1a/89dc6daaa4d6d1463146a3cf61bcd095aa5b9013722e00172529f42ed578/semafide_seal-0.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "linkarchivetools",
+      "version": "1.0.10",
+      "filename": "linkarchivetools-1.0.10.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/08/39/c12d7bc56a2d9b1f62897f90269539b32ccc324db2127c9ada3c32d9c80e/linkarchivetools-1.0.10.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "odoo-addon-account-ecotax",
+      "version": "19.0.1.0.0.2",
+      "filename": "odoo_addon_account_ecotax-19.0.1.0.0.2-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/e7/d4/e122ffb29d53121c5a48450c42ed0a7f4c1b8acb718699ebb5d0c675f1da/odoo_addon_account_ecotax-19.0.1.0.0.2-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "late-sdk",
+      "version": "1.4.761",
+      "filename": "late_sdk-1.4.761.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/78/e9/3418bbc44776a9a0575f68f76ad7c9095ac6835b0b454a90f0948d61084d/late_sdk-1.4.761.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zernio-sdk",
+      "version": "1.4.761",
+      "filename": "zernio_sdk-1.4.761.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c4/2a/18700d5ceaa099359c512c9a35af34786d1890be558b227279e7d8628979/zernio_sdk-1.4.761.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "slick-ai",
+      "version": "0.3.0",
+      "filename": "slick_ai-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/37/e4/61dc3f07b70cf01ceeb19e41b50183fec56de42e9864089c746db0975f2e/slick_ai-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "runspec-console",
+      "version": "0.246.2",
+      "filename": "runspec_console-0.246.2-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/2d/05/d1611be860737a928f51fa4326496a05227eb67e0582cac5e6812d4d69ca/runspec_console-0.246.2-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "dogmatic",
+      "version": "0.1.9",
+      "filename": "dogmatic-0.1.9-py3-none-macosx_10_12_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/97/8f/34b14286f8c6ffc414c0e219c3bcd9a83da7e1bb5c75c2a7a66a41748fc6/dogmatic-0.1.9-py3-none-macosx_10_12_x86_64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "memnest-mcp",
+      "version": "0.31.0",
+      "filename": "memnest_mcp-0.31.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/47/2f/40e3eed1fe552356a4faf2f4f584f97f62d65c11a111dea7253bd2d54980/memnest_mcp-0.31.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "spherical-wrist",
+      "version": "0.0.3",
+      "filename": "spherical_wrist-0.0.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/dd/a8/c919d2492c7947d731ffd6cb594ecd6e9f40d94f9f80fbd434eab19f6a07/spherical_wrist-0.0.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "increase",
+      "version": "0.543.0",
+      "filename": "increase-0.543.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ed/59/60447ef0764de8f9b4f91a46f8ed5d5065461147b2e344cbe4cabcdfa364/increase-0.543.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pUnit",
+      "version": "1.14.1",
+      "filename": "punit-1.14.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c0/5a/500a44021bb9c3a7879c7422efe9bc9b59841fa0bce59e48395b4e1c64fd/punit-1.14.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "reach_commons",
+      "version": "0.18.76",
+      "filename": "reach_commons-0.18.76.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/90/0d/64cb6d2d6f433a7e42e5c8c18d29aac097304f96dad3aa1fe326cfc0aa6b/reach_commons-0.18.76.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "nextcloud-mcp-server",
+      "version": "0.186.0",
+      "filename": "nextcloud_mcp_server-0.186.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3f/76/c5303be9975bf966a911d360016885a12103e08e4b716f996d70c83bdca6/nextcloud_mcp_server-0.186.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "listingsapi",
+      "version": "0.5.3",
+      "filename": "listingsapi-0.5.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/94/ee/5517b212b25314f19a61c661db2a5f255421ace775bba524d3f7d7c67f59/listingsapi-0.5.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "odoo-addon-account-invoice-report-payment-info",
+      "version": "19.0.1.0.0.2",
+      "filename": "odoo_addon_account_invoice_report_payment_info-19.0.1.0.0.2-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/91/d0/6cc1287d52d7ed74fd4b5a0e33e56b7d67254f77577c226a79aa2640eb5c/odoo_addon_account_invoice_report_payment_info-19.0.1.0.0.2-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "late-sdk",
+      "version": "1.4.761",
+      "filename": "late_sdk-1.4.761.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/78/e9/3418bbc44776a9a0575f68f76ad7c9095ac6835b0b454a90f0948d61084d/late_sdk-1.4.761.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zernio-sdk",
+      "version": "1.4.761",
+      "filename": "zernio_sdk-1.4.761.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c4/2a/18700d5ceaa099359c512c9a35af34786d1890be558b227279e7d8628979/zernio_sdk-1.4.761.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mjswan",
+      "version": "0.10.0",
+      "filename": "mjswan-0.10.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3f/26/177bdbc9c2be5a06d4e091b222e38eaf229c234493af4f7958b6680fe90c/mjswan-0.10.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "memory-industry",
+      "version": "1.27.0",
+      "filename": "memory_industry-1.27.0-py3-none-manylinux_2_28_aarch64.whl",
+      "url": "https://files.pythonhosted.org/packages/77/f0/08051f15d51f1d1680458b7aa3e9f40aba1980130906d79bc0fe92c633c8/memory_industry-1.27.0-py3-none-manylinux_2_28_aarch64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "cuba-memorys",
+      "version": "1.27.0",
+      "filename": "cuba_memorys-1.27.0-py3-none-manylinux_2_28_aarch64.whl",
+      "url": "https://files.pythonhosted.org/packages/1a/70/c2ea9a0b61406ced834007fb6dbb3f3128c40d58848dc1c0c3c532cb0640/cuba_memorys-1.27.0-py3-none-manylinux_2_28_aarch64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "websec-validator",
+      "version": "0.12.0",
+      "filename": "websec_validator-0.12.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/cf/8f/72be5df457f3d427b857576dfdb80a5d99c6df1a8ed4a28a97ceb349174b/websec_validator-0.12.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sase-core-rs",
+      "version": "0.34.8",
+      "filename": "sase_core_rs-0.34.8.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a3/b7/efcfc0e55f2930f0850bf0889c49c8dcc11aa02030774ccb6cd53174c472/sase_core_rs-0.34.8.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "camau",
+      "version": "1.0.0",
+      "filename": "camau-1.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c9/c5/a7b9869d7cf80aca43515ccafa5876f8f21c749b5f3a2eee8619c2cb94b7/camau-1.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "facebook-wda-plus",
+      "version": "0.2.5",
+      "filename": "facebook_wda_plus-0.2.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/53/bf/f33fec994b90148b8d85248cbf3b493b9d8569024cebbccd89cc2bb3c07d/facebook_wda_plus-0.2.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crc-pulp-service-client",
+      "version": "20260911.2",
+      "filename": "crc_pulp_service_client-20260911.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/11/ce/fdc0e9504c5369c049b864dba0fa15bbf8ccb5fc2ffff735bfdab79e011e/crc_pulp_service_client-20260911.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crc-pulp-file-client",
+      "version": "20260911.2",
+      "filename": "crc_pulp_file_client-20260911.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/47/a2/b1d262d55faed6edb50c2eec57384e4283562f5ed8e80be7bb2bf56ab5ec/crc_pulp_file_client-20260911.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agentsgen",
+      "version": "0.5.1",
+      "filename": "agentsgen-0.5.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/0d/06/c0a0e1d98094129c6d203459240e42a6001eed783266ac058b6209a47b9a/agentsgen-0.5.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "qgis-deployment-toolbelt",
+      "version": "0.45.0",
+      "filename": "qgis_deployment_toolbelt-0.45.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/fb/c8/cd881eb75d7f331a7b2d7ace32924b51592164a356286022237a814f442f/qgis_deployment_toolbelt-0.45.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crc-pulp-maven-client",
+      "version": "20260911.2",
+      "filename": "crc_pulp_maven_client-20260911.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/91/c9/94be7a169fda41224882a9a228dd91712782af9d6dd25be004151a3d30ca/crc_pulp_maven_client-20260911.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pythermodb-settings",
+      "version": "0.27.0",
+      "filename": "pythermodb_settings-0.27.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e5/ed/7b81f08804953a96d0d1f6ce3fc52b85620ac77e020428870b4fec9e4b8a/pythermodb_settings-0.27.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crc-pulp-rpm-client",
+      "version": "20260911.2",
+      "filename": "crc_pulp_rpm_client-20260911.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/dc/26/33f300b82ce405a5a1024f32bfb87f5c1d2dd369db3fbb35d9ed5ede63b4/crc_pulp_rpm_client-20260911.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "reaxkit",
+      "version": "3.0.0",
+      "filename": "reaxkit-3.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f7/d1/ce0535bfbc56879c591558eb3a50de56c36dc17e94deed5dbde0991614a5/reaxkit-3.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "stocklens-mcp",
+      "version": "1.0.1",
+      "filename": "stocklens_mcp-1.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/91/ff/eac887ae7d32848ba1be282501717799bdd512e6acf962bffd1bcd7a47b8/stocklens_mcp-1.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crc-pulp-npm-client",
+      "version": "20260911.2",
+      "filename": "crc_pulp_npm_client-20260911.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9e/2d/47f17df16caac9d09ca171e4a5f9eb32389c5ea56267eceafe7da5d6e42e/crc_pulp_npm_client-20260911.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "homestead-law",
+      "version": "0.4.0",
+      "filename": "homestead_law-0.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/15/0e/fc0c0555dd0085089881a263a3872da4c7c91579d8cb921008e4980c487f/homestead_law-0.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crc-pulp-python-client",
+      "version": "20260911.2",
+      "filename": "crc_pulp_python_client-20260911.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/db/6c/1a35923d72c35a7ffb4845899fcd157bfdc53af86e35f33c9ee5e0541d5f/crc_pulp_python_client-20260911.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "camera-ui-sdk",
+      "version": "1.2.37",
+      "filename": "camera_ui_sdk-1.2.37.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f8/ed/0683a37fa7b8450111b3bb8c470b395fb2e9e83d03a0ebe757b7603efbea/camera_ui_sdk-1.2.37.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crc-pulpcore-client",
+      "version": "20260911.2",
+      "filename": "crc_pulpcore_client-20260911.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9e/c9/55dccd35496e96425a25d28942572255af55122bb67ad45cbb0d90d7341f/crc_pulpcore_client-20260911.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "openfeature-provider-posthog",
+      "version": "0.1.75",
+      "filename": "openfeature_provider_posthog-0.1.75.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/15/80/f15df08ccb1e2e30797f3888ae342dd4ad25887699939888fd290d8fae3f/openfeature_provider_posthog-0.1.75.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "teamcity-messages-extra",
+      "version": "1.2.0",
+      "filename": "teamcity_messages_extra-1.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b4/a1/3cdd49ad561c6fd5b5f2a2289e0e41c953a1cd0311fcacbda62d4d7cb460/teamcity_messages_extra-1.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crxml",
+      "version": "2.1.0",
+      "filename": "crxml-2.1.0-cp313-cp313-manylinux_2_34_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/88/9a/0b96d006a69bb40fa72798773430c7d212b9f8c8e0d1b39afeb93c3f545e/crxml-2.1.0-cp313-cp313-manylinux_2_34_x86_64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "alibabacloud-polardb20170801",
+      "version": "8.3.1",
+      "filename": "alibabacloud_polardb20170801-8.3.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d4/1e/16a3be64f65d68ec24168e791026d23dbd3d544740682d8dfedd159f4f37/alibabacloud_polardb20170801-8.3.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "posthoganalytics",
+      "version": "7.52.1",
+      "filename": "posthoganalytics-7.52.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/20/f0/5c4641d9c0cdabe069bf7aa532d94a2e8ac36e1a14a001a9d6d2177610a8/posthoganalytics-7.52.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "odoo-addon-social-media-base",
+      "version": "17.0.1.0.0.2",
+      "filename": "odoo_addon_social_media_base-17.0.1.0.0.2-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5f/9a/6da58b1b2bb972c54fd960a6c656ac1e9761aabb3370d75ccb73d3a8b358/odoo_addon_social_media_base-17.0.1.0.0.2-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    }
+  ]
+}
