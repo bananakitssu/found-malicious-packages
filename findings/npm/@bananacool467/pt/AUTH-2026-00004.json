@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-12T16:05:17.487989+00:00",
+  "modified": "2026-09-12T16:05:17.487989+00:00",
+  "summary": "Potential Arbitrary Code Execution via Build Scripts",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) during the build process. While this is intended functionality for a build tool, it poses a risk if the tool is used in an untrusted environment or if the user's package.json contains malicious scripts.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary shell commands via child_process.execSync using scripts defined in the user's package.json."
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build function retrieves 'prepublishOnly' or 'prepare' scripts from the local package.json and executes them using child_process.execSync without sanitization."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to facilitate local testing of NPM packages by copying files to a temporary directory and linking them. The execution of 'prepublishOnly' or 'prepare' scripts is standard for build tools, but it effectively grants the package the ability to run arbitrary code on the host machine based on the contents of the user's package.json.",
+      "The use of 'file:pack&bananacool467:pt' in devDependencies is unusual but appears to be a mechanism for the tool to reference itself during development or testing."
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The package executes arbitrary shell commands via child_process.execSync using scripts defined in the user's package.json without sanitization, leading to OS command injection."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
