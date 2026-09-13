@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-13T16:53:16.189725+00:00",
+  "modified": "2026-09-13T16:53:16.189725+00:00",
+  "summary": "Potential risk from arbitrary script execution and package.json modification",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) via child_process.execSync. While this is common for build tools, the tool automatically copies files to a new directory and modifies the user's package.json file to add a devDependency pointing to the local copy, which could lead to unexpected side effects or persistence if used maliciously.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary scripts from package.json using child_process.execSync",
+      "Automatic modification of the user's package.json file to inject devDependencies"
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build function uses child_process.execSync to run 'prepublishOnly' or 'prepare' scripts from the user's package.json, which can execute arbitrary code."
+      },
+      {
+        "file": "pt.js",
+        "reason": "The link function modifies the user's package.json file by writing to it directly, adding a devDependency that points to the generated test folder."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as a utility to test NPM packages locally. The behavior of running build scripts and modifying package.json is consistent with its stated purpose, but it carries inherent risks if the package.json contains malicious scripts.",
+      "The use of execSync with stdio: 'pipe' is a standard way to capture output, but it does not prevent the execution of malicious commands if the package.json is compromised."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package executes arbitrary scripts defined in the user's package.json via child_process.execSync, which constitutes improper control of generation of code."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

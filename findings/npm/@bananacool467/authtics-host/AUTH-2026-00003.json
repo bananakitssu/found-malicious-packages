@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-13T16:53:16.189725+00:00",
+  "modified": "2026-09-13T16:53:16.189725+00:00",
+  "summary": "Potential Unauthenticated Administrative Access in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state modification (pause users). While these are intended for development/management, they lack robust authentication, relying on a 'dat' parameter which appears to be a simple string or array match against a configuration value.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Unauthenticated administrative API endpoints",
+      "Server-side process control (restart/shutdown) triggered via HTTP POST",
+      "Dynamic code execution via jiti and esbuild for SSR/rendering"
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "Implements POST endpoints like /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown that execute process.kill(process.pid, 'SIGTERM') and spawn new processes without standard authentication."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The 'dat' parameter check (config_.dat == req.dat) is a weak security mechanism for protecting administrative endpoints."
+      },
+      {
+        "file": "dist/renderEngine.js",
+        "reason": "Uses esbuild to dynamically compile and bundle code, which is standard for dev frameworks but requires careful handling of user-provided input."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as a development framework, which explains the presence of administrative endpoints. However, if deployed in a production environment without external protection, these endpoints could be exploited.",
+      "The 'dat' parameter acts as a shared secret or token, but its implementation is trivial and not a substitute for proper authentication.",
+      "The use of 'jiti' and 'esbuild' for runtime compilation is common in modern JS frameworks but increases the attack surface if the source files are user-controllable."
+    ],
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints lack robust authentication, allowing unauthorized access to sensitive server control functions.",
+      "The use of a trivial 'dat' parameter check is an insufficient authentication mechanism that fails to properly verify the identity of the requester."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
