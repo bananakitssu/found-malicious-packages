@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-14T19:52:24.812047+00:00",
+  "modified": "2026-09-14T19:52:24.812047+00:00",
+  "summary": "Security Analysis of OTPme Deployment Scripts",
+  "details": "The package contains several shell scripts that perform sensitive operations, including handling of encryption keys and passwords. Specifically, 'key_script.sh' and 'agent_script.sh' contain logic that handles passphrases and private keys, including potential exposure via environment variables or temporary files.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "otpme"
+      },
+      "versions": [
+        "0.3.0a276"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/otpme/0.3.0a276/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of temporary files for sensitive data (e.g., PINs in /tmp/pin-$RANDOM.sh).",
+      "Potential exposure of sensitive information via environment variables (e.g., SSH_ASKPASS, PIN).",
+      "Dynamic generation of shell scripts at runtime for decryption purposes.",
+      "Use of insecure file permissions (e.g., chmod 700 on temporary scripts, but still in /tmp)."
+    ],
+    "evidence": [
+      {
+        "file": "otpme-0.3.0a276/deploy/scripts/agent_script.sh",
+        "reason": "Creates a temporary script in /tmp to handle PIN input for ssh-add, which could be vulnerable to race conditions or local information disclosure."
+      },
+      {
+        "file": "otpme-0.3.0a276/deploy/scripts/key_script.sh",
+        "reason": "Contains complex logic for decrypting keys using openssl and bash, including reading passwords from stdin and handling temporary files for signing operations."
+      },
+      {
+        "file": "otpme-0.3.0a276/otpme/bin/command.py",
+        "reason": "Implements a workaround to avoid leaking passwords in /proc/<pid>/cmdline by using setproctitle and environment variables, which indicates awareness of the risk but relies on complex process-level manipulation."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is a complex system for OTP management and includes many administrative scripts. The use of /tmp for sensitive operations is a common pattern in older or legacy shell-based tooling but is inherently risky.",
+      "The Python code appears to be a wrapper around these shell scripts and backend logic. The security of the system heavily depends on the correct configuration of the backend and the environment.",
+      "The use of setproctitle and environment variable passing for passwords is a mitigation for command-line leakage, but it does not eliminate the risk of password exposure via other local vectors."
+    ],
+    "cwe_ids": [
+      "CWE-214",
+      "CWE-377",
+      "CWE-522"
+    ],
+    "cwe_notes": [
+      "The use of predictable or insecure temporary files in /tmp for sensitive data like PINs creates an insecure temporary file vulnerability.",
+      "The handling of passwords and private keys via environment variables and temporary files leads to insufficient protection of sensitive information.",
+      "The reliance on environment variables to pass sensitive credentials like passwords exposes them to potential inspection by other processes on the system."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

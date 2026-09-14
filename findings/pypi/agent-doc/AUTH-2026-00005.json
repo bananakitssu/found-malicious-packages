@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-14T19:52:24.812047+00:00",
+  "modified": "2026-09-14T19:52:24.812047+00:00",
+  "summary": "Runtime binary download and execution in agent-doc",
+  "details": "The package implements a bootstrap mechanism that downloads and executes arbitrary binary code from GitHub at runtime. While this is a common pattern for distributing native binaries via PyPI, it bypasses standard package integrity checks and introduces a dependency on external network resources during execution.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "agent-doc"
+      },
+      "versions": [
+        "0.35.395"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/agent-doc/0.35.395/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "runtime_download_and_execution"
+    ],
+    "evidence": [
+      {
+        "file": "agent_doc_bootstrap/cli.py",
+        "reason": "The package downloads a binary archive from a GitHub release URL, verifies it against a downloaded SHA256SUMS file, and then executes the binary using os.execv or subprocess.call."
+      }
+    ],
+    "reviewer_notes": [
+      "The bootstrap logic is well-implemented with security features like SHA256 verification and file locking. However, the fundamental design of downloading and executing binaries at runtime is inherently risky as it relies on the security of the GitHub repository and the network connection.",
+      "The code does not contain obfuscation or malicious intent, but the pattern itself warrants caution for users concerned about supply chain security."
+    ],
+    "cwe_ids": [
+      "CWE-829"
+    ],
+    "cwe_notes": [
+      "The package performs inclusion of functionality from an untrusted control sphere by downloading and executing arbitrary binaries from an external network resource at runtime."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
