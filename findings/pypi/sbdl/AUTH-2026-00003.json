@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-15T18:52:46.967053+00:00",
+  "modified": "2026-09-15T18:52:46.967053+00:00",
+  "summary": "Potential Arbitrary Code Execution and Remote Command Injection in sbdl",
+  "details": "The package contains multiple files that execute arbitrary code via 'eval()' or similar mechanisms, and includes a remote server component ('sbdl_server.py') that executes arbitrary commands based on user input.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "sbdl"
+      },
+      "versions": [
+        "1.27.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/sbdl/1.27.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic code execution via eval() or similar constructs in SBDL_Parser.",
+      "Remote command execution capability in sbdl_server.py.",
+      "Potential for arbitrary file system access via the SBDL compiler's file handling.",
+      "Use of 'exec_external' to run subprocesses with user-controlled arguments."
+    ],
+    "evidence": [
+      {
+        "file": "sbdl_server.py",
+        "reason": "The 'run_sbdl' function executes external commands using 'subprocess.run' with arguments derived from user input, and the server accepts remote requests to execute these commands."
+      },
+      {
+        "file": "sbdl_compliance.py",
+        "reason": "Contains a 'VERIFIER_TYPE' string that includes a '[[[#!python ... ]]]' block, which is intended to be executed as Python code within the SBDL compiler."
+      },
+      {
+        "file": "sbdl_model.py",
+        "reason": "The SBDL compiler architecture includes mechanisms to execute embedded Python code blocks (e.g., 'custom_verifier' attribute) which could lead to arbitrary code execution if the input SBDL files are untrusted."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as a DSL compiler that explicitly supports embedding Python code within the DSL files for verification and custom logic. This is a powerful feature but inherently dangerous if the input files are not trusted.",
+      "The 'sbdl_server.py' file appears to be a remote RPC server that allows executing the compiler remotely. This is a significant security risk if exposed to the network without authentication.",
+      "The 'Proprietary' license and the nature of the code suggest this is a specialized tool, but the security implications of the embedded code execution and remote server are high."
+    ],
+    "cwe_ids": [],
+    "cwe_notes": [
+      "CWE classification unavailable: HTTP Error 429: Too Many Requests"
+    ],
+    "cwe_status": "UNAVAILABLE"
+  }
+}
