@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-16T17:34:08.522961+00:00",
+  "modified": "2026-09-16T17:34:08.522961+00:00",
+  "summary": "Potential Arbitrary Code Execution via Build Scripts in @bananacool467/pt",
+  "details": "The package includes a build/link utility that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) using child_process.execSync. While this is intended functionality for a build tool, it poses a risk if the tool is run in an untrusted environment or if the package.json is manipulated.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary shell commands via child_process.execSync based on package.json scripts."
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build() function reads the 'prepublishOnly' or 'prepare' script from the local package.json and executes it using child_process.execSync without sanitization."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to facilitate local testing of npm packages by copying files to a temporary directory and linking them. The execution of 'prepublishOnly' or 'prepare' scripts is standard for build tools, but the implementation lacks strict input validation on the script content.",
+      "The use of 'child_process.execSync' with 'stdio: ['pipe', 'pipe', 'pipe']' is a common pattern but allows for potential command injection if the package.json is compromised."
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The use of child_process.execSync to execute scripts defined in package.json without sanitization allows for potential OS command injection if the package.json file is manipulated."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
