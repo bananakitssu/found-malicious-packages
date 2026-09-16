@@ -2,7 +2,8 @@ name: Daily Authtics Package Scan
 
 on:
   schedule:
-    - cron: "0 12 * * *"
+    # Run once per month instead of daily to conserve GitHub Actions minutes.
+    - cron: "0 12 1 * *"
   workflow_dispatch:
 
 permissions:
@@ -161,11 +162,11 @@ jobs:
           git config user.name "Authtics Bot"
           git config user.email "authtics-bot@users.noreply.github.com"
           BASE_BRANCH="${{ github.event.repository.default_branch }}"
-          BRANCH="authtics/daily-scan-${GITHUB_RUN_ID}"
+          BRANCH="authtics/monthly-scan-${GITHUB_RUN_ID}"
           git checkout -b "$BRANCH"
           git add reports/*.md findings/npm metadata/recent-packages.json metadata/scan-state.json
           if git diff --cached --quiet; then echo "No changes to commit."; exit 0; fi
-          git commit -m "security: add daily npm advisories for review"
+          git commit -m "security: add monthly npm advisories for review"
           git push --set-upstream origin "$BRANCH"
           REPORT=$(find reports -type f -name '*.md' | sort | tail -n 1)
           printf '%s\n' \
@@ -183,4 +184,4 @@ jobs:
             "### Report" \
             "- \`$REPORT\`" \
             > /tmp/authtics-pr-body.md
-          gh pr create --repo "$GITHUB_REPOSITORY" --base "$BASE_BRANCH" --head "$BRANCH" --title "security: Authtics daily npm advisories" --body-file /tmp/authtics-pr-body.md --draft
+          gh pr create --repo "$GITHUB_REPOSITORY" --base "$BASE_BRANCH" --head "$BRANCH" --title "security: Authtics monthly npm advisories" --body-file /tmp/authtics-pr-body.md --draft
