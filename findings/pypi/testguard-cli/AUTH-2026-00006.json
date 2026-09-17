@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00006",
+  "published": "2026-09-17T18:23:31.242368+00:00",
+  "modified": "2026-09-17T18:23:31.242368+00:00",
+  "summary": "Potential Arbitrary Code Execution via .codex/hooks.json",
+  "details": "The package includes a .codex/hooks.json file that defines command-line hooks to execute arbitrary Node.js scripts (pre-read.js, pre-write.js, etc.) during tool usage. While these appear to be intended for a development environment (likely related to the 'testguard' tool's own workflow), they represent a mechanism for executing arbitrary code based on file system events, which could be abused if the environment is compromised.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "testguard-cli"
+      },
+      "versions": [
+        "0.5.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/testguard-cli/0.5.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary Node.js scripts via command-line hooks triggered by file system operations (Read/Write/Edit)."
+    ],
+    "evidence": [
+      {
+        "file": "testguard_cli-0.5.0/.codex/hooks.json",
+        "reason": "Defines hooks that execute node commands (e.g., 'node \"$CLAUDE_PROJECT_DIR/.wolf/hooks/pre-read.js\"') upon file system events, which is a high-risk pattern for arbitrary code execution."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is a CLI tool for fault injection and test quality assurance. The hooks.json file seems to be part of a development-time automation suite (possibly for an AI-assisted coding environment).",
+      "While not inherently malicious, the ability to trigger arbitrary node scripts on file read/write events is a significant security concern if this package is used in an untrusted environment or if the hooks directory is writable by an attacker.",
+      "The package itself is a Python wrapper for a Node.js CLI, which explains the reliance on Node.js."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package implements a mechanism that executes arbitrary Node.js scripts based on file system events, which constitutes improper control of generation of code or code injection."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
