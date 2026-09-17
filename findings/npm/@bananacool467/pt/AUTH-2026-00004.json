@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-17T17:32:32.089983+00:00",
+  "modified": "2026-09-17T17:32:32.089983+00:00",
+  "summary": "Potential Arbitrary Code Execution via Lifecycle Script Trigger",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) during the build process. While this is intended functionality for a build tool, it poses a risk if the tool is used in an untrusted environment or if the user's package.json contains malicious scripts.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary shell commands via child_process.execSync using scripts defined in the user's package.json."
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build function retrieves 'prepublishOnly' or 'prepare' scripts from the local package.json and executes them using child_process.execSync, which could lead to arbitrary code execution if the package.json is manipulated."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to facilitate local testing of NPM packages by copying files to a temporary directory and linking them. The execution of lifecycle scripts is a common pattern in build tools, but it requires caution as it runs code from the project being processed.",
+      "The regex logic in glob-ignore.js and the file copying logic in pt.js appear to be standard utility code for this type of tool."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package executes arbitrary scripts defined in a user-provided package.json file using child_process.execSync, which constitutes improper control of generation of code."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
