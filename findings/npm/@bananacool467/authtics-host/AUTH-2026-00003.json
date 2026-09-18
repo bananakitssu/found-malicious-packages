@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-18T16:59:31.095985+00:00",
+  "modified": "2026-09-18T16:59:31.095985+00:00",
+  "summary": "Potential Unauthorized Administrative Access in @bananacool467/authtics-host",
+  "details": "The package contains administrative API endpoints that allow for server-side process control, including restarting and shutting down the server. While these are gated by a 'dat' configuration check, the implementation relies on a simple equality check against a potentially user-controlled or environment-injected configuration, which could lead to unauthorized administrative access if not properly secured by the end-user.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Remote administrative control via HTTP POST endpoints (restart, shutdown).",
+      "Dynamic process spawning using child_process.spawn with inherited stdio.",
+      "Potential for unauthorized access if the 'dat' configuration is predictable or exposed."
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "Implements /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which use child_process.spawn to restart the server process and process.kill to terminate it."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The administrative endpoints rely on a 'dat' check (config_.dat) which is used as a simple authentication token. If this configuration is not handled securely by the user, it provides a vector for unauthorized administrative actions."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is a web framework intended for development environments, which explains the presence of administrative APIs and HMR features.",
+      "The use of 'jiti' and dynamic file watching is consistent with a development-focused framework.",
+      "The administrative endpoints are clearly prefixed with '__authtics_host_apis__', suggesting they are intended for internal use, but they are exposed via the public server interface.",
+      "The 'dat' authentication mechanism is weak and should be highlighted to users as a security risk if exposed to untrusted networks."
+    ],
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative endpoints rely on a weak, potentially predictable 'dat' configuration check for authentication, which constitutes improper authentication.",
+      "The administrative functionality is exposed via public endpoints without sufficient access control, leading to missing authentication for critical functions."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
