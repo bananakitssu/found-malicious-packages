@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-18T18:06:50.217817+00:00",
+  "modified": "2026-09-18T18:06:50.217817+00:00",
+  "summary": "Potential Security Risk: Automatic Self-Update and Data Collection in Dokugen",
+  "details": "The package includes an automatic update mechanism that executes 'pip install --upgrade' or 'uv pip install --upgrade' at runtime. This behavior is risky as it allows the package to modify its own installation environment without explicit user confirmation during the update process, potentially introducing arbitrary code if the PyPI package is compromised.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "dokugen"
+      },
+      "versions": [
+        "14.0.11"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/dokugen/14.0.11/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Automatic runtime self-update via pip/uv",
+      "Exfiltration of system information (OS, architecture, username) to a remote backend",
+      "Execution of arbitrary shell commands via subprocess"
+    ],
+    "evidence": [
+      {
+        "file": "src/dokugen/utils.py",
+        "reason": "The 'check_and_update' function performs an automatic 'pip install --upgrade' or 'uv pip install --upgrade' if a newer version is detected on PyPI, which is a significant security risk."
+      },
+      {
+        "file": "src/dokugen/utils.py",
+        "reason": "The 'get_user_info' function collects system metadata (OS, architecture, release, username) and sends it to a remote backend."
+      },
+      {
+        "file": "src/dokugen/commands/aic.py",
+        "reason": "The package executes 'git' commands via subprocess to stage files and commit changes, which could be abused if the input to these commands is not properly sanitized."
+      }
+    ],
+    "reviewer_notes": [
+      "The package's primary functionality is to generate documentation and commit messages using a remote AI backend. The collection of user info and the automatic update mechanism are the primary security concerns.",
+      "The automatic update mechanism is particularly concerning as it runs with the privileges of the user executing the CLI tool.",
+      "The code uses 'requests' to send project data to a remote server. While this is expected for an AI-based tool, users should be aware that their codebase is being sent to a third-party server."
+    ],
+    "cwe_ids": [
+      "CWE-200",
+      "CWE-88"
+    ],
+    "cwe_notes": [
+      "The package collects and exfiltrates system metadata (OS, architecture, username) to a remote backend without explicit user consent, which constitutes an exposure of sensitive information.",
+      "The package executes git commands via subprocess using potentially unsanitized input, which can lead to argument injection."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
