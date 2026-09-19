@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-19T16:18:06.879832+00:00",
+  "modified": "2026-09-19T16:18:06.879832+00:00",
+  "summary": "Arbitrary script execution via build tool",
+  "details": "The package includes a build tool that executes arbitrary scripts defined in the user's package.json (prepublishOnly/prepare) during the build process. While this is intended functionality for a build tool, it poses a risk if the tool is used in an untrusted environment or if the user's package.json contains malicious scripts.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/pt"
+      },
+      "versions": [
+        "0.1.0-beta.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/pt/v/0.1.0-beta.5"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of arbitrary scripts from package.json using child_process.execSync"
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build function retrieves 'prepublishOnly' or 'prepare' scripts from the user's package.json and executes them using child_process.execSync without sanitization."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to facilitate local testing of NPM packages by copying files to a local directory and linking them. The execution of 'prepublishOnly' or 'prepare' scripts is a common pattern in build tools, but it effectively grants the package the ability to run arbitrary code on the host machine based on the contents of the user's package.json.",
+      "The code does not appear to contain obfuscated payloads or malicious network activity, but the execution of user-defined scripts is a significant security vector."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package executes arbitrary scripts defined in package.json using child_process.execSync without sanitization, leading to potential code injection or arbitrary command execution."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
