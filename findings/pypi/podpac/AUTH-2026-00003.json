@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-17T18:23:31.242368+00:00",
+  "modified": "2026-09-17T18:23:31.242368+00:00",
+  "summary": "Arbitrary Code Execution Risk in PODPAC Algorithm Nodes",
+  "details": "The package contains nodes (Arithmetic and Generic) that allow for arbitrary Python code execution via eval() and exec(). While these nodes include a safety check (settings.allow_unsafe_eval), they are designed to execute user-provided code strings, which poses a significant security risk if misused or if the safety mechanism is bypassed.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "podpac"
+      },
+      "versions": [
+        "4.0.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/podpac/4.0.5/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of eval() for dynamic code execution in Arithmetic node.",
+      "Use of exec() for dynamic code execution in Generic node."
+    ],
+    "evidence": [
+      {
+        "file": "podpac-4.0.5/podpac/core/algorithm/generic.py",
+        "reason": "The Arithmetic node uses eval() to execute mathematical expressions provided by the user, and the Generic node uses exec() to execute arbitrary multi-line Python code provided by the user."
+      }
+    ],
+    "reviewer_notes": [
+      "The package implements a 'settings.allow_unsafe_eval' flag to gate these dangerous functions. However, the presence of these features in a library that might be used in data processing pipelines warrants caution, as it allows for remote code execution if the input strings are controlled by an attacker.",
+      "The use of eval/exec is clearly documented as a feature for flexibility, but it remains a high-risk pattern."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package uses eval() and exec() to process user-provided strings, which allows for arbitrary code execution."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

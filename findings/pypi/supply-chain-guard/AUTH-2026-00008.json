@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00008",
+  "published": "2026-09-17T18:23:31.242368+00:00",
+  "modified": "2026-09-17T18:23:31.242368+00:00",
+  "summary": "Invasive Runtime Monkey-patching in supply-chain-guard",
+  "details": "The package implements a global import hook and monkey-patches core Python functionality (os.environ, builtins.open) to monitor and block sensitive operations. While intended for security, this approach is highly invasive, prone to breaking legitimate applications, and introduces significant stability risks.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "supply-chain-guard"
+      },
+      "versions": [
+        "0.3.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/supply-chain-guard/0.3.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Monkey-patching built-in functions (builtins.open)",
+      "Monkey-patching os.environ methods",
+      "Global installation of sys.meta_path hooks",
+      "Global installation of sys.addaudithook",
+      "Automatic execution of security hooks upon package import"
+    ],
+    "evidence": [
+      {
+        "file": "supply_chain_guard-0.3.1/supply_chain_guard/__init__.py",
+        "reason": "The package uses monkey-patching on os.environ and builtins.open to intercept file and environment access, which can cause unpredictable behavior in host applications."
+      },
+      {
+        "file": "supply_chain_guard-0.3.1/supply_chain_guard/__init__.py",
+        "reason": "The package automatically registers a global audit hook and meta_path finder upon import, which affects the entire Python runtime environment."
+      }
+    ],
+    "reviewer_notes": [
+      "The package's intent appears to be security-focused (detecting supply chain attacks), but the implementation method (monkey-patching core runtime components) is considered dangerous and non-standard for production libraries.",
+      "The package version in setup.py (0.1.0) does not match the version in pyproject.toml (0.3.1), suggesting poor maintenance or packaging errors.",
+      "The use of sys.addaudithook is a powerful feature that, if misconfigured or bypassed, could lead to unexpected application crashes."
+    ],
+    "cwe_ids": [
+      "CWE-693"
+    ],
+    "cwe_notes": [
+      "The package uses invasive monkey-patching of core Python built-ins and global hooks, which undermines the integrity and stability of the runtime environment, a form of protection mechanism failure."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

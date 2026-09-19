@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00009",
+  "published": "2026-09-17T18:23:31.242368+00:00",
+  "modified": "2026-09-17T18:23:31.242368+00:00",
+  "summary": "Malicious Data Exfiltration in aiosendletter",
+  "details": "The package 'aiosendletter' contains malicious code designed to exfiltrate local data. It attempts to escalate privileges to administrator and exfiltrate the contents of the user's 'logs' directory to a remote server.",
+  "severity": "critical",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "aiosendletter"
+      },
+      "versions": [
+        "4.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/aiosendletter/4.6/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 1,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Privilege escalation attempt using ctypes.windll.shell32.ShellExecuteW with 'runas' verb.",
+      "Unauthorized data exfiltration of local files to a remote endpoint.",
+      "Accessing sensitive user directories (LOCALAPPDATA/logs) without clear justification.",
+      "Use of remote infrastructure (Cloudflare Workers) for data collection."
+    ],
+    "evidence": [
+      {
+        "file": "aiosendletter-4.6/e.py",
+        "reason": "The script explicitly requests administrative privileges and then proceeds to zip and upload the contents of the user's 'logs' folder to a hardcoded remote URL."
+      }
+    ],
+    "reviewer_notes": [
+      "The package claims to be a 'bug reporter' but performs unauthorized data exfiltration. This is a clear case of malicious intent disguised as a utility.",
+      "The code uses 'ctypes' to force an administrative prompt, which is highly suspicious for a library that claims to be a simple log reporter."
+    ],
+    "cwe_ids": [
+      "CWE-200",
+      "CWE-269",
+      "CWE-506"
+    ],
+    "cwe_notes": [
+      "The package contains embedded malicious code designed to exfiltrate data.",
+      "The package performs unauthorized exfiltration of local files to a remote server.",
+      "The package attempts to escalate privileges to administrator using shell execution verbs."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

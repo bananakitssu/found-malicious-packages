@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-17T18:23:31.242368+00:00",
+  "modified": "2026-09-17T18:23:31.242368+00:00",
+  "summary": "Arbitrary Code Execution via Generic and Arithmetic Nodes",
+  "details": "The package contains nodes ('Generic' and 'Arithmetic') that explicitly allow for the execution of arbitrary Python code via 'exec()' and 'eval()'. While these features are guarded by a settings flag ('allow_unsafe_eval'), they present a significant security risk if enabled, as they allow arbitrary code execution through PODPAC node definitions.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "podpac"
+      },
+      "versions": [
+        "4.0.5"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/podpac/4.0.5/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of exec() for arbitrary code execution in Generic.algorithm",
+      "Use of eval() for arbitrary code execution in Arithmetic.algorithm"
+    ],
+    "evidence": [
+      {
+        "file": "podpac-4.0.5/podpac/core/algorithm/generic.py",
+        "reason": "The 'Generic' class uses 'exec(self.code, inputs)' to execute arbitrary code provided in the 'code' attribute."
+      },
+      {
+        "file": "podpac-4.0.5/podpac/core/algorithm/generic.py",
+        "reason": "The 'Arithmetic' class uses 'eval(eqn, f_locals)' as a fallback if 'numexpr' fails, allowing arbitrary expression evaluation."
+      }
+    ],
+    "reviewer_notes": [
+      "The package implements a security control ('allow_unsafe_eval') to prevent accidental use of these features.",
+      "The risk is high because if a user or application enables this setting, any untrusted input passed to these nodes could lead to remote code execution.",
+      "The implementation of these features is intentional for the package's functionality, but it is inherently dangerous."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package explicitly uses exec() and eval() to process user-provided code or expressions, which constitutes improper control of generation of code."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
