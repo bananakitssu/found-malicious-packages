@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-14T19:52:24.812047+00:00",
+  "modified": "2026-09-14T19:52:24.812047+00:00",
+  "summary": "Potential Arbitrary Code Execution via Configuration Files",
+  "details": "The package uses 'exec()' on content read from user-configurable files, which is a security risk if an attacker can influence the content of these files.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "esa-climate-toolbox"
+      },
+      "versions": [
+        "1.7.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/esa-climate-toolbox/1.7.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of exec() on file content",
+      "Dynamic configuration loading from user-writable paths"
+    ],
+    "evidence": [
+      {
+        "file": "esa_climate_toolbox-1.7.1/esa_climate_toolbox/conf/conf.py",
+        "reason": "The function _read_python_config uses exec() to execute arbitrary Python code read from configuration files, which can lead to arbitrary code execution if the configuration files are tampered with."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to load configuration from files like '~/.ect/conf.py'. While this is a common pattern for configuration, using exec() on these files allows any user with write access to the configuration directory to execute arbitrary code with the privileges of the user running the toolbox.",
+      "The risk is mitigated by the fact that these are local configuration files, but it remains a potential vector for local privilege escalation or persistence if the environment is shared or if the user is tricked into placing a malicious config file."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The application uses exec() on content read from user-configurable files, which allows for the execution of arbitrary code."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
