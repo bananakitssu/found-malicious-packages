@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-19T17:23:05.323985+00:00",
+  "modified": "2026-09-19T17:23:05.323985+00:00",
+  "summary": "Security Analysis of chatty-agent: Sandboxed AI Agent with Command Execution",
+  "details": "The package implements a sandboxed AI agent that executes shell commands and Python scripts. While it includes safety mechanisms like Landlock and path validation, the ability to execute arbitrary shell commands and Python scripts (even with some safety checks) presents a significant risk if the sandbox is misconfigured or if the LLM is manipulated to bypass restrictions.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "chatty-agent"
+      },
+      "versions": [
+        "0.3.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/chatty-agent/0.3.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Executes arbitrary shell commands via subprocess.Popen.",
+      "Executes arbitrary Python scripts via subprocess.",
+      "Implements a custom Landlock wrapper for process isolation, which is a complex security feature that could have bypasses.",
+      "Uses dynamic code execution patterns (e.g., parsing and executing Python scripts)."
+    ],
+    "evidence": [
+      {
+        "file": "src/chatty/runner.py",
+        "reason": "The tool_run_command function uses subprocess.Popen to execute shell commands, which is a high-risk operation."
+      },
+      {
+        "file": "src/chatty/safety.py",
+        "reason": "The validate_command_safety function attempts to block dangerous commands, but relies on blacklisting and parsing, which is inherently prone to bypasses."
+      },
+      {
+        "file": "src/chatty/landlock.py",
+        "reason": "The package compiles and uses a custom C binary for Landlock sandboxing, which adds complexity and potential for security vulnerabilities."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to be a powerful AI agent, which inherently requires dangerous capabilities (file system access, command execution).",
+      "The security model relies on a combination of path validation, Landlock, and command blacklisting. These are good practices but are not foolproof against sophisticated LLM-based attacks.",
+      "The use of a custom C binary for Landlock is a notable design choice that requires careful auditing."
+    ],
+    "cwe_ids": [
+      "CWE-184",
+      "CWE-78",
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package executes arbitrary Python scripts, which constitutes improper control of generation of code.",
+      "The package executes arbitrary shell commands via subprocess.Popen, which is a classic command injection risk.",
+      "The reliance on blacklisting for command validation is an incomplete, error-prone approach to input validation."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

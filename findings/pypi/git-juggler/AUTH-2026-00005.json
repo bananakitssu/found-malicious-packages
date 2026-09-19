@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-19T17:23:05.323985+00:00",
+  "modified": "2026-09-19T17:23:05.323985+00:00",
+  "summary": "Potential Remote Command Execution via Unauthenticated Terminal WebSocket",
+  "details": "The package provides a web-based terminal interface that spawns a shell process on the host machine. While this is a core feature of the application, it introduces significant security risks if exposed to untrusted users, as it allows arbitrary command execution within the context of the user running the application.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "git-juggler"
+      },
+      "versions": [
+        "0.1.2"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/git-juggler/0.1.2/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Spawning a shell process (pty.fork) and relaying input/output over a WebSocket."
+    ],
+    "evidence": [
+      {
+        "file": "src/backend/git_juggler/terminal.py",
+        "reason": "The application uses pty.fork() to spawn a shell (defaulting to /bin/bash) and relays input from a WebSocket directly to the shell's stdin, enabling remote command execution."
+      }
+    ],
+    "reviewer_notes": [
+      "The terminal functionality is clearly intended for local use, as evidenced by the CORS configuration restricting access to localhost. However, the lack of authentication on the WebSocket endpoint means that any process on the local machine (or any entity that can bypass the CORS check) could potentially interact with the terminal. The risk is primarily relevant if the tool is exposed to a network or if a malicious local process interacts with the port."
+    ],
+    "cwe_ids": [
+      "CWE-306",
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The application spawns a shell process and relays input directly to it, enabling OS command injection.",
+      "The terminal WebSocket endpoint lacks authentication, allowing unauthorized access to the shell interface."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
