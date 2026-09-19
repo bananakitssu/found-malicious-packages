@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-19T17:23:05.323985+00:00",
+  "modified": "2026-09-19T17:23:05.323985+00:00",
+  "summary": "Hardcoded Paths and Risky Internal Overrides in allopockets",
+  "details": "The package contains hardcoded local file paths in 'allopockets/features/embeddings.py' and 'allopockets/database/allodb.py', which may cause runtime errors or security concerns if the environment is not configured as expected. Additionally, the package includes a modified version of 'pdbecif''s '_parseFile' method in 'allopockets/database/cifutils.py', which is a significant deviation from standard library behavior and requires careful review.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "allopockets"
+      },
+      "versions": [
+        "1.0.17"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/allopockets/1.0.17/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Hardcoded absolute file paths in source code",
+      "Modification of third-party library internals (pdbecif)",
+      "Potential for arbitrary file access via hardcoded paths"
+    ],
+    "evidence": [
+      {
+        "file": "allopockets/features/embeddings.py",
+        "reason": "Hardcoded absolute path '/data/fnerin/huggingface/hub/models--facebook--esm2_t33_650M_UR50D' used to load machine learning models."
+      },
+      {
+        "file": "allopockets/database/cifutils.py",
+        "reason": "The package overrides the private '_parseFile' method of 'pdbecif.mmcif_tools.MMCIF2Dict', which is a risky practice that could lead to unexpected behavior or vulnerabilities if the upstream library changes."
+      },
+      {
+        "file": "allopockets/database/allodb.py",
+        "reason": "Hardcoded path 'data' relative to the module directory for saving CIF files."
+      }
+    ],
+    "reviewer_notes": [
+      "The hardcoded path in 'embeddings.py' is highly specific to a single user's environment ('fnerin'), which is a major red flag for portability and security.",
+      "The modification of 'pdbecif' internals suggests the package relies on specific, potentially fragile, parsing logic that might not be maintained or secure.",
+      "The package uses 'peewee' and 'playhouse' for database operations, which is generally safe, but the custom parsing logic in 'cifutils.py' should be audited for potential injection or parsing vulnerabilities."
+    ],
+    "cwe_ids": [
+      "CWE-1076",
+      "CWE-73"
+    ],
+    "cwe_notes": [
+      "The use of hardcoded absolute file paths in the source code can lead to external control of file name or path, potentially allowing unauthorized access or manipulation of files.",
+      "The modification of third-party library internals (monkey patching) is a risky practice that can lead to unexpected behavior and maintenance issues."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
