@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-20T16:42:59.525014+00:00",
+  "modified": "2026-09-20T16:42:59.525014+00:00",
+  "summary": "Insecure Administrative API Endpoints in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state modification (pause users). While these are intended for development/management, they lack robust authentication, relying on a 'dat' parameter which appears to be a simple string or array check against a configuration value.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Unauthenticated administrative API endpoints",
+      "Server-side process control (restart/shutdown) exposed via HTTP",
+      "Dynamic code execution via jiti and esbuild"
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "The class App exposes POST endpoints like /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which trigger process.kill(process.pid, 'SIGTERM') and process spawning, protected only by a simple 'dat' string match."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The /__authtics_host_apis__/set-users-paused endpoint allows modifying internal server state without proper authentication."
+      },
+      {
+        "file": "dist/renderEngine.js",
+        "reason": "Uses esbuild to dynamically compile and bundle code, which is standard for dev servers but requires careful handling of input."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' parameter check is not a secure authentication mechanism. If this package is used in a production environment or exposed to the public internet, it could lead to unauthorized server restarts or state manipulation.",
+      "The use of 'jiti' and 'esbuild' for runtime compilation is common in modern JS frameworks but increases the attack surface if user-controlled input influences the files being compiled."
+    ],
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints lack robust authentication, relying on a weak 'dat' parameter check, which constitutes missing authentication for critical functions.",
+      "The reliance on a simple string match for access control is an insufficient authentication mechanism."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
