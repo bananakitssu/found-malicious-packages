@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-20T17:39:19.916263+00:00",
+  "modified": "2026-09-20T17:39:19.916263+00:00",
+  "summary": "Security Analysis of pyfixer-ai: Dynamic Execution and API Key Probing",
+  "details": "The package contains dynamic code execution patterns and network-based API key probing that warrant careful review. Specifically, the use of exec() and eval() in _pair_probe.py and the automatic network probing of API keys in byok.py pose security risks.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pyfixer-ai"
+      },
+      "versions": [
+        "0.5.9"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/pyfixer-ai/0.5.9/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic code execution via exec() and eval() in _pair_probe.py.",
+      "Automatic network probing of API keys against external endpoints in byok.py.",
+      "Potential for arbitrary code execution if the input files to _pair_probe.py are untrusted."
+    ],
+    "evidence": [
+      {
+        "file": "pyfixer_ai-0.5.9/pyfixer/_pair_probe.py",
+        "reason": "Uses exec() to load and execute code from arbitrary paths and eval() to evaluate expressions from a JSON file, which is a high-risk pattern for code injection."
+      },
+      {
+        "file": "pyfixer_ai-0.5.9/pyfixer/byok.py",
+        "reason": "Contains _is_deepseek_key which performs an automatic network POST request to an external API (api.deepseek.com) using the user's provided API key to probe its validity."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to perform automated code analysis and fixing, which inherently requires some level of dynamic analysis. However, the implementation of _pair_probe.py is particularly dangerous as it executes code from files provided as arguments.",
+      "The network probing in byok.py is a privacy and security concern as it sends the user's API key to an external service without explicit user confirmation during the probe.",
+      "The package uses a local SQLite database for caching, which is standard, but the overall architecture relies on significant trust in the input files being analyzed."
+    ],
+    "cwe_ids": [
+      "CWE-200",
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The use of exec() and eval() on potentially untrusted input allows for arbitrary code execution.",
+      "The automatic transmission of API keys to an external service without explicit user consent constitutes an exposure of sensitive information."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

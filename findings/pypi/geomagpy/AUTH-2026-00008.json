@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00008",
+  "published": "2026-09-20T17:39:19.916263+00:00",
+  "modified": "2026-09-20T17:39:19.916263+00:00",
+  "summary": "Hardcoded absolute paths in geomagpy",
+  "details": "The package contains hardcoded absolute file paths in multiple source files, which is a poor practice that can lead to security issues or runtime failures in environments where these paths do not exist.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "geomagpy"
+      },
+      "versions": [
+        "2.0.2"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/geomagpy/2.0.2/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Hardcoded absolute file paths in source code"
+    ],
+    "evidence": [
+      {
+        "file": "magpy/absolutes.py",
+        "reason": "Contains hardcoded path: sys.path.insert(1, '/home/leon/Software/magpy/')"
+      },
+      {
+        "file": "magpy/core/activity.py",
+        "reason": "Contains hardcoded path: sys.path.insert(1,'/home/leon/Software/magpy/')"
+      },
+      {
+        "file": "magpy/core/database.py",
+        "reason": "Contains hardcoded path: sys.path.insert(1, '/home/leon/Software/magpy/')"
+      },
+      {
+        "file": "magpy/core/flagbrain.py",
+        "reason": "Contains hardcoded path: sys.path.insert(1,'/home/leon/Software/magpy/')"
+      },
+      {
+        "file": "magpy/core/flagging.py",
+        "reason": "Contains hardcoded path: sys.path.insert(1, '/home/leon/Software/magpy/')"
+      },
+      {
+        "file": "magpy/core/plot.py",
+        "reason": "Contains hardcoded path: sys.path.insert(1,'/home/leon/Software/magpy/')"
+      }
+    ],
+    "reviewer_notes": [
+      "The hardcoded paths appear to be remnants of a developer's local environment. While not inherently malicious, they indicate poor development practices and could potentially be exploited if an attacker can create directories matching these paths on a target system to inject malicious modules.",
+      "The package uses standard libraries and does not show signs of obfuscation or malicious intent."
+    ],
+    "cwe_ids": [
+      "CWE-426"
+    ],
+    "cwe_notes": [
+      "The hardcoded absolute paths in sys.path allow for untrusted search path vulnerabilities, where an attacker could potentially place malicious modules in the specified directory if it is writable or can be created."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
