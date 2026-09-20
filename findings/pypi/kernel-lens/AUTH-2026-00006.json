@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00006",
+  "published": "2026-09-20T17:39:19.916263+00:00",
+  "modified": "2026-09-20T17:39:19.916263+00:00",
+  "summary": "Runtime C++ Compilation and Hardcoded Paths in kernel-lens",
+  "details": "The package performs dynamic compilation of C++ code using 'nvcc' and 'g++' at runtime, which involves downloading external binaries and executing system commands. While this is a core feature of the package's functionality (compiling Triton kernels), it introduces security risks related to arbitrary code execution and dependency on system-level tools.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "kernel-lens"
+      },
+      "versions": [
+        "1.1.7"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/kernel-lens/1.1.7/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Runtime compilation of C++ code using subprocess.run() with nvcc and g++.",
+      "Downloading external binaries (onnxruntime-linux-x64-gpu-1.20.1.tgz) from GitHub via curl.",
+      "Hardcoded fallback paths for cache directories that include sensitive user information (e.g., /home/ostentatoire/...).",
+      "Dynamic modification of system environment variables (PATH) to locate nvcc."
+    ],
+    "evidence": [
+      {
+        "file": "kernel_lens-1.1.7/kernel_lens/backends/builder.py",
+        "reason": "The build_ort_plugin function downloads a tarball from GitHub and executes system commands (curl, nvcc, g++) to compile shared libraries at runtime."
+      },
+      {
+        "file": "kernel_lens-1.1.7/kernel_lens/compiler/core.py",
+        "reason": "The _get_cache_dir function contains a hardcoded absolute path (/home/ostentatoire/...) as a fallback, which is a significant security and privacy concern."
+      },
+      {
+        "file": "kernel_lens-1.1.7/kernel_lens/utils/env_check.py",
+        "reason": "The check_environment function modifies the system PATH environment variable to locate nvcc, which could be exploited if an attacker controls the environment."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to compile Triton kernels into shared libraries at runtime. This behavior is intentional but inherently risky.",
+      "The hardcoded path in _get_cache_dir is likely a developer oversight but should be removed as it leaks local system information.",
+      "The reliance on system-level compilers (nvcc, g++) means the package's security is tied to the security of the host's build environment.",
+      "No evidence of malicious intent was found; the code appears to be a legitimate, albeit complex, compiler tool."
+    ],
+    "cwe_ids": [
+      "CWE-200",
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package performs runtime compilation and execution of external code via subprocess calls, which can lead to arbitrary code execution if inputs are not properly sanitized.",
+      "The inclusion of hardcoded absolute paths containing local system information constitutes an information exposure vulnerability."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

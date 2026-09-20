@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00007",
+  "published": "2026-09-20T17:39:19.916263+00:00",
+  "modified": "2026-09-20T17:39:19.916263+00:00",
+  "summary": "Hardcoded local filesystem path in repo_searcher.py",
+  "details": "The package contains a hardcoded path in 'src/helpers/repo_searcher.py' that attempts to walk the filesystem starting at '/Users/chestor'. This is highly suspicious as it targets a specific user directory, which is likely a developer's local environment path, and could lead to unauthorized file enumeration or privacy concerns if executed on a machine where that path exists.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "hashenv"
+      },
+      "versions": [
+        "0.1.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/hashenv/0.1.6/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Hardcoded filesystem path traversal targeting a specific user directory (/Users/chestor)."
+    ],
+    "evidence": [
+      {
+        "file": "src/helpers/repo_searcher.py",
+        "reason": "The function 'repo_searcher' uses 'os.walk(\"/Users/chestor\")', which is a hardcoded path specific to a local development environment. This behavior is unexpected for a general-purpose CLI tool and suggests potential unauthorized access to user files."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be a CLI tool for managing environment variables. While the functionality seems intended for syncing repositories, the hardcoded path in 'repo_searcher.py' is a significant red flag.",
+      "The 'login' command takes a token and stores it using 'keyring', which is standard practice, but the hardcoded path suggests the developer may have accidentally included local development code in the production release."
+    ],
+    "cwe_ids": [
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package contains a hardcoded filesystem path (/Users/chestor) which is a form of hardcoded configuration that exposes local environment details and potentially facilitates unauthorized file system access."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

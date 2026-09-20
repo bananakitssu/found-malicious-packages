@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-20T17:39:19.916263+00:00",
+  "modified": "2026-09-20T17:39:19.916263+00:00",
+  "summary": "Hardcoded User Path in repo_searcher.py",
+  "details": "The package contains a hardcoded path in 'src/helpers/repo_searcher.py' that attempts to walk the filesystem starting at '/Users/chestor'. This is highly suspicious as it targets a specific user directory, which is likely a developer's local path, and could lead to unauthorized file enumeration or privacy concerns if executed on a different machine.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "hashenv"
+      },
+      "versions": [
+        "0.1.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/hashenv/0.1.6/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Hardcoded filesystem path traversal targeting a specific user directory (/Users/chestor)."
+    ],
+    "evidence": [
+      {
+        "file": "src/helpers/repo_searcher.py",
+        "reason": "The function 'repo_searcher' uses 'os.walk(\"/Users/chestor\")', which is a hardcoded path specific to a local development environment and poses a security risk by scanning arbitrary files on a user's system."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be a CLI tool for environment management. While the functionality seems intended for syncing .env files, the hardcoded path in repo_searcher is a significant red flag.",
+      "The code also uses 'keyring' to store tokens, which is a standard practice, but the overall implementation should be reviewed for potential data exfiltration risks given the server-side communication."
+    ],
+    "cwe_ids": [
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package contains a hardcoded filesystem path (/Users/chestor) which is a form of hardcoded configuration that can lead to unauthorized file system access or information disclosure."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

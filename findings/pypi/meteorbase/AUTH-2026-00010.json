@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00010",
+  "published": "2026-09-20T17:39:19.916263+00:00",
+  "modified": "2026-09-20T17:39:19.916263+00:00",
+  "summary": "Hardcoded Credentials and Automated Data Deletion in meteorbase",
+  "details": "The package contains hardcoded Firebase credentials and implements automated database management logic that performs remote deletions without user confirmation. The presence of a telemetry cache file suggests potential data exfiltration or tracking behavior.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "meteorbase"
+      },
+      "versions": [
+        "0.1.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/meteorbase/0.1.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Hardcoded Firebase API keys and project configuration",
+      "Automated remote deletion of database records without user intervention",
+      "Presence of a local telemetry cache file containing request history",
+      "Dynamic execution of database operations based on external configuration"
+    ],
+    "evidence": [
+      {
+        "file": "meteorbase-0.1.0/firebase-applet-config.json",
+        "reason": "Contains hardcoded Firebase API keys, project IDs, and storage bucket information."
+      },
+      {
+        "file": "meteorbase-0.1.0/meteorbase/app.py",
+        "reason": "The function 'verify_and_cleanup_database' performs automated deletions of Firestore records based on timestamps without explicit user confirmation."
+      },
+      {
+        "file": "meteorbase-0.1.0/.telemetry_cache.json",
+        "reason": "Contains a detailed log of request paths, timestamps, and latency, indicating potential tracking or telemetry collection."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be a wrapper for a specific Firebase project ('itsjustayush').",
+      "The 'telemetry_cache.json' file is highly unusual for a standard Python library and suggests the package might be tracking usage patterns or exfiltrating data.",
+      "The hardcoded credentials in 'firebase-applet-config.json' pose a significant security risk if this package is intended for general use."
+    ],
+    "cwe_ids": [
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package contains hardcoded Firebase API keys and project configuration in firebase-applet-config.json."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
