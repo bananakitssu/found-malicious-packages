@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-22T17:39:08.295371+00:00",
+  "modified": "2026-09-22T17:39:08.295371+00:00",
+  "summary": "Potential Unauthenticated Administrative API Access in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state manipulation (pause users). While these are intended for development/management, they lack robust authentication, relying only on a 'dat' (data) token check which may be insufficient depending on the implementation.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Implementation of administrative API endpoints (/__authtics_host_apis__/restart, /__authtics_host_apis__/shutdown) that can terminate the server process.",
+      "Use of child_process.spawn to restart the server process, which could be abused if the 'dat' token is leaked or guessed.",
+      "Runtime modification of server state (usersPaused) via unauthenticated or weakly authenticated API endpoints."
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "The class App defines multiple POST routes under /__authtics_host_apis__/ that perform sensitive actions like process.kill(process.pid, 'SIGTERM') for restart and shutdown, protected only by a simple 'dat' token comparison."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The restart functionality uses child_process.spawn to re-execute the current process, which is a powerful capability that should be strictly guarded."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' token appears to be a configuration-based secret. If this secret is not properly managed or is exposed in client-side code, these endpoints could be exploited by unauthorized parties.",
+      "The package is intended for development use, which mitigates the risk, but the lack of explicit authentication middleware for these administrative routes is a security concern.",
+      "The code uses 'jiti' for dynamic loading and 'esbuild' for bundling, which is standard for modern JS frameworks but requires careful review of the generated output."
+    ],
+    "cwe_ids": [
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints perform sensitive operations such as process termination and state manipulation while relying on a weak or insufficient authentication mechanism ('dat' token) instead of robust authentication."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
