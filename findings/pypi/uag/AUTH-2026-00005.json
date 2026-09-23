@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-23T19:41:22.123989+00:00",
+  "modified": "2026-09-23T19:41:22.123989+00:00",
+  "summary": "Dynamic Runtime Dependency Installation in uag",
+  "details": "The package implements a dynamic auto-installation mechanism that executes 'pip install' commands at runtime when optional dependencies are missing. While this is intended to improve user experience for optional features, it introduces risks related to arbitrary code execution and dependency confusion if not strictly controlled.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "uag"
+      },
+      "versions": [
+        "0.7.14"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/uag/0.7.14/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic execution of 'pip install' via subprocess at runtime.",
+      "Automatic installation of packages based on user-provided or environment-controlled triggers.",
+      "Use of a custom allowlist for auto-installation that includes a wide range of third-party packages."
+    ],
+    "evidence": [
+      {
+        "file": "src/uagent/_pip_auto.py",
+        "reason": "The 'auto_install' and 'install_with_status' functions use 'subprocess.run' to execute 'pip install' commands at runtime, which can be triggered by missing imports."
+      },
+      {
+        "file": "src/uagent/_pip_auto.py",
+        "reason": "The '_ALLOWED_PACKAGES' set defines a large list of packages that the library is permitted to install automatically, which could be exploited if an attacker influences the environment or the package's dependency resolution."
+      }
+    ],
+    "reviewer_notes": [
+      "The auto-installation feature is gated by an environment variable 'UAGENT_AUTO_INSTALL' (defaulting to 'allow'), which allows users to disable it. However, the default behavior is to permit automatic installation.",
+      "The implementation attempts to verify the package after installation, but the reliance on 'pip' at runtime is a significant security concern for production environments.",
+      "The package also includes cryptographic utilities for environment variable encryption, which appear to be implemented correctly using 'cryptography.hazmat' primitives."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package executes arbitrary commands via 'pip install' at runtime, which constitutes improper control of generation of code and can lead to arbitrary code execution."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

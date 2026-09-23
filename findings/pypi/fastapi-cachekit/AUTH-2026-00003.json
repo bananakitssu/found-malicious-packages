@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-23T19:41:22.123989+00:00",
+  "modified": "2026-09-23T19:41:22.123989+00:00",
+  "summary": "Insecure Deserialization via pickle in Cache Backends",
+  "details": "The package uses the 'pickle' module for serializing and deserializing cached data across multiple backends (DynamoDB, Firestore, Memcached, MongoDB, Postgres, Redis).",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "fastapi-cachekit"
+      },
+      "versions": [
+        "0.2.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/fastapi-cachekit/0.2.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of pickle for deserialization of data retrieved from external cache stores."
+    ],
+    "evidence": [
+      {
+        "file": "fastapi_cachekit-0.2.1/fast_cache/backends/dynamodb.py",
+        "reason": "Uses pickle.loads() to deserialize data retrieved from DynamoDB."
+      },
+      {
+        "file": "fastapi_cachekit-0.2.1/fast_cache/backends/google_firestore.py",
+        "reason": "Uses pickle.loads() to deserialize data retrieved from Firestore."
+      },
+      {
+        "file": "fastapi_cachekit-0.2.1/fast_cache/backends/memcached.py",
+        "reason": "Uses pickle.loads() to deserialize data retrieved from Memcached."
+      },
+      {
+        "file": "fastapi_cachekit-0.2.1/fast_cache/backends/mongodb.py",
+        "reason": "Uses pickle.loads() to deserialize data retrieved from MongoDB."
+      },
+      {
+        "file": "fastapi_cachekit-0.2.1/fast_cache/backends/postgres.py",
+        "reason": "Uses pickle.loads() to deserialize data retrieved from PostgreSQL."
+      },
+      {
+        "file": "fastapi_cachekit-0.2.1/fast_cache/backends/redis.py",
+        "reason": "Uses pickle.loads() to deserialize data retrieved from Redis."
+      }
+    ],
+    "reviewer_notes": [
+      "The use of the 'pickle' module for deserializing data from external cache stores is a well-known security risk. If an attacker can influence the contents of the cache (e.g., via a compromised Redis instance or other shared cache access), they could potentially achieve arbitrary code execution by injecting malicious pickled payloads.",
+      "While this is a common pattern in Python caching libraries, it is inherently insecure if the cache store is not strictly protected and trusted."
+    ],
+    "cwe_ids": [
+      "CWE-502"
+    ],
+    "cwe_notes": [
+      "The application uses the pickle module to deserialize data retrieved from external cache backends, which is inherently insecure and can lead to arbitrary code execution if the cache is compromised."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

@@ -1,0 +1,706 @@
+{
+  "ecosystem": "PyPI",
+  "generated": "2026-09-23T18:21:39Z",
+  "packages": [
+    {
+      "name": "pyobs-core",
+      "version": "2.10.7",
+      "filename": "pyobs_core-2.10.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7e/db/b197375974c8436095fdfa53db228e1e8b323f12183433ee960c99e96cef/pyobs_core-2.10.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "kaypy",
+      "version": "0.13.2",
+      "filename": "kaypy-0.13.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/50/de/320bf56d82bc8a55cf53b89237850fecfc15a006244f2d9eba631996b6e6/kaypy-0.13.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "paytrace",
+      "version": "2.0.7",
+      "filename": "paytrace-2.0.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c0/5b/06a77719401b0aaa9bde15f742339d29391437e4503f79a460f0805c40f2/paytrace-2.0.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ledgence-client",
+      "version": "0.1.1",
+      "filename": "ledgence_client-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/36/2b/5efedcfb14c5fbcb0a3dd6fd7dc38c089f0da5cc8db709fda04253c6f221/ledgence_client-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "melon-parse",
+      "version": "0.1.0",
+      "filename": "melon_parse-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/04/a5/25a1c2b44cc993611e6a244fe5bb78ccb8d9d6d5432b098cff12738d716c/melon_parse-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "openfilter",
+      "version": "1.4.0",
+      "filename": "openfilter-1.4.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/6f/a8/4456b0c0e9a299e7d11428735f89cefb6519243b15a9a08a66abad0a8c39/openfilter-1.4.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "joe-orchestrator",
+      "version": "1.3.4",
+      "filename": "joe_orchestrator-1.3.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/69/f5/0a1cdbeaf9620b40f547a79b79b75abfe796986e8ba1d6c5df2768626f2f/joe_orchestrator-1.3.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "python-aidot-cameras",
+      "version": "0.17.2",
+      "filename": "python_aidot_cameras-0.17.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/45/11/52842066324b65e0b9b2a874fc2fa11856c434e5932d67e59020226ee993/python_aidot_cameras-0.17.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "puvinoise-sdk",
+      "version": "0.3.115",
+      "filename": "puvinoise_sdk-0.3.115.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/78/65/aa40798c8874b9611808cedd85488e5544d82c37a7418a464e7b8f2962bc/puvinoise_sdk-0.3.115.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "shellbrain",
+      "version": "0.1.64",
+      "filename": "shellbrain-0.1.64.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8f/84/8319fc664236d3e18ab6d74d910738f4ec70af2a37f594a02279ae674903/shellbrain-0.1.64.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "admina-core",
+      "version": "0.12.0",
+      "filename": "admina_core-0.12.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/77/00/ebdda8761d77660ee9d707669c85e536a1ebbceff5533ac2c4d0249a6394/admina_core-0.12.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sagemaker-training",
+      "version": "5.1.2",
+      "filename": "sagemaker_training-5.1.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/33/b2/266fe5d4865b0f9c85dbcd6d811ed5454e328257d3f2f4f737b15955b25f/sagemaker_training-5.1.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "hnt-nf-jira-library",
+      "version": "0.4.41",
+      "filename": "hnt_nf_jira_library-0.4.41.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/95/08/cafc3c7b801dc4ace5a014638dcb32badff15fc68f7e9b6a74dab199eab4/hnt_nf_jira_library-0.4.41.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "iotbr",
+      "version": "0.2.2",
+      "filename": "iotbr-0.2.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/75/fc/4e81847f24cb2ed42ddc6fd6bf1f4d365720b51ce65899ce9377872ec912/iotbr-0.2.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "immunopipe",
+      "version": "2.6.1",
+      "filename": "immunopipe-2.6.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4c/af/48f86606da85aaf6c3d44878afc4564e654533346cc4fe736d6bcbff2c9c/immunopipe-2.6.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "singularity-grid",
+      "version": "0.10.1",
+      "filename": "singularity_grid-0.10.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4d/bf/5f9d493034987df6bff14be04cbc1f7bc94b6239cd0f34c988aa19520564/singularity_grid-0.10.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "recce-nightly",
+      "version": "1.67.0.20260923",
+      "filename": "recce_nightly-1.67.0.20260923.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a0/9b/9d51a22fa1a3338df873167da5326d83899e56e4e826ae6e75af7d696793/recce_nightly-1.67.0.20260923.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ebook2text",
+      "version": "2.3.2",
+      "filename": "ebook2text-2.3.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ad/c7/ba9842a5f937d9fdd3c55b9ed814a0ed65243f1d51f0f3681e53234c4ad3/ebook2text-2.3.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agentrecap",
+      "version": "0.11.0",
+      "filename": "agentrecap-0.11.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e0/a0/c9c8919df16879dc6f50fefda2c1ebb2795117a754e4ff294aa010770376/agentrecap-0.11.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "griip-sdk",
+      "version": "0.5.16",
+      "filename": "griip_sdk-0.5.16.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/82/60/e7ebae96c84c7048f0f26e184396c46c63254fb771a135cf331191050444/griip_sdk-0.5.16.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "cswap-pin",
+      "version": "0.1.276",
+      "filename": "cswap_pin-0.1.276.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b4/e5/069b9da67aa003857b2db204e6d0db8400246f6a7b68248b0297bbaf1304/cswap_pin-0.1.276.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "admina-framework",
+      "version": "0.12.0",
+      "filename": "admina_framework-0.12.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/11/ab/33ec210505a4eb1233392b43e4af6a039b47816911632767c7d767bf6105/admina_framework-0.12.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "bioclients",
+      "version": "0.2.37",
+      "filename": "bioclients-0.2.37.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/df/1a/ebe5f141f9a25dc0d2243653a6b5ca0b837ac261433549d9d2614b1d53d1/bioclients-0.2.37.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ida-colors",
+      "version": "0.0.2",
+      "filename": "ida_colors-0.0.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f6/a4/4ff1eabbf145cb934be57db89772101b9a81f53742a7965ee0275307d631/ida_colors-0.0.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ai-costs",
+      "version": "2.2.3",
+      "filename": "ai_costs-2.2.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/70/f5/6715878bab461cbe4b52382d96552ffe3568a4ad96e931be9e59c48bd5f5/ai_costs-2.2.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "log-foundry",
+      "version": "1.0.1",
+      "filename": "log_foundry-1.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/41/58/f2291d2f75f0c6eee3943c57bcb805489a2e6e08cab4d703e7c6ea38ffa4/log_foundry-1.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "albus-sdk",
+      "version": "0.20.1",
+      "filename": "albus_sdk-0.20.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c4/32/2979bfe68291e8e839bca8d7a013d776dbc9be6fcabec47dfd71fefc742e/albus_sdk-0.20.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "flip-utils",
+      "version": "0.8.0",
+      "filename": "flip_utils-0.8.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3f/c1/27511bc029edec30ca44a379ad4ed8d38ff3b3c96f1f8c15f9a72176cf9a/flip_utils-0.8.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "keel-sdk",
+      "version": "0.5.0",
+      "filename": "keel_sdk-0.5.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a5/dc/367a63502ac24ccf2f4c163dfc9acaea7bd16ee105829bd3b0b2a4f5c0e5/keel_sdk-0.5.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "copela",
+      "version": "0.3.2",
+      "filename": "copela-0.3.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4a/25/019804a79093ea8919a8e06758094474a93070cdede32394f9d116afa60e/copela-0.3.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "recce-cloud-nightly",
+      "version": "1.32.0.20260922",
+      "filename": "recce_cloud_nightly-1.32.0.20260922.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/46/e8/77b4680bce8ded0ac738dc830c85f78c3723a097a97eef2064e3bedfe805/recce_cloud_nightly-1.32.0.20260922.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "google-ads-transparency",
+      "version": "0.1.0",
+      "filename": "google_ads_transparency-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/46/45/46fbbb7b57343d6a5c6422c2e5c393e469f76fa4dfd67da122d3fe1277d1/google_ads_transparency-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sphinx-vtk-xref",
+      "version": "0.4.0",
+      "filename": "sphinx_vtk_xref-0.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9b/4e/5a9e6d393f7e6fc61ee098e53da847921b7281e07cae70970fda47476b22/sphinx_vtk_xref-0.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "allspeak-ai",
+      "version": "2609231916",
+      "filename": "allspeak_ai-2609231916.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/65/67/463d6ec16b99559bf1132008efbf5f0317605246d1832473af413813cfef/allspeak_ai-2609231916.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "q-alchemy-sdk-py",
+      "version": "0.3.1",
+      "filename": "q_alchemy_sdk_py-0.3.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b7/1c/d7c9733926f04fdb7f804982d9abd4bb2123348ed6148450ed220f9041dc/q_alchemy_sdk_py-0.3.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pypulseqpp",
+      "version": "0.0.5",
+      "filename": "pypulseqpp-0.0.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ef/73/1076ba902bf1afab662a0b0ab37b59fc00130b14c2e5197b6244c73b14ff/pypulseqpp-0.0.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "clichatty",
+      "version": "0.6.6",
+      "filename": "clichatty-0.6.6.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3a/30/ee2257a7536b5ea9bb38650c1d3a723f53fc02c928d55b692d83136e5df7/clichatty-0.6.6.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dart-risk-mcp",
+      "version": "1.29.5",
+      "filename": "dart_risk_mcp-1.29.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/90/cd/bfc8ea104432d466ab8042dd3e6c6d8158e57fc29927f56fa5aef7e3d10b/dart_risk_mcp-1.29.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "singularity-grid",
+      "version": "0.10.1",
+      "filename": "singularity_grid-0.10.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4d/bf/5f9d493034987df6bff14be04cbc1f7bc94b6239cd0f34c988aa19520564/singularity_grid-0.10.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "cmpnd",
+      "version": "0.27.7",
+      "filename": "cmpnd-0.27.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a9/e6/b1da2ce6fc83d61250252570548762f65674a5bf7f4f518755b57c08ba00/cmpnd-0.27.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "django-sqlfun",
+      "version": "0.2.0",
+      "filename": "django_sqlfun-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/51/c1/776d4d6f091a0c888dba480fe119cf8d6abb2209998d318a513ea32e8d9d/django_sqlfun-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ruminant",
+      "version": "0.0.41",
+      "filename": "ruminant-0.0.41.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d8/13/cae67f5b8daa10c6d1ff7be1a35acf4ce39999a63519f6e77508cd95feb0/ruminant-0.0.41.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "plexora",
+      "version": "0.0.20",
+      "filename": "plexora-0.0.20.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/90/1b/fdc79c5ae5d06a528b5d28f4e18c67d2ca29b15784fd4e1d06ad81a58c58/plexora-0.0.20.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "fastapi-cachekit",
+      "version": "0.2.1",
+      "filename": "fastapi_cachekit-0.2.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8b/89/5051d1834b682fd07427a8b861d2f7cb106a0f7231007df8df565334b71c/fastapi_cachekit-0.2.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "yaas",
+      "version": "0.11.4",
+      "filename": "yaas-0.11.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/df/9a/57854f77f6ad3439570df31d7fad46f8d148fdd65e5144af7d97f6447040/yaas-0.11.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ChatLogin",
+      "version": "0.1.5",
+      "filename": "chatlogin-0.1.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a9/08/d9b9170a581943384fa5d7f57dcdafc77e2252b5e1f6a0e9d1687dbfb25c/chatlogin-0.1.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "edgeproc-core",
+      "version": "0.4.3",
+      "filename": "edgeproc_core-0.4.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/58/70/be0357afd9a76b92578c7a1e60115810acb3aab677433b0940a0857dcb47/edgeproc_core-0.4.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "vergefy-client",
+      "version": "0.25.0",
+      "filename": "vergefy_client-0.25.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/75/81/57c2b090fe38338f9851f0ad485452db87a76c1c6f7a4014edadee1a2081/vergefy_client-0.25.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "PyFiberModes",
+      "version": "0.16.0",
+      "filename": "pyfibermodes-0.16.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/61/cf/a1cf128de1e00be861abbee2794de725508b738bdab44bff436c36851cc2/pyfibermodes-0.16.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agent-workflow-ui",
+      "version": "1.3.0",
+      "filename": "agent_workflow_ui-1.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/af/c8/26714a2375118e9e11eb05b63ed730f105edb5c4dfc5678febde7fe1855b/agent_workflow_ui-1.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "markwright",
+      "version": "0.2.0",
+      "filename": "markwright-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/61/65/400ea37f558a54e10c1fbdc5e4639a2b0eebea00a2ee59a8c567f8839cae/markwright-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "northlight",
+      "version": "0.0.0",
+      "filename": "northlight-0.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/6c/19/0fe7f710ab5f73d34a0709054be5c722a83c78ddd65cf51d5aa58f0b29de/northlight-0.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "llmock",
+      "version": "0.2.1",
+      "filename": "llmock-0.2.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7f/5c/f0a2d5d22e20ab032b1a7a8fc29fa2aaea98eaad571f652870e42943442c/llmock-0.2.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pyredis-om",
+      "version": "0.11.1",
+      "filename": "pyredis_om-0.11.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f5/7d/caf4817c42e226ac2ad7aea308f1caa94fa7565386aa6fee7a6cfe295b2e/pyredis_om-0.11.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "awf",
+      "version": "1.3.0",
+      "filename": "awf-1.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/63/e1/7a9bca7f40c6593f9159180724e9063f4d7d16d280c3995f78a344938779/awf-1.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "quantconnect-stubs",
+      "version": "18124",
+      "filename": "quantconnect_stubs-18124.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/09/1d/c63ac0e89b699a8006b9c6b9fbe3bf56c1ab26dbfb127a7098d5f6eba8c7/quantconnect_stubs-18124.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "arrowbricks",
+      "version": "3.2.0",
+      "filename": "arrowbricks-3.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8b/0b/a247e230f65aac3b364d90c6b1c76b4e63cafb413d45550189bdb9d1926b/arrowbricks-3.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "odoo-addon-l10n-br-base",
+      "version": "19.0.2.2.0",
+      "filename": "odoo_addon_l10n_br_base-19.0.2.2.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/4d/bf/ea65f27e54e120642161757cb03353dfaea51a657117887297beeff6fb34/odoo_addon_l10n_br_base-19.0.2.2.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "agentfoundry",
+      "version": "1.5.92",
+      "filename": "agentfoundry-1.5.92-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl",
+      "url": "https://files.pythonhosted.org/packages/ad/d7/d62e47f8cf96c7e20bb03be08b31c8ccc75bb5dd47cad2252cdfeca34489/agentfoundry-1.5.92-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "exoatlas",
+      "version": "0.7.11",
+      "filename": "exoatlas-0.7.11.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ac/9e/068e54ff5450ab891885787f4fd4445018e69ec06d4afd7f9f20ce3fb2e0/exoatlas-0.7.11.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mlpipelineholder",
+      "version": "0.3.17",
+      "filename": "mlpipelineholder-0.3.17.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/04/3d/f56044d3000241fbfdb02ce8255a8a567f4f5041bbc167c68398a99d222f/mlpipelineholder-0.3.17.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ssmforge",
+      "version": "0.2.0",
+      "filename": "ssmforge-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b9/46/3c1d9d3cde7a9cfe5a8a5f0c513628a95fc718e17b8cfa392054deb3c853/ssmforge-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pxr-vt-dev",
+      "version": "26.8",
+      "filename": "pxr_vt_dev-26.8.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/08/70/c064510297337e2ea8f7773785b0452467edd429ac2cd8621c476d2f4a33/pxr_vt_dev-26.8.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "arthur-client",
+      "version": "1.4.2692",
+      "filename": "arthur_client-1.4.2692.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/24/48/e1b3b6d4714870e6b73f335df1aec52bc6ef6a43d6468635220aa419dbaf/arthur_client-1.4.2692.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agent-eval-planner",
+      "version": "0.1.0",
+      "filename": "agent_eval_planner-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/09/b2/a6bd36963847ac69199c28b05967810c1e03db3c853966853291709db78d/agent_eval_planner-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "olas-operate-middleware",
+      "version": "0.15.40",
+      "filename": "olas_operate_middleware-0.15.40.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3d/78/5ea6cb88b9f401872733fa7c54e5dd03781738dca788582bafd3b79104cf/olas_operate_middleware-0.15.40.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "petit-log-crunchtools",
+      "version": "4.2.0",
+      "filename": "petit_log_crunchtools-4.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c1/6e/af8f50652e2a60e986ad8173973800f3428f4bf7087789aac8bfdeca9102/petit_log_crunchtools-4.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zipline-ai",
+      "version": "1.24.1",
+      "filename": "zipline_ai-1.24.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/12/ed/921b1810b99cbc7a9919acc1e03dfd4b526c1ee49a8360372c024e0e5f8f/zipline_ai-1.24.1-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "arxyne",
+      "version": "0.3.23",
+      "filename": "arxyne-0.3.23-cp311-cp311-macosx_11_0_arm64.whl",
+      "url": "https://files.pythonhosted.org/packages/86/49/615623b4342e8279b0570d40f7726900f4861b4e44b253b8dc32899c3507/arxyne-0.3.23-cp311-cp311-macosx_11_0_arm64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "groundx",
+      "version": "4.0.7",
+      "filename": "groundx-4.0.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/27/e4/1ce7a28f1c79416fdb85c8f1b6d29de0eb61f682a7e003db833823cd431f/groundx-4.0.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "maneki",
+      "version": "0.19.13",
+      "filename": "maneki-0.19.13.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/60/1e/1918d62a58a2c7e9b3d69ad2f86668a02d1096edc25fe9889a1c6a492aae/maneki-0.19.13.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "probe-research",
+      "version": "0.179.3",
+      "filename": "probe_research-0.179.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f6/15/37bb725e409ebd8d18aaf398c3f2c211622a141782aaf20161fcb2f7b484/probe_research-0.179.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "rocketride",
+      "version": "1.4.0",
+      "filename": "rocketride-1.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/15/e6/97b49cb914b66bf3f595280efead4f1d65f373e3a0f17c585f37e2ab6f23/rocketride-1.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "rocketride-mcp",
+      "version": "1.5.0",
+      "filename": "rocketride_mcp-1.5.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/71/92/c386031a6f25a12bc2fc0fd98451e757edd566020ccc4c059998a3b011df/rocketride_mcp-1.5.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ultracart-rest-sdk",
+      "version": "4.1.171",
+      "filename": "ultracart_rest_sdk-4.1.171.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/dc/a3/4f2312652c3026c943f6aa11db297a63e1a7d12ef30d59e36eae16278c8e/ultracart_rest_sdk-4.1.171.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "bartorch",
+      "version": "0.0.3.post0",
+      "filename": "bartorch-0.0.3.post0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/bb/93/4f545f5b201bbdaacb8ab18630a293ca616735fdc616e18cf584dead770e/bartorch-0.0.3.post0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-alerts",
+      "version": "0.1.28",
+      "filename": "ovos_skill_alerts-0.1.28.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1d/74/e76dbd11147ae4e7f9c7ec53605a0d3ff7e7ca063eae5312e7a257273f2c/ovos_skill_alerts-0.1.28.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mikrowerk-edi-invoicing",
+      "version": "0.7.1",
+      "filename": "mikrowerk_edi_invoicing-0.7.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/60/c2/12ce6facad9a3d9526660be63f6eda91b8e1dff663db42f0859ae3e8ec16/mikrowerk_edi_invoicing-0.7.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "methodinfrascan",
+      "version": "0.3.0",
+      "filename": "methodinfrascan-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a8/3e/c588b99fb428b69d364cfcf4028e5a113c50b61edc514d25b09c67d2b280/methodinfrascan-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "externum",
+      "version": "4.3.0",
+      "filename": "externum-4.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ce/12/0860a0e5c11b7bf2d470a0652066ff7a84efcc80f1234da447eceac4b2b0/externum-4.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "winvda",
+      "version": "0.1.0",
+      "filename": "winvda-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/0b/ac/a1f36f1ac6361b58956f7c778d93dae14b8f6946079e45a300b24e7c2854/winvda-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lusid-sdk",
+      "version": "2.3.253",
+      "filename": "lusid_sdk-2.3.253.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/87/d1/9d290e39c8bc6ab020e46c042861694335d644e9e7773232fb64c4db8fad/lusid_sdk-2.3.253.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lumoz-mcp",
+      "version": "0.3.0",
+      "filename": "lumoz_mcp-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/2f/30/002e9a8f8c7641b7ec2639835ccb55aec37432dd6d2afa58e9dd8b114308/lumoz_mcp-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mdix",
+      "version": "0.3.0",
+      "filename": "mdix-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a4/84/ee6f64b7250a7aee4cade5cb54760fce5a06aacbf01e4da7b450e8204c00/mdix-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "factory-sim",
+      "version": "0.1.2",
+      "filename": "factory_sim-0.1.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/91/26/b46c34daaeae56dfbbd7993946d0419777a8c2cbe6957eeb9116a96211e0/factory_sim-0.1.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "jastg",
+      "version": "1.1.0",
+      "filename": "jastg-1.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/79/2e/367065867d1d29b8fd1547f20058b8f6c68dca72c511fb2f12d81ab8b282/jastg-1.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "hugmunn",
+      "version": "0.0.0.12",
+      "filename": "hugmunn-0.0.0.12.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/08/2a/62036fc74f302fee4d4af0bf1e597ae9167b70e2594d0a0630689b6d3294/hugmunn-0.0.0.12.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "runprov",
+      "version": "0.6.0",
+      "filename": "runprov-0.6.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f6/68/7eaa44854ea9d88a2e7739d96bc72a0e3085af32c5abbe859e41d07f41fe/runprov-0.6.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "django-resaas",
+      "version": "0.0.606",
+      "filename": "django_resaas-0.0.606.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8b/a8/1d228ef7a7c5b879dce632312c0e22d867918bfb628055a7657ce89de2d6/django_resaas-0.0.606.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "allwright",
+      "version": "0.1.13",
+      "filename": "allwright-0.1.13.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/00/0d/92fdbd3a618d86965cc29c46344d4501b82a15707e90510ac2d797c02990/allwright-0.1.13.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ffbb-data-client",
+      "version": "2.4.33",
+      "filename": "ffbb_data_client-2.4.33.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/57/8d/69722e71f838e7ad2fadc707fdadc882defdb7e4f6b7e2c5d9e67b66fee2/ffbb_data_client-2.4.33.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sccont",
+      "version": "0.1.0",
+      "filename": "sccont-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/44/54/a8f0f002ff6bffb603ca028e566ee259a66937f707c765a06f5c64e8f4c7/sccont-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "cuacd",
+      "version": "0.1.0",
+      "filename": "cuacd-0.1.0-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/ac/08/b37789c6b57a21738ec7f5596a6354ac5e445930680cc7d17c9c00bf4231/cuacd-0.1.0-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "maneki",
+      "version": "0.19.13",
+      "filename": "maneki-0.19.13.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/60/1e/1918d62a58a2c7e9b3d69ad2f86668a02d1096edc25fe9889a1c6a492aae/maneki-0.19.13.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "uag",
+      "version": "0.7.14",
+      "filename": "uag-0.7.14.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/48/a7/21caf910ff1e230f5fec396c09d5b62a8e3a60eaa77798350970955d7484/uag-0.7.14.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "smrti",
+      "version": "0.21.4",
+      "filename": "smrti-0.21.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/dd/52/64f6de4aed5871e6780f415a16d6b676903de40aec17ceb1785b5bcf12e2/smrti-0.21.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pulumi-azure-native",
+      "version": "3.28.0",
+      "filename": "pulumi_azure_native-3.28.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/79/a4/5a425ebffd05455f58d5ed065c8ff8a4c6382176502e0ebc4f916b3b27a3/pulumi_azure_native-3.28.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "redundo",
+      "version": "0.4.1",
+      "filename": "redundo-0.4.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5b/49/4bb6c8ab711276f5d000d7093cf47117ea2cc3db1ea9f28e7b6dd0ce3e57/redundo-0.4.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "smartytalent-client",
+      "version": "0.9.34",
+      "filename": "smartytalent_client-0.9.34.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/49/ca/8de946e0cfa8fd1c870f5f6a0f419b0c3d3e65327fd389dda2dfe11d9bb4/smartytalent_client-0.9.34.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "laya",
+      "version": "0.3.11",
+      "filename": "laya-0.3.11.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/69/04/0abe8a5986500e9385f43d795a62910dab63628390250c73fea5e1e98822/laya-0.3.11.tar.gz",
+      "packagetype": "sdist"
+    }
+  ]
+}
