@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-23T19:41:22.123989+00:00",
+  "modified": "2026-09-23T19:41:22.123989+00:00",
+  "summary": "DRM and Obfuscation in Externum Package",
+  "details": "The package implements a custom DRM (Digital Rights Management) system that includes obfuscation of string literals and runtime tamper detection. While these techniques are often used for security, they can also be used to hide malicious behavior or hinder security analysis. The code uses base64 encoding for string literals and performs runtime integrity checks on the file itself.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "externum"
+      },
+      "versions": [
+        "4.3.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/externum/4.3.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Runtime obfuscation of string literals using base64 decoding.",
+      "Self-tamper detection mechanism that reads the file's own source code at runtime.",
+      "DRM system that enforces license key validation via environment variables."
+    ],
+    "evidence": [
+      {
+        "file": "externum-4.3.0/externum/drm.py",
+        "reason": "Implements _obfuscate_strings which encodes string literals in base64 and provides a runtime decoder, and _ext_drm_self_check which reads the file's own source code to verify its integrity."
+      },
+      {
+        "file": "externum-4.3.0/externum/runtime/__init__.py",
+        "reason": "The Runtime class uses exec() on dynamically compiled code, which is a common pattern for transpilers but requires careful review when combined with DRM/obfuscation."
+      }
+    ],
+    "reviewer_notes": [
+      "The DRM implementation is clearly intended for protecting intellectual property (license keys, watermarking).",
+      "The self-tamper detection mechanism is a common technique in commercial software protection but is inherently suspicious in open-source packages as it can be used to prevent users from auditing or modifying the code.",
+      "The use of exec() on generated code is standard for a language transpiler, but the combination with obfuscation makes static analysis of the final executed code difficult."
+    ],
+    "cwe_ids": [],
+    "cwe_notes": [
+      "CWE classification unavailable: HTTP Error 503: Service Unavailable"
+    ],
+    "cwe_status": "UNAVAILABLE"
+  }
+}
