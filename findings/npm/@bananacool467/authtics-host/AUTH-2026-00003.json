@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-23T17:49:20.532729+00:00",
+  "modified": "2026-09-23T17:49:20.532729+00:00",
+  "summary": "Potential Administrative Control Vulnerability in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control, including restarting and shutting down the process. While these are protected by a 'dat' (likely 'data' or 'dat-token') check, the implementation relies on a simple equality check against a configuration value, which could be vulnerable if the token is leaked or predictable.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Remote server control via HTTP POST endpoints (restart, shutdown).",
+      "Dynamic process spawning using child_process.spawn with detached: true.",
+      "Network traffic interception and monitoring in the browser via monkey-patching fetch, WebSocket, and EventSource."
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "Implements /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which use child_process.spawn to restart the server and process.kill to terminate it."
+      },
+      {
+        "file": "dist/devPanel.js",
+        "reason": "Monkey-patches global window.fetch, window.WebSocket, and window.EventSource to intercept and monitor network requests, which is typical for dev-tools but invasive."
+      }
+    ],
+    "reviewer_notes": [
+      "The administrative endpoints are intended for development environments, but their presence in a production-capable server framework requires caution.",
+      "The 'dat' token authentication mechanism is simplistic and should not be relied upon as a robust security boundary.",
+      "The use of monkey-patching in devPanel.js is standard for development tools but should be verified to ensure it does not leak sensitive data to external services."
+    ],
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The authentication mechanism relies on a simple equality check against a configuration value, which is insufficient for protecting sensitive administrative endpoints.",
+      "The administrative endpoints (restart, shutdown) are missing robust authentication, allowing unauthorized access to critical server control functions."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
