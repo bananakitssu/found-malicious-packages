@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00006",
+  "published": "2026-09-24T19:17:54.883370+00:00",
+  "modified": "2026-09-24T19:17:54.883370+00:00",
+  "summary": "Potential Arbitrary Code Execution via Database-Stored Logic",
+  "details": "The package contains multiple instances of dynamic code execution patterns, specifically using 'run_code_from_db_field' to execute Python code stored in database fields. This is a high-risk pattern that allows for arbitrary code execution if the database content is compromised or if user-supplied input is improperly handled.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "pytigon-standard-prj"
+      },
+      "versions": [
+        "0.260924"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/pytigon-standard-prj/0.260924/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic execution of code stored in database fields via 'run_code_from_db_field'.",
+      "Use of 'eval()' or similar dynamic evaluation patterns in custom logic.",
+      "Potential for arbitrary code execution through user-modifiable database content."
+    ],
+    "evidence": [
+      {
+        "file": "pytigon_standard_prj/prj/_schbi/schbi/models.py",
+        "reason": "Uses 'run_code_from_db_field' to execute code from the 'refresh_data' field."
+      },
+      {
+        "file": "pytigon_standard_prj/prj/_schbi/schbi/views.py",
+        "reason": "Uses 'run_code_from_db_field' to execute code from 'view' fields in models."
+      },
+      {
+        "file": "pytigon_standard_prj/prj/_schdata/schchart/views.py",
+        "reason": "Uses 'run_code_from_db_field' to execute code from 'get_config', 'get_data', 'get_layout', and 'on_event' fields."
+      },
+      {
+        "file": "pytigon_standard_prj/prj/_schdata/schdoc/views.py",
+        "reason": "Uses 'run_code_from_db_field' to execute code from 'save_fun' and 'load_fun' fields."
+      }
+    ],
+    "reviewer_notes": [
+      "The package architecture relies heavily on storing and executing Python code within database fields. While this may be a design choice for a framework, it presents a significant security risk if the database is not strictly protected or if the input validation for these fields is insufficient.",
+      "The 'prepare_for_pypi.sh' script performs various database migrations and setup tasks, which is unusual for a standard package installation and suggests a complex, state-dependent deployment process."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The application uses a pattern that dynamically executes Python code retrieved from database fields, which constitutes improper control of generation of code (Code Injection)."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
