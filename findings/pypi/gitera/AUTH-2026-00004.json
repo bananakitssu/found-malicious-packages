@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-24T19:17:54.883370+00:00",
+  "modified": "2026-09-24T19:17:54.883370+00:00",
+  "summary": "Potential security risks in gitera CLI utilities",
+  "details": "The package contains a utility 'gitnuke' that performs automated git operations using shell=True, which is inherently risky if input were ever sourced from untrusted locations, though currently it prompts for user input. The package also uses terminal control sequences and shell commands to manipulate the user's git repository state.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "gitera"
+      },
+      "versions": [
+        "0.0.16"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/gitera/0.0.16/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of shell=True in subprocess.run with f-string interpolation",
+      "Automated execution of git commands that modify the repository state (git init, git add, git commit, rm)"
+    ],
+    "evidence": [
+      {
+        "file": "src/gitera/gitnuke.py",
+        "reason": "The function 'inp' uses subprocess.run with shell=True and an f-string to execute git commands. While the input is currently an integer, this pattern is dangerous and prone to command injection if modified."
+      },
+      {
+        "file": "src/gitera/gitout.py",
+        "reason": "The script performs automated 'git checkout' operations based on user input and terminal interaction, which could lead to unexpected repository states or data loss if not handled carefully."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is a CLI tool for git management. The 'gitnuke' functionality is destructive (it runs 'git init' and 'rm gitout' repeatedly). While not explicitly malicious, it is highly dangerous for a user to run in an existing repository.",
+      "The use of shell=True in gitnuke.py is unnecessary and should be replaced with list-based arguments to subprocess.run for security best practices."
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The use of shell=True in subprocess.run with f-string interpolation creates a potential for OS command injection if the input source is ever changed to untrusted data."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-24T19:17:54.883370+00:00",
+  "modified": "2026-09-24T19:17:54.883370+00:00",
+  "summary": "Analysis of GoodbyeSQL 0.5.3",
+  "details": "The package GoodbyeSQL contains a broken entry point reference and a potential logic error in the session provider implementation.",
+  "severity": "low",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "GoodbyeSQL"
+      },
+      "versions": [
+        "0.5.3"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/goodbyesql/0.5.3/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Broken entry point configuration",
+      "Potential runtime error in session management"
+    ],
+    "evidence": [
+      {
+        "file": "goodbyesql-0.5.3/setup.py",
+        "reason": "The entry point 'goodbyesql=goodbyesql.main:main' references a function 'main' that does not exist in 'goodbyesql/main.py'."
+      },
+      {
+        "file": "goodbyesql-0.5.3/goodbyesql/registry.py",
+        "reason": "The get_session function creates a RuntimeError object but fails to raise it, meaning the function will return None instead of failing when the session provider is not set."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be a work-in-progress or poorly maintained library rather than malicious.",
+      "The missing 'main' function in setup.py will cause an ImportError if a user attempts to run the console script.",
+      "The logic in registry.py is flawed as it does not actually raise the exception."
+    ],
+    "cwe_ids": [
+      "CWE-391",
+      "CWE-703"
+    ],
+    "cwe_notes": [
+      "The registry.py file creates a RuntimeError object but fails to raise it, leading to improper error handling.",
+      "The broken entry point in setup.py causes an ImportError, which is a failure to handle expected program execution conditions."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

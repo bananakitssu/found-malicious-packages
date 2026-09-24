@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-24T19:17:54.883370+00:00",
+  "modified": "2026-09-24T19:17:54.883370+00:00",
+  "summary": "Potential risk from unverified binary component in lowlevel package",
+  "details": "The package includes a pre-compiled binary (memory.dll) which is loaded at runtime via ctypes. This bypasses standard Python security analysis and introduces potential risks associated with arbitrary binary execution.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "lowlevel"
+      },
+      "versions": [
+        "1.0.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/lowlevel/1.0.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Loading of external binary (DLL) at runtime",
+      "Direct memory manipulation via ctypes"
+    ],
+    "evidence": [
+      {
+        "file": "lowlevel-1.0.0/lowlevel/memory/memory.py",
+        "reason": "The module loads a local file named 'memory.dll' using ctypes.CDLL. The source code for this binary is not provided, making it impossible to verify the safety of the memory management operations."
+      }
+    ],
+    "reviewer_notes": [
+      "The package relies on a pre-compiled binary component. Without the source code for 'memory.dll', the security of the memory allocation and read/write operations cannot be verified.",
+      "The use of ctypes to interface with a binary is a common pattern for performance, but it is also a common vector for hiding malicious functionality.",
+      "The package appears to be a wrapper for low-level memory operations, which inherently carries risks if the underlying binary is compromised."
+    ],
+    "cwe_ids": [
+      "CWE-506"
+    ],
+    "cwe_notes": [
+      "The inclusion of an unverified, pre-compiled binary component (memory.dll) without source code constitutes the inclusion of hidden or obfuscated functionality that cannot be audited for malicious behavior."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
