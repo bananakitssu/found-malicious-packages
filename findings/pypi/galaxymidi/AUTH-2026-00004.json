@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-25T19:40:41.539297+00:00",
+  "modified": "2026-09-25T19:40:41.539297+00:00",
+  "summary": "Security Analysis of galaxymidi: System Command Execution and Redundant Code",
+  "details": "The package contains multiple modules that execute system-level commands (apt-get, tar, pigz) and include potentially dangerous patterns like subprocess.run with shell-like behavior or external dependencies. While these appear to be intended for dataset management, they pose risks if paths are not properly sanitized.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "galaxymidi"
+      },
+      "versions": [
+        "26.9.25"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/galaxymidi/26.9.25/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Execution of system-level commands (apt-get, tar, pigz) via subprocess.run.",
+      "Potential for command injection if archive_path or output_dir are attacker-controlled.",
+      "Use of /dev/null in subprocess calls, which is non-portable and potentially problematic on non-POSIX systems.",
+      "Inclusion of large, potentially obfuscated or redundant code blocks (e.g., MIDI.py duplicated in multiple files)."
+    ],
+    "evidence": [
+      {
+        "file": "galaxymidi-26.9.25/galaxymidi/fast_parallel_extract.py",
+        "reason": "Uses subprocess.run to execute 'tar' and 'pigz' with user-provided paths. The security note acknowledges the risk of command injection."
+      },
+      {
+        "file": "galaxymidi-26.9.25/galaxymidi/helpers.py",
+        "reason": "Contains functions that execute 'apt-get' via subprocess.run to install system packages, which requires root privileges."
+      },
+      {
+        "file": "galaxymidi-26.9.25/galaxymidi/MIDI.py",
+        "reason": "Contains a large, possibly redundant copy of a MIDI processing library, which increases the attack surface and complicates security auditing."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed for large-scale dataset processing, which explains the use of parallel extraction and system-level tools.",
+      "The code appears to be a collection of utilities for the 'Galaxy MIDI Dataset'.",
+      "The use of 'sudo' and 'apt-get' inside a Python package is generally discouraged as it can lead to unexpected system modifications and security issues.",
+      "The duplication of MIDI.py across multiple files is poor practice and makes maintenance and security review difficult."
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The package uses subprocess.run to execute system-level commands like tar, pigz, and apt-get with potentially unsanitized user-provided paths, leading to a risk of OS command injection."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
