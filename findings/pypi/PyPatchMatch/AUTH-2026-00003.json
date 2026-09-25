@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-25T19:40:41.539297+00:00",
+  "modified": "2026-09-25T19:40:41.539297+00:00",
+  "summary": "Runtime binary dependency fetching in PyPatchMatch",
+  "details": "The package dynamically downloads binary libraries from a remote GitHub repository at runtime, which introduces a supply chain risk if the remote repository is compromised.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "PyPatchMatch"
+      },
+      "versions": [
+        "1.0.2"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/pypatchmatch/1.0.2/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic network communication to fetch binary dependencies at runtime",
+      "Execution of arbitrary code via subprocess (make) if pre-compiled binaries are not found"
+    ],
+    "evidence": [
+      {
+        "file": "PyPatchMatch-1.0.2/patchmatch/patch_match.py",
+        "reason": "The code performs an unauthenticated HTTP request to GitHub API to fetch and download binary files (DLLs/shared objects) based on the user's platform, which are then loaded via ctypes."
+      },
+      {
+        "file": "PyPatchMatch-1.0.2/patchmatch/patch_match.py",
+        "reason": "The package attempts to compile C extensions using 'make' via subprocess if the pre-compiled binaries are not found, which could lead to arbitrary code execution if the build environment is manipulated."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to provide C-based performance for image processing. The dynamic downloading of binaries is a common pattern in some Python packages (like those wrapping C++ libraries), but it bypasses standard package integrity checks (like hashes in requirements.txt).",
+      "The use of 'subprocess.run' with 'shell=True' to execute 'make' is a potential security risk if the environment is not controlled, though it is intended for local compilation."
+    ],
+    "cwe_ids": [
+      "CWE-494",
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The package downloads binary dependencies at runtime without integrity verification, bypassing standard supply chain security mechanisms.",
+      "The use of subprocess.run to execute 'make' commands introduces potential command injection risks if the environment or build process is manipulated."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
