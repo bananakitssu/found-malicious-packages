@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00006",
+  "published": "2026-09-26T17:55:45.732783+00:00",
+  "modified": "2026-09-26T17:55:45.732783+00:00",
+  "summary": "Remote Code Execution via Dynamic Code Loading in fintech-hub",
+  "details": "The package implements a remote code execution (RCE) pattern by design, allowing users to fetch and execute arbitrary Python code from a remote server. While this is the stated functionality of the package, it poses a significant security risk if the remote server is compromised or if the user is tricked into connecting to a malicious endpoint.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "fintech-hub"
+      },
+      "versions": [
+        "0.1.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/fintech-hub/0.1.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Remote code execution via dynamic execution of fetched code",
+      "Use of exec() and compile() on data retrieved from a network request",
+      "Persistent storage of authentication keys in the user's home directory"
+    ],
+    "evidence": [
+      {
+        "file": "fintech_hub-0.1.0/fintech_hub/__init__.py",
+        "reason": "The _run function uses exec(compile(code, filename, 'exec'), namespace) to execute code retrieved from the network, which is a direct RCE vector."
+      },
+      {
+        "file": "fintech_hub-0.1.0/fintech_hub/__init__.py",
+        "reason": "The _ask function performs network requests to a configurable URL (HUB_URL) using an authorization key, which could be intercepted or redirected."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to act as a remote function runner. The security risk is inherent to the design. Users should be warned that this package executes arbitrary code from the configured server.",
+      "The use of linecache to map the executed code to a filename is a clever way to handle tracebacks but does not mitigate the risk of executing malicious code.",
+      "The package does not appear to perform any signature verification or integrity checks on the code received from the server."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The package uses exec() and compile() on data retrieved from a network request without integrity verification, leading to arbitrary code execution."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

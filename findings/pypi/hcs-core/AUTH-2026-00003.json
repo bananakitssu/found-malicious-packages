@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-26T17:55:45.732783+00:00",
+  "modified": "2026-09-26T17:55:45.732783+00:00",
+  "summary": "Security Review: Telemetry and Insecure HTTP usage in hcs-core",
+  "details": "The package contains telemetry functionality that sends data to an external endpoint (collie.omnissa.com) without explicit user opt-in, and uses 'verify=False' in its HTTP requests, which disables SSL certificate verification.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "hcs-core"
+      },
+      "versions": [
+        "0.1.355"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/hcs-core/0.1.355/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Telemetry data collection and transmission to an external server.",
+      "Disabling SSL certificate verification (verify=False) in HTTP requests.",
+      "Dynamic execution of code via eval() in _read_group_meta."
+    ],
+    "evidence": [
+      {
+        "file": "hcs_core-0.1.355/hcs_core/ctxp/telemetry.py",
+        "reason": "The _injest function sends telemetry data to an external endpoint using verify=False, which is insecure."
+      },
+      {
+        "file": "hcs_core-0.1.355/hcs_core/ctxp/cli_processor.py",
+        "reason": "The _read_group_meta function uses eval() on content read from files, which is a security risk if the file content is attacker-controlled."
+      }
+    ],
+    "reviewer_notes": [
+      "The telemetry feature is enabled by default. While it appears to be for internal usage by Omnissa, the lack of SSL verification and the default-enabled state are security concerns.",
+      "The use of eval() in _read_group_meta should be replaced with a safer alternative like ast.literal_eval()."
+    ],
+    "cwe_ids": [
+      "CWE-295",
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The use of verify=False in HTTP requests disables SSL certificate verification, making the connection susceptible to man-in-the-middle attacks.",
+      "The use of eval() on potentially untrusted input allows for arbitrary code execution."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

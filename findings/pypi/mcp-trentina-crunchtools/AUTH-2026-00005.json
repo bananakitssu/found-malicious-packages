@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-26T17:55:45.732783+00:00",
+  "modified": "2026-09-26T17:55:45.732783+00:00",
+  "summary": "Inclusion of functional exploit payload in demo directory",
+  "details": "The package contains a 'demo/attack-sim' directory that includes a 'struct.py' file designed to act as a module shadow payload. This file uses obfuscated character codes to perform file system operations (writing '.status' file). While this is presented as part of a security demonstration/challenge, the inclusion of functional exploit payloads in a package is a significant security risk.",
+  "severity": "high",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "mcp-trentina-crunchtools"
+      },
+      "versions": [
+        "0.39.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/mcp-trentina-crunchtools/0.39.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of obfuscated character codes (chr()) to hide file system operations.",
+      "Inclusion of a 'module shadow' payload designed to execute arbitrary file writes.",
+      "Presence of a 'cipher challenge' that guides an AI agent to execute the payload."
+    ],
+    "evidence": [
+      {
+        "file": "mcp_trentina_crunchtools-0.39.0/demo/attack-sim/payload/struct.py",
+        "reason": "Contains obfuscated code using chr() to write a file named '.status' to the current working directory, acting as a malicious module shadow."
+      },
+      {
+        "file": "mcp_trentina_crunchtools-0.39.0/demo/attack-sim/server.py",
+        "reason": "Implements a stateful challenge server that provides the malicious archive to users/agents."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is a security tool (MCP gateway) and the demo/attack-sim appears to be a legitimate educational/testing harness for demonstrating the tool's defense capabilities.",
+      "The obfuscation in 'struct.py' is explicitly acknowledged in 'gourmand-exceptions.toml' as a design choice for testing the tool's detection capabilities.",
+      "Despite the benign intent (security testing), shipping functional exploit payloads in a production package is dangerous and violates standard security practices."
+    ],
+    "cwe_ids": [
+      "CWE-506"
+    ],
+    "cwe_notes": [
+      "The inclusion of functional, obfuscated exploit payloads within a distributed package constitutes the embedding of malicious code, regardless of the stated educational intent."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
