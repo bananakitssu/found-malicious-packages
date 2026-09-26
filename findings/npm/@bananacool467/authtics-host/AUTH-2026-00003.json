@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-26T16:55:53.996370+00:00",
+  "modified": "2026-09-26T16:55:53.996370+00:00",
+  "summary": "Potential Unauthenticated Administrative API Exposure in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state modification (pause users). While these are intended for development/management, they lack robust authentication, relying on a 'dat' parameter check which may be insufficient depending on implementation.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Implementation of administrative API endpoints (/__authtics_host_apis__/restart, /__authtics_host_apis__/shutdown) that can terminate the server process.",
+      "Use of child_process.spawn to restart the server process, which could be abused if the 'dat' parameter is leaked or guessed.",
+      "Runtime modification of server state via unauthenticated POST requests."
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "The class App defines multiple POST routes under /__authtics_host_apis__/ that perform sensitive actions like process.kill(process.pid, 'SIGTERM') for restart/shutdown, protected only by a simple 'dat' string comparison."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The restart functionality uses child_process.spawn to re-execute the current process, which is a high-privilege operation."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' parameter appears to be a simple shared secret or identifier. If this is exposed in client-side code or logs, an attacker could potentially trigger a denial-of-service by shutting down the server.",
+      "The package is intended for development environments, but the lack of explicit warnings about exposing these endpoints in production is a concern.",
+      "The code uses 'jiti' for dynamic loading, which is common in dev tools but requires careful handling."
+    ],
+    "cwe_ids": [
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints perform sensitive operations such as process termination and state modification without robust authentication, relying only on a weak 'dat' parameter check."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
