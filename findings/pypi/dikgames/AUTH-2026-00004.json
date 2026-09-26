@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-26T17:55:45.732783+00:00",
+  "modified": "2026-09-26T17:55:45.732783+00:00",
+  "summary": "Insecure SSL Configuration in dikgames SDK",
+  "details": "The package disables SSL certificate verification in its API client, which exposes the application to potential Man-in-the-Middle (MitM) attacks when communicating with the DikGames API.",
+  "severity": "low",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "dikgames"
+      },
+      "versions": [
+        "1.0.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/dikgames/1.0.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Disabling SSL certificate verification (ssl.CERT_NONE)"
+    ],
+    "evidence": [
+      {
+        "file": "dikgames-1.0.1/dikgames/client.py",
+        "reason": "The DikGamesClient class explicitly sets self.ctx.verify_mode = ssl.CERT_NONE and self.ctx.check_hostname = False, which disables TLS/SSL validation for all API requests."
+      }
+    ],
+    "reviewer_notes": [
+      "While the package appears to be a legitimate SDK for a specific website, the decision to disable SSL verification is a security anti-pattern. It allows any attacker capable of intercepting the network traffic to present a fraudulent certificate and potentially inject malicious data into the API responses.",
+      "No other malicious behavior (such as obfuscated code, unauthorized data exfiltration, or persistence mechanisms) was detected."
+    ],
+    "cwe_ids": [
+      "CWE-295"
+    ],
+    "cwe_notes": [
+      "The package explicitly disables SSL certificate verification and hostname checking, which constitutes improper certificate validation."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
