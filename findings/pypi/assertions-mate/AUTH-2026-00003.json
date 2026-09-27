@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-27T18:28:45.106810+00:00",
+  "modified": "2026-09-27T18:28:45.106810+00:00",
+  "summary": "Potential Arbitrary Code Execution via CWL Hint Custom Functions",
+  "details": "The package uses the 'exec()' function to execute user-provided custom functions within a Rego/CQL2 validation context. While the documentation and code comments acknowledge this as a security risk, it remains a potential vector for arbitrary code execution if untrusted CWL workflows are processed.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "assertions-mate"
+      },
+      "versions": [
+        "0.10.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/assertions-mate/0.10.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of exec() to execute dynamically provided code strings."
+    ],
+    "evidence": [
+      {
+        "file": "src/assertions_mate/cql2_validator.py",
+        "reason": "The Cql2Validator class uses exec(custom_functions, function_map) to execute arbitrary Python code provided via CWL hints. The code includes a comment explicitly noting that this permits arbitrary code execution if untrusted workflows are loaded."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to validate CWL workflows. The use of exec() is a deliberate design choice for extensibility but poses a significant security risk if the input CWL files are not from a trusted source.",
+      "The package includes security-conscious practices such as using bandit for static analysis and strict typing, which mitigates some risks, but the core design of executing hint-provided code remains a high-impact feature."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The application uses the exec() function to execute user-provided code strings, which allows for arbitrary code execution if the input is not properly sanitized or trusted."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

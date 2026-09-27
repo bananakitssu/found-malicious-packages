@@ -1,0 +1,706 @@
+{
+  "ecosystem": "PyPI",
+  "generated": "2026-09-27T18:15:10Z",
+  "packages": [
+    {
+      "name": "hubzoid",
+      "version": "1.0.3",
+      "filename": "hubzoid-1.0.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/dc/97/2eb165b81828242d1ba9c9ebdc0771b7f0971e8d4b72400311a3bfae3f5b/hubzoid-1.0.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dgf-bench",
+      "version": "0.1.0",
+      "filename": "dgf_bench-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/45/45/6c341051220c82fec7435c9acae8911db752a35fc7c16aee350a13234790/dgf_bench-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zc-mailhub",
+      "version": "0.1.17",
+      "filename": "zc_mailhub-0.1.17.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c3/70/94208291edfe546b20668a041911a49ad32322b62a43c8e3d21c2fde8bf6/zc_mailhub-0.1.17.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pynortecgo",
+      "version": "0.3.0",
+      "filename": "pynortecgo-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/91/88/0c78ef22306d525d8c1aa0c70d50c9a7cd1aee6017f2e6921f973a17b9de/pynortecgo-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "uv-test-demo-chendj",
+      "version": "0.1.0",
+      "filename": "uv_test_demo_chendj-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/09/f2/e1ca92757ba7e6468465c7d282981aa309d111c90237b09ec804602316af/uv_test_demo_chendj-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dpdpkit-policies",
+      "version": "2026.10.0a1",
+      "filename": "dpdpkit_policies-2026.10.0a1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a5/02/93b4b8f30ce4dfbd9815a2329060cb58dca400e18eccb34d807613e56e67/dpdpkit_policies-2026.10.0a1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "django-admin-reset",
+      "version": "0.7.4",
+      "filename": "django_admin_reset-0.7.4-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/34/06/e8dce2154e02be56d9a5b973cdbb73e8a4e2471ed8745193b656cc19b2dc/django_admin_reset-0.7.4-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "csa-google-gmail-calendar",
+      "version": "0.4.0",
+      "filename": "csa_google_gmail_calendar-0.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1b/66/a3e706b1a4f966d5366a7b1d956203ca4026f10d4ee28c5d1e9e7746b253/csa_google_gmail_calendar-0.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zeit-cdts",
+      "version": "0.24.0",
+      "filename": "zeit_cdts-0.24.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/50/0c/b02cb8b97f180edf7bf193d76bf85a21decac5878ceca2b4c05ee4332b78/zeit_cdts-0.24.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "copse-agents",
+      "version": "0.1.3",
+      "filename": "copse_agents-0.1.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/03/da/1eb3f883d6fc8a42601e348dd5824381fc38e8b474607ed74417c1ac26a7/copse_agents-0.1.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mkui",
+      "version": "1.22.1",
+      "filename": "mkui-1.22.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b1/20/76d780faab181ab234d3e72bd091caa66546d3d9dc02c59eb889207bf935/mkui-1.22.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mcp-atlassian-extended",
+      "version": "0.10.0",
+      "filename": "mcp_atlassian_extended-0.10.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/91/e7/77f10f61898828c041eac5565a2b37808252744768b8cec571e1608d88ed/mcp_atlassian_extended-0.10.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "gigaxml",
+      "version": "1.1.0",
+      "filename": "gigaxml-1.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f6/16/a4175e7f53be32900532a50081fa46a14dece6e13b483f78e80129f87907/gigaxml-1.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "eawf",
+      "version": "0.6.8",
+      "filename": "eawf-0.6.8.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c5/48/165562e69705d2963f806bb92e77ba7e3ed4f66d654714cd54157f81214f/eawf-0.6.8.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "recurrent-transformer-pytorch",
+      "version": "0.0.9",
+      "filename": "recurrent_transformer_pytorch-0.0.9.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/0c/d3/99da763f8a268d1d491c39d450555089cc228b65b53b8dbb9d29ec1b6561/recurrent_transformer_pytorch-0.0.9.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "xtimeline",
+      "version": "0.2.0",
+      "filename": "xtimeline-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7e/52/8831485f350cdfd5e29d85b83071858fffa985e1cdcbaa538ae4e039cf4a/xtimeline-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "tornadochildd",
+      "version": "0.1.4",
+      "filename": "tornadochildd-0.1.4-cp39-abi3-manylinux_2_34_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/5b/26/f6ac2fcc2b81dbc554cd2262f3bd5a439d580f3ac92f5e790c324c44ba87/tornadochildd-0.1.4-cp39-abi3-manylinux_2_34_x86_64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "gns3-gui",
+      "version": "3.0.6",
+      "filename": "gns3_gui-3.0.6.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d7/ad/4642f1ac978d25656eb05f0431e1e00ad521c6eea71bd2a51d178a240eea/gns3_gui-3.0.6.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "allyotter-lite",
+      "version": "0.1.1",
+      "filename": "allyotter_lite-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/63/5f/4de5909f94355e1b6e54c4caaed30915d682373ac8653140c91e71129903/allyotter_lite-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "site-health-checker",
+      "version": "2.1.1",
+      "filename": "site_health_checker-2.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/54/d4/12be0367166451eb1125ad81fcf31ced3e7ac64e5aeb1680c69408b46f2f/site_health_checker-2.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "aegis-kernel",
+      "version": "0.5.0",
+      "filename": "aegis_kernel-0.5.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/13/b8/0c58925f37f695cd3d55db504873fa826343836ac3c62aba3e1bbc532e1d/aegis_kernel-0.5.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "megillah",
+      "version": "2026.9.27.985",
+      "filename": "megillah-2026.9.27.985-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5a/9e/db5c7c2d2782f7ac32774c1c269e1a429f4f66205c91fc9da1c7dee6b8d3/megillah-2026.9.27.985-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "safe-s3-storage",
+      "version": "0.15.0",
+      "filename": "safe_s3_storage-0.15.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/76/09/dbd4e0b2c8dd059eab349a5b4900957e53589e33106b9f831f21a29a39b1/safe_s3_storage-0.15.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agentdynamics",
+      "version": "0.8.0",
+      "filename": "agentdynamics-0.8.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/0b/b7/4f0c71ce4262d62fa3d6a0b91968c0676237300d4f5d398b2673be282730/agentdynamics-0.8.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "bandl",
+      "version": "0.8.0",
+      "filename": "bandl-0.8.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/66/3d/ed456ae5e9b47cd5260d1054c1c3a196190a3f82a50080f62ce45cac28b1/bandl-0.8.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "base120",
+      "version": "3.1.0",
+      "filename": "base120-3.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/95/08/c542ecf4ce9c3b273ce30165be98fc727e18077bb79e0531c363784f49f9/base120-3.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "studio-baton",
+      "version": "1.12.0",
+      "filename": "studio_baton-1.12.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/45/2a/7c5160252d7bc0c751435f1366987103ddb7d5a0acbf12855414136f2143/studio_baton-1.12.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "gns3-server",
+      "version": "3.0.6",
+      "filename": "gns3_server-3.0.6.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/80/f1/2e7a55373088c237658684ea2cf126067e9f3ee899c6760785c49842b476/gns3_server-3.0.6.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mailcycle",
+      "version": "0.5.1",
+      "filename": "mailcycle-0.5.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e3/57/6d2711b60db972717d2bca942feccb8a333ab10914accd61ab5649b7c6c6/mailcycle-0.5.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dbt-assay",
+      "version": "0.55.0",
+      "filename": "dbt_assay-0.55.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c1/ec/2072dbd4e089a0d89a40bc922c4815634d75ab71d2a1d441ee62bff7887e/dbt_assay-0.55.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "fantasy-hockey-notifier-cdk",
+      "version": "2.0.70",
+      "filename": "fantasy_hockey_notifier_cdk-2.0.70.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/2f/63/8785e9b594e4514010ae5955c373c43edbcdbc5cf6faedd19c8c7eae47a5/fantasy_hockey_notifier_cdk-2.0.70.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pinmok-content",
+      "version": "1.0.1",
+      "filename": "pinmok_content-1.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ef/e9/de9db41efe9a58e68651f30dc0c43f5eae4012734609b503016bce8535e9/pinmok_content-1.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "veribai",
+      "version": "0.3.0",
+      "filename": "veribai-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/33/7f/aac4967c537918b0b9cf8273882bb080c4fe285313368361a0415819f444/veribai-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "codulora",
+      "version": "0.0.1",
+      "filename": "codulora-0.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a7/6f/fee96e91aeabcac6cdf31bb9520ec3f71e8f84959261f3fb60f038595932/codulora-0.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "togul",
+      "version": "0.2.0",
+      "filename": "togul-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/dd/39/0c4962b40be1374948e03efad1eaa3c73fab8c84806426050750fad607af/togul-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "wazuhtestgen",
+      "version": "0.4.0",
+      "filename": "wazuhtestgen-0.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e2/39/9a9107642327a86e09c000fcff572860c4bd78ea87bd03c58832f47abb0a/wazuhtestgen-0.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "halu",
+      "version": "0.1.2",
+      "filename": "halu-0.1.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/56/60/3274347ca163e672b8e1a95bceacda29c48a346dff2e535d1aaee21fb430/halu-0.1.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mcp-review-board",
+      "version": "2.4.2",
+      "filename": "mcp_review_board-2.4.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/71/87/cd9ba152e3d675e99567ef9d2dd296729dc3d5bea7f66ecd52ef3fb7c864/mcp_review_board-2.4.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "my-claude-code",
+      "version": "7.64.0",
+      "filename": "my_claude_code-7.64.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/95/02/f811f098b7959df319a9ef13a497d72d85750de0e303fdb078b7d42e06ba/my_claude_code-7.64.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "typedmem",
+      "version": "0.9.3",
+      "filename": "typedmem-0.9.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ee/bc/3e4e544db38444dea3da23650bc71cb90f13270bf5331710d636bfce858b/typedmem-0.9.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sbxloop-worker",
+      "version": "2.1.24",
+      "filename": "sbxloop_worker-2.1.24.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/0f/39/4e39aade1caf86bea3d02da5ae6e50a00d8ba1658143163df930f2b1d8cf/sbxloop_worker-2.1.24.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sbxloop",
+      "version": "2.1.24",
+      "filename": "sbxloop-2.1.24.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1c/3f/0cbd0b005ad23c81417488ec00fe088f77fe30e20df670f349b219999187/sbxloop-2.1.24.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "hummbl-governance",
+      "version": "1.5.1",
+      "filename": "hummbl_governance-1.5.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c0/a3/91747354492a64f3df7b1a45856b29dc61a9de04018fb5772ab25a37f805/hummbl_governance-1.5.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "jobseek-crawler-setup",
+      "version": "0.13.874",
+      "filename": "jobseek_crawler_setup-0.13.874-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5d/6f/7e8c73af4c51da97f89b3aa41c0d8f2fdf2e24485788b8d74cfb160300b6/jobseek_crawler_setup-0.13.874-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "tensorfs",
+      "version": "0.3.62",
+      "filename": "tensorfs-0.3.62.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/87/8d/0589735e49238b4a2210d37a4727d0b42359fe6a194ee9518d988b28c496/tensorfs-0.3.62.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "narwhal-inference",
+      "version": "0.3.1",
+      "filename": "narwhal_inference-0.3.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c6/8c/9a6ae6e0a9221fb8486e14d963b29191ac1e3f44c409fba6ac50b464ac9a/narwhal_inference-0.3.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lxreview",
+      "version": "0.1.1",
+      "filename": "lxreview-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/30/ba/ba58327b7c2387b0ca9b8aadf3d6df25527888ca0767959780129146781d/lxreview-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "megillah",
+      "version": "2026.9.27.985",
+      "filename": "megillah-2026.9.27.985-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5a/9e/db5c7c2d2782f7ac32774c1c269e1a429f4f66205c91fc9da1c7dee6b8d3/megillah-2026.9.27.985-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "weed-cli",
+      "version": "2.8.2",
+      "filename": "weed_cli-2.8.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b9/28/a8a48f36a348fc56db97309b274e6a7e9faa5f552ff684abcbc256de381a/weed_cli-2.8.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "megillah",
+      "version": "2026.9.27.985",
+      "filename": "megillah-2026.9.27.985-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5a/9e/db5c7c2d2782f7ac32774c1c269e1a429f4f66205c91fc9da1c7dee6b8d3/megillah-2026.9.27.985-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "traceclip",
+      "version": "0.1.0",
+      "filename": "traceclip-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e5/65/4a0dc34028c978c7603a8bb9def9c8275a0ff2f3da81cd3d0306af15d310/traceclip-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "saroku",
+      "version": "0.6.2",
+      "filename": "saroku-0.6.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/35/b8/d7b8a1802e3195f05b1bc783d8ab095d4414e5e172700005413fbd6917da/saroku-0.6.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "epimemer",
+      "version": "0.2.10",
+      "filename": "epimemer-0.2.10.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/37/cc/2830f2feb2eaa9dc47c46b36bb7b133e3171c80621683add61ab0e3c1e10/epimemer-0.2.10.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "aspc",
+      "version": "1.0.0",
+      "filename": "aspc-1.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/94/a2/8dea1e4541f9ad9dd4e0466c972f78c17e52b9690c63166f736de8990804/aspc-1.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ftcheck",
+      "version": "0.1.1",
+      "filename": "ftcheck-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7e/c2/bf31cfb40d7ffad3c4f1d083604bbba99dbe572bc7bdfb60d7961daa6f93/ftcheck-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "baldur-framework",
+      "version": "1.16.0",
+      "filename": "baldur_framework-1.16.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a5/70/dd333facfc19a5dd4c37fd568492c2a4719d39b0b2a3bf26efbb0e9e5eee/baldur_framework-1.16.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "unlimitedpipe",
+      "version": "0.10.7",
+      "filename": "unlimitedpipe-0.10.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/89/21/235ac40544e67c3e326b626e6c9291d8a6416c2beea36c46107263e5dbad/unlimitedpipe-0.10.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "assertions-mate",
+      "version": "0.10.1",
+      "filename": "assertions_mate-0.10.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/fd/35/6d313a6e5234bcf30b65f456aba3637b2185da48e62f9926708f41ac4ec0/assertions_mate-0.10.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "VeloxQuant-MLX",
+      "version": "0.91.9",
+      "filename": "veloxquant_mlx-0.91.9.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/be/9b/6b2f9d129fd0923bd83424685363042997ccb77703f09b1f75f2086c209c/veloxquant_mlx-0.91.9.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "firestarter",
+      "version": "3.1.0",
+      "filename": "firestarter-3.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/34/dc/3b3660253752c4c5758e6c86c7b193ad305f441fe573c2c8de4a271a25ac/firestarter-3.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "allspeak-ai",
+      "version": "2609271819",
+      "filename": "allspeak_ai-2609271819.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4a/3e/1261fa3b1cdd83290da208c526eb517119c7adb7978e5add4432f9a39e49/allspeak_ai-2609271819.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "maplestats-mcp",
+      "version": "0.1.0",
+      "filename": "maplestats_mcp-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d3/8f/d8048e05f0b226a8f7f9c50d31c8467501ea19219096a6c56f137d8252f0/maplestats_mcp-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "promptdispatch",
+      "version": "0.1.0",
+      "filename": "promptdispatch-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/de/96/1fb9f98ca79528dde92efe22092fb00708ca447ab746b054693c5563984a/promptdispatch-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "omnimarket",
+      "version": "0.4.254",
+      "filename": "omnimarket-0.4.254.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/95/5c/d26d392815f5485f07a1688ccc5178f0116870b4de58dc1aadc60c0382fb/omnimarket-0.4.254.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "image-migrate-picgo",
+      "version": "0.1.0",
+      "filename": "image_migrate_picgo-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d4/e5/2113c54762272986f0e43cb98797265767fcfe81446ec1cb923e5d56c6eb/image_migrate_picgo-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "clean_ioc",
+      "version": "1.24.0",
+      "filename": "clean_ioc-1.24.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3f/e6/25c7cb5017e6be498d31ec292acaabe19c0eea850df1af15828500ba4806/clean_ioc-1.24.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "bec-testing-plugin",
+      "version": "0.3.2",
+      "filename": "bec_testing_plugin-0.3.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/dc/03/a67efa740010a16ff9f70db0b5d17bf21dbb90ece2e5ebaec25780f215fc/bec_testing_plugin-0.3.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "goygram",
+      "version": "0.8.13",
+      "filename": "goygram-0.8.13.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f5/cc/9d8642f134ff40512886520917c5b375cf61eb1f8923626ba9f71a473a59/goygram-0.8.13.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "revit-model-mcp",
+      "version": "0.6.0",
+      "filename": "revit_model_mcp-0.6.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/64/33/338f1aed05e84b2bc0948b9191c700caf06ead589884bc95693588ed2d31/revit_model_mcp-0.6.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "orchvia",
+      "version": "0.1.12",
+      "filename": "orchvia-0.1.12.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9f/08/5c8be2ca9290fd436770ffc12ab68d2099db38bae4fada92555bbd32bec1/orchvia-0.1.12.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "nyx-astro",
+      "version": "0.2.1",
+      "filename": "nyx_astro-0.2.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3f/40/ed6fd970e097c043b38bfa99e39fe5a5e917bc8fb13e4e48fddc3d4dd529/nyx_astro-0.2.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "hanaikada",
+      "version": "0.1.2",
+      "filename": "hanaikada-0.1.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/49/55/89b2d0813f837c15faf2cfb8b2b23cc0ee3b64a54eac450c2f464b1704cd/hanaikada-0.1.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "aiolocust",
+      "version": "0.10.1",
+      "filename": "aiolocust-0.10.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c3/70/ad469cba777967c759c3638d13c3ac971f1c46f8b9f62bb2bb0034c7bd5c/aiolocust-0.10.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "agent-loop-tool",
+      "version": "0.1.0",
+      "filename": "agent_loop_tool-0.1.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8b/90/9303d8a03f142b2dde1c603a2bae67b7152714cdcf382ebb2322f7872df2/agent_loop_tool-0.1.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "testing-conventions",
+      "version": "0.0.131",
+      "filename": "testing_conventions-0.0.131.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/82/78/acbcb0b861cc217e615f48c0a028389a00ab4daec7a18089ac6f18515463/testing_conventions-0.0.131.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "bazaar-compute-node",
+      "version": "0.2.0",
+      "filename": "bazaar_compute_node-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b6/df/01c21e9835bfc46340416a867168057f91d21d73780c0b3cd094e6171791/bazaar_compute_node-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "code-puppy-core-plugins",
+      "version": "0.0.70",
+      "filename": "code_puppy_core_plugins-0.0.70.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/21/d1/20fcbb973dc4dd8fdbadb74d839610d651e198d0e9c4c513ba6e4b5be6e0/code_puppy_core_plugins-0.0.70.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "parsecraft",
+      "version": "2026.9.7",
+      "filename": "parsecraft-2026.9.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ad/72/d4dfe1506e196bf2f78b50845956c4112227d9b5936e40a4c9cc35a0ba1a/parsecraft-2026.9.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "manim-3d",
+      "version": "0.1.1",
+      "filename": "manim_3d-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ed/80/cbc17cccfabedd052b40c2b4e464482cdf1066e18e595927d22483b0a902/manim_3d-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "sd-model-hub",
+      "version": "0.1.14",
+      "filename": "sd_model_hub-0.1.14.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7b/b1/6ce5c9afd661efafba80f0eec112c4c57e8fa0ea69323f7ec136745af266/sd_model_hub-0.1.14.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "trikesh",
+      "version": "1.0.0",
+      "filename": "trikesh-1.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1e/ce/3045c3b7eb903d8afbe9999d5a1fe7fc323d0b3dd1f0142b524bbfe5e658/trikesh-1.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "memframe",
+      "version": "0.13.1",
+      "filename": "memframe-0.13.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1d/6f/1ee503fc043c672cddbd08f999afe5a7c8142e63e8ed25a6a67b75926d51/memframe-0.13.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pymrm",
+      "version": "2.4.1",
+      "filename": "pymrm-2.4.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c2/7d/3f60e6a1647ebd375a2d92fb885eeb813fe446071923a3447722c9e50b4a/pymrm-2.4.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "musubi-harness",
+      "version": "1.5.0",
+      "filename": "musubi_harness-1.5.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/65/e7/2ae1d8dc982356c2cec39323cb550dd502b69dbe559ced422fc3b445d5e7/musubi_harness-1.5.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "limescape-plugin-sdk",
+      "version": "0.2.2",
+      "filename": "limescape_plugin_sdk-0.2.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/60/10/5d62343085ea3a6b9a46dd6862392cf2aafdb2ba4fae88caa7c5e5ce7176/limescape_plugin_sdk-0.2.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "zygo-sdk",
+      "version": "0.1.4",
+      "filename": "zygo_sdk-0.1.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ec/f2/4d6391cfa0ecddc962b244343c58127bbd0085d6f918762f2eb42dd23ec5/zygo_sdk-0.1.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "plum-econet",
+      "version": "1.2.0",
+      "filename": "plum_econet-1.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5a/3c/5d0bca6149dcdb91e0e1df589f6263a6e397d82f6c39eecb0185cb397f2d/plum_econet-1.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "abi-core-ai",
+      "version": "1.13.47",
+      "filename": "abi_core_ai-1.13.47.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4b/64/99681323e890c1f59b1283c5970598969570e13ff314f09bb115abdcb505/abi_core_ai-1.13.47.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ahocorasick-ner",
+      "version": "0.1.1",
+      "filename": "ahocorasick-ner-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/52/c9/96359c624f8d34564490140455a83d5a74ed9079d5ab577d9cf59ee84a4b/ahocorasick-ner-0.1.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "openrewrite-static-analysis",
+      "version": "0.2.0",
+      "filename": "openrewrite_static_analysis-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a1/f8/a350f2452e068a1344ee16d3b3a37f3db81cb731b03cd4064dc1f591b223/openrewrite_static_analysis-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "safe-s3-storage",
+      "version": "0.15.0",
+      "filename": "safe_s3_storage-0.15.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/76/09/dbd4e0b2c8dd059eab349a5b4900957e53589e33106b9f831f21a29a39b1/safe_s3_storage-0.15.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "batem",
+      "version": "0.6.16",
+      "filename": "batem-0.6.16.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/47/8c/f04eef8acc0fd5b9ee784c9ee283f690537869875cc3c6485d2c1ccb87b7/batem-0.6.16.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "algo-compare",
+      "version": "1.0.0",
+      "filename": "algo_compare-1.0.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/84/c0/30e0d7a1f7e67cbeb30e4ecb61899f952b26d07b62114546f85a7697f6e6/algo_compare-1.0.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "datablob",
+      "version": "0.9.2",
+      "filename": "datablob-0.9.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/6e/ef/f94001fcce1052f4ef7c48738f516e570dcbeb5c659de008fc17a459c6ef/datablob-0.9.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "aloha",
+      "version": "2026.928.112",
+      "filename": "aloha-2026.928.112.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/04/d5/199de43cf45fb4e92cf6868ca1326694d7f76e3f08be17689b66b59ade00/aloha-2026.928.112.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "uncomment",
+      "version": "3.9.0",
+      "filename": "uncomment-3.9.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1b/a5/42293f6d524cc379b4856858bf513b57bda52372bb37c23a44cce58456ee/uncomment-3.9.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "pawbot-ai",
+      "version": "0.7.2",
+      "filename": "pawbot_ai-0.7.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f8/38/b6687926e70095df19d63a37dbb77244b7d6dca2bd751273559ad388fac3/pawbot_ai-0.7.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mantos",
+      "version": "0.33.0",
+      "filename": "mantos-0.33.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a3/26/d9bee9370a5f5391a4d170607ec425945e8366929165cb4a0e59eaea1b4b/mantos-0.33.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dsl41",
+      "version": "1.7.0",
+      "filename": "dsl41-1.7.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ef/88/be1b353c382eacead8a1745e50db1a41a45d0e3536ef40ff70e7cc80dc5f/dsl41-1.7.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "dirpluck",
+      "version": "0.12.0",
+      "filename": "dirpluck-0.12.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/b5/b7/eea47ca9c9b2669d188f18bd0085279ed83e21fc2ebaf9f6d309b2daa342/dirpluck-0.12.0.tar.gz",
+      "packagetype": "sdist"
+    }
+  ]
+}

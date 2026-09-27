@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-27T18:28:45.106810+00:00",
+  "modified": "2026-09-27T18:28:45.106810+00:00",
+  "summary": "Dynamic binary download and execution in uncomment package",
+  "details": "The package functions as a wrapper that dynamically downloads and executes a binary from GitHub at runtime. While this is a common pattern for cross-platform CLI tools, it bypasses standard package integrity checks and introduces a supply chain risk where the executed code is not part of the PyPI distribution.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "uncomment"
+      },
+      "versions": [
+        "3.9.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/uncomment/3.9.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic download of executable binaries from external URLs",
+      "Runtime execution of downloaded binaries via subprocess"
+    ],
+    "evidence": [
+      {
+        "file": "uncomment/downloader.py",
+        "reason": "The 'ensure_binary' function fetches a binary from a GitHub release URL and saves it to the user's home directory, then 'run_uncomment' executes it using subprocess."
+      }
+    ],
+    "reviewer_notes": [
+      "The package does not contain the actual logic for comment removal; it acts solely as a downloader and wrapper for a Rust-based binary.",
+      "The use of certifi for SSL verification is a positive security practice, but the reliance on external binaries remains a significant security concern for auditing purposes.",
+      "The binary is fetched from 'https://github.com/Goldziher/uncomment/releases/download/'. Users should verify the integrity of these releases independently."
+    ],
+    "cwe_ids": [
+      "CWE-829"
+    ],
+    "cwe_notes": [
+      "The package performs dynamic downloading and execution of external binaries, which constitutes inclusion of functionality from an untrusted control sphere."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
