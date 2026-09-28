@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-28T20:04:47.880160+00:00",
+  "modified": "2026-09-28T20:04:47.880160+00:00",
+  "summary": "Potential Unauthenticated Administrative API and Runtime Control in @bananacool467/authtics-host",
+  "details": "The package implements administrative API endpoints that allow for server control (restart, shutdown) and state manipulation (pause users). While these are intended for development/management, they lack robust authentication, relying on a 'dat' parameter which appears to be a simple string or array check against a configuration value.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@bananacool467/authtics-host"
+      },
+      "versions": [
+        "0.2.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://www.npmjs.com/package/@bananacool467/authtics-host/v/0.2.6"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Unauthenticated administrative API endpoints",
+      "Runtime process control (restart/shutdown) via HTTP requests",
+      "Dynamic code execution via jiti and esbuild",
+      "Network traffic interception in the browser"
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "Implements /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which use child_process.spawn and process.kill to restart or terminate the server process based on a simple 'dat' parameter check."
+      },
+      {
+        "file": "dist/devPanel.js",
+        "reason": "Injects a network interceptor into the browser's global fetch, WebSocket, and EventSource objects to monitor and log network activity."
+      },
+      {
+        "file": "dist/renderEngine.js",
+        "reason": "Uses esbuild to dynamically compile and bundle code at runtime, including a 'patchForSsr' feature that injects a large block of mocked browser globals into the server-side environment."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' parameter check is not a secure authentication mechanism. If this server is exposed to the public internet, an attacker could potentially discover the 'dat' value or exploit the lack of proper authorization to restart or shut down the server.",
+      "The network interception in devPanel.js is typical for development tools but should be carefully reviewed to ensure it does not leak sensitive data (like authentication tokens) to the dev panel UI.",
+      "The use of 'jiti' and 'esbuild' for runtime compilation is standard for modern dev-focused frameworks but increases the attack surface if user-provided code is processed."
+    ],
+    "cwe_ids": [
+      "CWE-287",
+      "CWE-306"
+    ],
+    "cwe_notes": [
+      "The administrative API endpoints lack robust authentication, relying on a weak 'dat' parameter check, which constitutes a missing authentication for critical function.",
+      "The reliance on a simple string or array check against a configuration value for access control is an insufficient authentication mechanism."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
