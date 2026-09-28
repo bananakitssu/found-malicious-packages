@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00004",
+  "published": "2026-09-28T20:54:18.268062+00:00",
+  "modified": "2026-09-28T20:54:18.268062+00:00",
+  "summary": "Arbitrary Code Execution via Insecure Configuration Parsing",
+  "details": "The package uses 'eval()' in multiple locations to process user-provided configuration strings, which could lead to arbitrary code execution if a user is tricked into using a malicious configuration file.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "phylogenie"
+      },
+      "versions": [
+        "3.12.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/phylogenie/3.12.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of eval() on user-provided strings in configuration processing.",
+      "Dynamic execution of code via eval() in 'phylogenie.generators.factories.eval_expression'."
+    ],
+    "evidence": [
+      {
+        "file": "src/phylogenie/generators/factories.py",
+        "reason": "The function 'eval_expression' uses 'eval()' to process strings from configuration files. This is a high-risk pattern for arbitrary code execution."
+      },
+      {
+        "file": "src/phylogenie/io/newick.py",
+        "reason": "The 'parse_newick' function uses 'eval()' to parse metadata values embedded in Newick strings, which can be manipulated to execute arbitrary code."
+      },
+      {
+        "file": "src/phylogenie/plugins/native/base.py",
+        "reason": "The 'generate' method uses 'eval_expression' to evaluate 'acceptance_criterion' and 'tree_logs'/'model_logs' expressions, which are derived from user-provided configuration."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is explicitly marked as deprecated and inactive, which increases the likelihood that these security issues will not be addressed.",
+      "The use of 'eval()' is pervasive in the configuration parsing logic, making it difficult to safely use this package with untrusted input.",
+      "While the intent is to allow users to define mathematical expressions for simulation parameters, the implementation is insecure."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The application uses eval() to process user-provided configuration strings, which allows for arbitrary code execution."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

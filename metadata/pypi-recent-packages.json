@@ -1,0 +1,706 @@
+{
+  "ecosystem": "PyPI",
+  "generated": "2026-09-28T20:29:40Z",
+  "packages": [
+    {
+      "name": "unlimitedpipe",
+      "version": "0.10.27",
+      "filename": "unlimitedpipe-0.10.27.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/57/f6/2bdfb9d337b6d67a25917d4da4eba4cfe5a89408902ca8127ba25f83ce7a/unlimitedpipe-0.10.27.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "bubble-sandbox",
+      "version": "0.12.0",
+      "filename": "bubble_sandbox-0.12.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d3/a4/47a761f37727019e0275492625bd76b76ff38dce26b788c12f62ae42482b/bubble_sandbox-0.12.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "adif-mcp",
+      "version": "1.1.3",
+      "filename": "adif_mcp-1.1.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5b/01/0d9c2a229410a4a451563d0182a31022038114a25a45ed99f8e2118a73c0/adif_mcp-1.1.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "nyshporka",
+      "version": "0.18.12",
+      "filename": "nyshporka-0.18.12.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1c/c4/10cd0a4c6da30d7f96a5bdcd5ac48add338aa0283a566d0d608030d6fa4f/nyshporka-0.18.12.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "feed-ursus",
+      "version": "2.6.7",
+      "filename": "feed_ursus-2.6.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/79/b8/989b281c385b601e22cd25d214f4a2f1cb3a2b0a38b00565f7896f2109b1/feed_ursus-2.6.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "langchain-amu",
+      "version": "0.1.3",
+      "filename": "langchain_amu-0.1.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/66/65/e6ef5142a248d0c8ae677600cc52a053cd10dc9f4da36c6da3e6bec26902/langchain_amu-0.1.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-confucius-quotes",
+      "version": "0.2.0",
+      "filename": "ovos_skill_confucius_quotes-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/89/aa/58efb738fe4411e75f1f6281fd31904ebd8e09415822d74bb72b638f8bc8/ovos_skill_confucius_quotes-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "secator",
+      "version": "0.46.1",
+      "filename": "secator-0.46.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/cb/15/cafe2bd2d69d00cbad8b29301bb59cef727f19252c2d03cacc0a5b0e31bb/secator-0.46.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-moviemaster",
+      "version": "0.0.12",
+      "filename": "ovos-skill-moviemaster-0.0.12.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/53/ae/c3f354dfa178b3815789dc11b74837148fb4db85537ed17ca397ddee45d0/ovos-skill-moviemaster-0.0.12.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "langflow",
+      "version": "1.12.3",
+      "filename": "langflow-1.12.3-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/73/a0/cc2ccebeabdd715c4381287e5cd11278cd6358b90705806fd178a197e99a/langflow-1.12.3-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "amu-pgvector",
+      "version": "0.1.3",
+      "filename": "amu_pgvector-0.1.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5a/90/5b4e409f9705c223dbf2a3016a4e255054f1f150af138d9185801ad31b11/amu_pgvector-0.1.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "crypttrace",
+      "version": "0.9.0",
+      "filename": "crypttrace-0.9.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3d/17/abce14147e97e686fcb3d324dc134290f6ed68b56ac5b873c00ce34c71de/crypttrace-0.9.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "langflow-base",
+      "version": "1.12.3",
+      "filename": "langflow_base-1.12.3-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/4d/6c/e6eafadcfc04369581b4017433680a0c28a6a4c77b7860234b87770c4687/langflow_base-1.12.3-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "yaeda",
+      "version": "0.1.2",
+      "filename": "yaeda-0.1.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d8/6b/69cac6001a317d2d8599ab104085e3fe95e34fa3c74ad865bd8c236030db/yaeda-0.1.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "airbyte",
+      "version": "0.71.0",
+      "filename": "airbyte-0.71.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/46/b4/8031cb54e2ab6ae64b14f63fdfa40d5299aa79c81fc3199c87344b62945d/airbyte-0.71.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lfx-valkey",
+      "version": "0.1.4",
+      "filename": "lfx_valkey-0.1.4-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/0e/b8/10276877ee7f41ea8fc7ecaff4eb73b27383167954b6a8cd9e29033bb940/lfx_valkey-0.1.4-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "revturbine",
+      "version": "0.11.15",
+      "filename": "revturbine-0.11.15.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/76/9f/3ab0b32eb9f36c2180b217b7525a07495c199eef9f2477073d6712e84f1e/revturbine-0.11.15.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-mark1-ctrl",
+      "version": "0.0.1",
+      "filename": "ovos_skill_mark1_ctrl-0.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/34/7c/05ff282cb487f59d84d3d4bef4f4f7769c754ceeedfb281c960ffb89560e/ovos_skill_mark1_ctrl-0.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "wandelbots_api_client",
+      "version": "26.7.0",
+      "filename": "wandelbots_api_client-26.7.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e1/59/2fc434b1801692aab00acbf19a0f50e550340e4f72cafa99096dffdb5fbe/wandelbots_api_client-26.7.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-pokepedia",
+      "version": "0.1.4",
+      "filename": "ovos_skill_pokepedia-0.1.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/65/12/04a8f8d6e0397a50aab6adca53e237c30d375a2bda29526f1b5f730f9541/ovos_skill_pokepedia-0.1.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ankigammon",
+      "version": "1.17.2",
+      "filename": "ankigammon-1.17.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/dd/7d/675b097362f7d9a8fa91b4ff037ded0afe0cd86bedafc51c44dcc717eb7f/ankigammon-1.17.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ltc-code",
+      "version": "0.2.37",
+      "filename": "ltc_code-0.2.37.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/32/42/ef30f1533a7587b55c54b246a7ae24402f16c82bc0c92067732bd88d364b/ltc_code-0.2.37.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-iss-location",
+      "version": "0.2.16",
+      "filename": "ovos-skill-iss-location-0.2.16.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/26/24/9c9d4324be4c4e05ed8e7c282614a87a0188d9ff6de92b9c8c6a5f4aec00/ovos-skill-iss-location-0.2.16.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "shell-interface",
+      "version": "3.0.1",
+      "filename": "shell_interface-3.0.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3a/13/6270f23db3f3ab4ccc28236ed89cae39d0cd29be52a358f74ad0d3f7b48c/shell_interface-3.0.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lfx-datastax",
+      "version": "0.1.8",
+      "filename": "lfx_datastax-0.1.8-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/66/54/d9316f8b73a7f6a4f463214c93551ed324f243244c57739fdd032d7c940f/lfx_datastax-0.1.8-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "snapshot-runner",
+      "version": "2.4.0",
+      "filename": "snapshot_runner-2.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e6/88/2c9e514e943c662643db961295110f4361e2b5cea046ef33cf53c22beb82/snapshot_runner-2.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "phylogenie",
+      "version": "3.12.0",
+      "filename": "phylogenie-3.12.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/12/64/2aec2b91896de19d85a7fed5b371afc467abd072f00fa5384563057bd12d/phylogenie-3.12.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-color-picker",
+      "version": "0.0.7",
+      "filename": "ovos-skill-color-picker-0.0.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/bd/53/f92a13ec4fb4b37aff0c955e44d1bf1194cf092a39c8c838ddc0926035ff/ovos-skill-color-picker-0.0.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-ddg",
+      "version": "0.3.7",
+      "filename": "ovos_skill_ddg-0.3.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c4/e2/7f22eec11d7272cb551f444c980bcc09ca19ce9a786876745b7a3b7fe457/ovos_skill_ddg-0.3.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "veri-sdk",
+      "version": "0.2.37",
+      "filename": "veri_sdk-0.2.37.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c6/79/e7c6bc648dd6421800c4070967dde96bf9bcc827ef3fd07fb40112ba7b30/veri_sdk-0.2.37.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-dictation",
+      "version": "0.2.21",
+      "filename": "ovos_skill_dictation-0.2.21.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/05/1f/ab2f838077a21b9fe841b192550eba675ee534b44e33647c3ace45c79e08/ovos_skill_dictation-0.2.21.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "fg-agents",
+      "version": "0.4.7",
+      "filename": "fg_agents-0.4.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7e/2c/fbf4c157376043a1ccc152ca8485f35435ac9f6bfd01b2ae155fa8297bef/fg_agents-0.4.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "spoligotyper",
+      "version": "0.7.0",
+      "filename": "spoligotyper-0.7.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/82/68/99fcd8629971ebb6347995cb98e44fd4d6a99680e25aaa7d1020509b2a06/spoligotyper-0.7.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "respan-instrumentation-livekit",
+      "version": "0.1.2",
+      "filename": "respan_instrumentation_livekit-0.1.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1e/0a/6da91ad22668b341c5c0ced811095373b939a6cc0e33414551aa3b909079/respan_instrumentation_livekit-0.1.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "geocif",
+      "version": "0.4.1055",
+      "filename": "geocif-0.4.1055.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/95/b1/0970bab830e6b91f71846e8e959921c658376f283f4083844e8265356601/geocif-0.4.1055.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lfx-bundles",
+      "version": "1.1.30",
+      "filename": "lfx_bundles-1.1.30-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/46/1a/5807067cbaf7b8f002fd50115cab53ebaf7787e6ccbe0ffc311e0dcc83f2/lfx_bundles-1.1.30-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "prime",
+      "version": "0.7.7",
+      "filename": "prime-0.7.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/10/90/d586cde714d354bf33b10eee18141fe42adf6e95702bcb14f20c11242678/prime-0.7.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ephapsys",
+      "version": "0.3.0",
+      "filename": "ephapsys-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5f/a5/0202cca7ad3f84570cda275dc16888001b34f7e2ee223488ee6ea0cc10fe/ephapsys-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-fuster-quotes",
+      "version": "0.0.4",
+      "filename": "ovos-skill-fuster-quotes-0.0.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/68/66/1cea7c30cd952c334a1e0526e5e9e4ce36cae0f3c4aa1e4296cd1ae53d9f/ovos-skill-fuster-quotes-0.0.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "httpware",
+      "version": "0.17.1",
+      "filename": "httpware-0.17.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a3/ba/b889e68c54574982d3be20a2d3d5075aada46aedeaf1a82d715ef1a117fc/httpware-0.17.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-diagnostics",
+      "version": "0.0.8",
+      "filename": "ovos-skill-diagnostics-0.0.8.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/64/1c/08217f5380126b89015b50167e8857ebbe36d08655d5bacd73b67ac5d121/ovos-skill-diagnostics-0.0.8.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "arkitekt-spec",
+      "version": "1.1.2",
+      "filename": "arkitekt_spec-1.1.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/0f/94/3b084becf71f38433b91a3313a47c1534eb44f438f8a7250c759d76861af/arkitekt_spec-1.1.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "prime-sandboxes",
+      "version": "0.4.0",
+      "filename": "prime_sandboxes-0.4.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/75/49/81cff52505b30ab5bcb9d4442d9e114b901b9cf51fa3c4b2f3ee3a67a471/prime_sandboxes-0.4.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "google-cloud-jupyter-config",
+      "version": "0.0.15",
+      "filename": "google_cloud_jupyter_config-0.0.15.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/20/66/3b9489d1cbbe9123a1db5a52ee4be0c22343bdc2940f7e32421fd3351fde/google_cloud_jupyter_config-0.0.15.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-moviemaster",
+      "version": "0.0.12",
+      "filename": "ovos-skill-moviemaster-0.0.12.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/53/ae/c3f354dfa178b3815789dc11b74837148fb4db85537ed17ca397ddee45d0/ovos-skill-moviemaster-0.0.12.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-count",
+      "version": "0.0.2",
+      "filename": "ovos-skill-count-0.0.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/19/6e/e3599991d3a8372bdee24bd80e5990f73b3a058dd56b0eaf9f3ea1c29c7b/ovos-skill-count-0.0.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mhcflurry",
+      "version": "2.3.5",
+      "filename": "mhcflurry-2.3.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a0/17/1c2250fa753ac9fa080124fd30268e45b4f8f5e3d29b18f8bdfd954c94c9/mhcflurry-2.3.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lfx-amazon",
+      "version": "0.1.6",
+      "filename": "lfx_amazon-0.1.6-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/31/f9/16248d9bd93d276fba3aa253850f0d1f7a7c0254183857aaac7dd52890e1/lfx_amazon-0.1.6-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "health-universe-a2a",
+      "version": "0.7.8",
+      "filename": "health_universe_a2a-0.7.8.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/89/44/01cb026d30d548cf764c250b201f618a181074de43ecd9b51e14f908b426/health_universe_a2a-0.7.8.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "cuda-cccl",
+      "version": "1.2.1",
+      "filename": "cuda_cccl-1.2.1-cp310-cp310-manylinux_2_24_aarch64.whl",
+      "url": "https://files.pythonhosted.org/packages/54/0a/873a3a9fd5e55aa0dd4cef5d71c6cef73f964fff6211317d7e807ef4031e/cuda_cccl-1.2.1-cp310-cp310-manylinux_2_24_aarch64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "vmex",
+      "version": "0.11.5",
+      "filename": "vmex-0.11.5.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/30/8a/390264380ed30d00b1baf7e9f811cbde381bfba17c4c92a7f51756d1b95f/vmex-0.11.5.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "superqode",
+      "version": "2.4.24",
+      "filename": "superqode-2.4.24.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3e/8a/b9289094db5a797f12cada4abafde2fa548c2b3d27e24637381c5a866b0f/superqode-2.4.24.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "cozy-runtime",
+      "version": "0.18.74",
+      "filename": "cozy_runtime-0.18.74.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/16/96/27d4386040b3f0a07d68582c9030b84d68954ba7a12543139dd95b4ac137/cozy_runtime-0.18.74.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "docseek",
+      "version": "0.7.0",
+      "filename": "docseek-0.7.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/03/09/fcd9a8c67f41b70ba97b3b45b2a8a90a7ad17c67205472dafe28b5504f81/docseek-0.7.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ptsrvtester",
+      "version": "1.4.7",
+      "filename": "ptsrvtester-1.4.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/77/87/358bb866fa34f8ed88faca8970456d6c30f5700a9ddb0facb1aa0bb1cc9b/ptsrvtester-1.4.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-confucius-quotes",
+      "version": "0.2.0",
+      "filename": "ovos_skill_confucius_quotes-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/89/aa/58efb738fe4411e75f1f6281fd31904ebd8e09415822d74bb72b638f8bc8/ovos_skill_confucius_quotes-0.2.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "minitest-cli",
+      "version": "0.29.0",
+      "filename": "minitest_cli-0.29.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/52/c3/9a62d5725d26dd37ec6f1c9f285fedca1e27a09a931a6170dfa352f74650/minitest_cli-0.29.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mergendb-studio",
+      "version": "0.7.2",
+      "filename": "mergendb_studio-0.7.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/00/a7/49710d39d827b117fb28679b0ddb5ee607c78acf7cacec22097370611754/mergendb_studio-0.7.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mergendb",
+      "version": "0.7.2",
+      "filename": "mergendb-0.7.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/96/9c/ae7d86ffac520042957548199dbdcaf276cadb263573bf61c63098be3920/mergendb-0.7.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "ovos-skill-icanhazdadjokes",
+      "version": "0.3.7",
+      "filename": "ovos-skill-icanhazdadjokes-0.3.7.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/8a/21/c331b48b8c1e25cad0afb9432027d4fbb7214bf6fdc4ae0c815c7f066967/ovos-skill-icanhazdadjokes-0.3.7.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "lfx",
+      "version": "1.12.3",
+      "filename": "lfx-1.12.3-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/44/85/4cb5837fe29b226f5f95ec3b5609d32884d828e1b8d26e61563e08b4ee9a/lfx-1.12.3-py3-none-any.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "boto3-stubs-lite",
+      "version": "1.43.104",
+      "filename": "boto3_stubs_lite-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/e0/25/859cf2880f2a28e499d0005fbaef74ae7f3dc906b5b7957501a6c4ebfbbc/boto3_stubs_lite-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "boto3-stubs",
+      "version": "1.43.104",
+      "filename": "boto3_stubs-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/65/b2/755432894c28d1c36230e62503ff198dc973cfaa13c91a1c8defb842ca78/boto3_stubs-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-ssm",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_ssm-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c8/b4/007e9acec1ccc7b0f9148f3ef2f6fe27ef183c5c7ab08b6b5a7d465d13d5/mypy_boto3_ssm-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-securityagent",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_securityagent-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7b/6f/4a7521e8bb5baa1804dfce96a05b3d4c3af8c79a76f0c781328d9227d5d3/mypy_boto3_securityagent-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-guardduty",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_guardduty-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4c/dd/24edcd6f431aebfc258096e3595c7d920d082a5ba72de4046b0b5aa2845f/mypy_boto3_guardduty-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-glue",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_glue-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/34/f1/24f3c662e5018e7a47cc934e66a69fd6dd5be7e06312aa0dd951109c2b3c/mypy_boto3_glue-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-fsx",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_fsx-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/1c/f8/500751fbf1a99a2843f31f6057e5cc4622582b58fc2daf06cde1df064a15/mypy_boto3_fsx-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-eks",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_eks-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d6/d9/be888ca63aa259cd5c313855c2e0ce08d131cb7ef5d54ec5398d6ba69e15/mypy_boto3_eks-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "srmp",
+      "version": "0.1.6",
+      "filename": "srmp-0.1.6-cp310-cp310-macosx_11_0_arm64.whl",
+      "url": "https://files.pythonhosted.org/packages/b5/24/0d719205df62011c3eaac11989564605e918df1b438094fd2463ca979cfc/srmp-0.1.6-cp310-cp310-macosx_11_0_arm64.whl",
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "name": "mypy-boto3-ec2",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_ec2-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/79/de/dd6855717739dccf0db7d325e8ccb266b5f6dcfc083bb783844b0facb1d3/mypy_boto3_ec2-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-connect",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_connect-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5f/f4/848276e16aae53ccb480c14b7a4e387b896e2b80fc0ed6ae1e71719adebc/mypy_boto3_connect-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-billing",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_billing-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/7e/1a/cbf16468a95cc86d8ee642f37bb9e8de01592dda4e805c0408dca3b7d79b/mypy_boto3_billing-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-bedrock-agentcore-control",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_bedrock_agentcore_control-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/43/aa/4efb75b72524cedf8744296fda505224ae5ef8af5e250f7a00e745a94c40/mypy_boto3_bedrock_agentcore_control-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-agent-registry-control",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_agent_registry_control-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/79/e5/84608d98ec3d13e5ab3d989ed923da94c52c57bd09c15fd86be2aac8d2db/mypy_boto3_agent_registry_control-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "mypy-boto3-agent-registry",
+      "version": "1.43.104",
+      "filename": "mypy_boto3_agent_registry-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/13/13/c2e206c31f81276e71efe89a303bb7fb5082995a6e3e4f71f1aa7d10a201/mypy_boto3_agent_registry-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "financial-reports-generated-client",
+      "version": "1.4.86",
+      "filename": "financial_reports_generated_client-1.4.86.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a1/f7/1ec2a205af1dd93a956cd85085489a07a8ede56ee50504bbb24cb094f773/financial_reports_generated_client-1.4.86.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "rsadpy",
+      "version": "0.13.0",
+      "filename": "rsadpy-0.13.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/22/a7/a993205de56459c1fc34bf4a62ba0c57105cb504c631da56b0065787cce6/rsadpy-0.13.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3",
+      "version": "1.43.104",
+      "filename": "types_boto3-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/c0/d1/b3d49862af766a95c4e8ad9fbbd8f475025ef6ffd56af15290b0bcd64548/types_boto3-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-lite",
+      "version": "1.43.104",
+      "filename": "types_boto3_lite-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/4a/01/e2ec62dc4ee66ca698d20ac73092119b9eb26fb7bd503172dc6e4043025c/types_boto3_lite-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-ssm",
+      "version": "1.43.104",
+      "filename": "types_boto3_ssm-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f6/79/ce0a5c1e63a5e45d4bbe0b8339281dd46ba5df69a547b3c164a56a0d4b92/types_boto3_ssm-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-securityagent",
+      "version": "1.43.104",
+      "filename": "types_boto3_securityagent-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5e/7d/a7591947f5846c6bb39ece9061c46220560ef2c57ee163a62b71bf44172d/types_boto3_securityagent-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-guardduty",
+      "version": "1.43.104",
+      "filename": "types_boto3_guardduty-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/20/ac/eed1b98ac23e890a623645112dd26b28248643749b229a48c0408e18e95b/types_boto3_guardduty-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-glue",
+      "version": "1.43.104",
+      "filename": "types_boto3_glue-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/d5/e3/ef7770364792adbb280e931ea19cd2d447b01a703d5b7b6adf54f9168f23/types_boto3_glue-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-fsx",
+      "version": "1.43.104",
+      "filename": "types_boto3_fsx-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ac/b7/bc83f9448bedd1140cac16b07f5c0d521081cef36160d439a780306c54d0/types_boto3_fsx-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-eks",
+      "version": "1.43.104",
+      "filename": "types_boto3_eks-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3f/8f/a0d9a814fd2018daedc2702bc56674aca29bbf593e67081a502b00d6c3ca/types_boto3_eks-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-ec2",
+      "version": "1.43.104",
+      "filename": "types_boto3_ec2-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ae/f5/1d829264876bdcee68b4e4ecb20bcd368da075642d5259a5734dcf3c6080/types_boto3_ec2-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-connect",
+      "version": "1.43.104",
+      "filename": "types_boto3_connect-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/9e/99/d6d783c104cf412df085160f6e8b901c981f68089fb32874bb1172d8aec0/types_boto3_connect-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-billing",
+      "version": "1.43.104",
+      "filename": "types_boto3_billing-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/35/fd/3d6740805b9690a4e0da2a62785c36c14abf96f92b4f018f12d66f8ee37a/types_boto3_billing-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-agent-registry",
+      "version": "1.43.104",
+      "filename": "types_boto3_agent_registry-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f6/c3/f7a251bb94aafea01457fb2495f5d33f3c82292125ea12eacfee81dcad0a/types_boto3_agent_registry-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-bedrock-agentcore-control",
+      "version": "1.43.104",
+      "filename": "types_boto3_bedrock_agentcore_control-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/50/7f/7c765b9f259b7f0dc5d2239e451463b92be48f0512f66e49cffd78b99843/types_boto3_bedrock_agentcore_control-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "types-boto3-agent-registry-control",
+      "version": "1.43.104",
+      "filename": "types_boto3_agent_registry_control-1.43.104.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/68/72/999007c45dd6c62db0db44b2fec6ea3cdb9f67150c66091de908ade51002/types_boto3_agent_registry_control-1.43.104.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "due-work-harness",
+      "version": "0.3.0",
+      "filename": "due_work_harness-0.3.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/09/73/44583a9556f6c09a76191316145ebba7b12dcbf096c5b6306297c84efd11/due_work_harness-0.3.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "kazenai",
+      "version": "1.0.3",
+      "filename": "kazenai-1.0.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/5a/bc/2f6e9d81ea035a4c6797a187e7c0f7abcd47209bd3db0f3d49d591c9b061/kazenai-1.0.3.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "kazen-event-schema",
+      "version": "0.6.2",
+      "filename": "kazen_event_schema-0.6.2.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a5/37/c8e1319ac758dc736858dbccae633c8af2dcb7433ba245f9ae9d9a344c9d/kazen_event_schema-0.6.2.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "roadstyle",
+      "version": "0.8.4",
+      "filename": "roadstyle-0.8.4.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/fa/47/cd4f9dcf8a0ff5e4bb96d6135f6654c05117000bd805ad17c3e54e7cfcdc/roadstyle-0.8.4.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "supafone-labs",
+      "version": "0.7.1",
+      "filename": "supafone_labs-0.7.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/98/c3/6504b5c3b3329710342012f808e6dc69e19526b134e7d19c516a97af4708/supafone_labs-0.7.1.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "briefloop",
+      "version": "0.26.0",
+      "filename": "briefloop-0.26.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ac/49/4d7803c58bae4586530c36eadf266a9f01641286d35f039cc79c112a38b9/briefloop-0.26.0.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "badkeys",
+      "version": "0.0.21",
+      "filename": "badkeys-0.0.21.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/a1/05/6f1939e3fb4b7cdf7799d7a200c0151ca6a1662042a283b658fe98627f9b/badkeys-0.0.21.tar.gz",
+      "packagetype": "sdist"
+    },
+    {
+      "name": "bomiot-cmd",
+      "version": "0.1.14",
+      "filename": "bomiot_cmd-0.1.14-cp310-cp310-macosx_11_0_universal2.whl",
+      "url": "https://files.pythonhosted.org/packages/fd/9b/cc8eeda9a64fb4906dd544ac026efd4fdb57e16baa9d8739cfd8fddbdc78/bomiot_cmd-0.1.14-cp310-cp310-macosx_11_0_universal2.whl",
+      "packagetype": "bdist_wheel"
+    }
+  ]
+}
