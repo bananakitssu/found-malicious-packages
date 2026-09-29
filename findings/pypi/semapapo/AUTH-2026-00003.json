@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00003",
+  "published": "2026-09-29T19:54:57.797293+00:00",
+  "modified": "2026-09-29T19:54:57.797293+00:00",
+  "summary": "Automatic modification of .bashrc for persistence",
+  "details": "The package automatically modifies the user's .bashrc file to inject shell code that executes the 'semapapo' command upon shell startup. While the intent appears to be a greeting utility, modifying shell configuration files without explicit user consent or clear warning is a risky practice.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "semapapo"
+      },
+      "versions": [
+        "1.4.1"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/semapapo/1.4.1/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Automatic modification of user shell configuration files (.bashrc)",
+      "Persistence mechanism via shell startup scripts"
+    ],
+    "evidence": [
+      {
+        "file": "semapapo-1.4.1/src/semapapo/semapapo.py",
+        "reason": "The 'configurar' function reads and appends a 'source' command to the user's ~/.bashrc file, ensuring that the package's custom script runs every time a new shell session starts."
+      }
+    ],
+    "reviewer_notes": [
+      "The package provides a CLI tool that, when invoked with specific flags, modifies the user's environment. This behavior is persistent and affects the user's shell environment globally. While not inherently malicious, this pattern is often used by malware for persistence. The code is transparent, but the side effect of modifying .bashrc should be clearly documented and require explicit user interaction."
+    ],
+    "cwe_ids": [
+      "CWE-426"
+    ],
+    "cwe_notes": [
+      "The package modifies the user's .bashrc file to execute arbitrary code upon shell startup, which can be used to hijack the execution environment or maintain persistence."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
