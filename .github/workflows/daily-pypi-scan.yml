@@ -209,14 +209,21 @@ jobs:
           AUTHTICS_ECOSYSTEM: pypi
         run: python3 scripts/classify_cwe.py
 
-      - name: Check for actionable findings
+      - name: Reconcile existing advisories
+        env:
+          AUTHTICS_ECOSYSTEM: pypi
+        run: python3 scripts/upsert_findings.py
+
+
+      - name: Check for advisory changes
         id: findings
         run: |
-          if find findings/pypi -type f -name 'AUTH-*.json' -print -quit 2>/dev/null | grep -q .; then
+          if [ -n "$(git status --porcelain=v1 --untracked-files=all -- findings reports)" ]; then
             echo "has_findings=true" >> "$GITHUB_OUTPUT"
+            echo "New or updated advisories detected."
           else
             echo "has_findings=false" >> "$GITHUB_OUTPUT"
-            echo "No actionable PyPI findings. No report, commit, or PR will be created."
+            echo "No new or updated advisories. No report, commit, or PR will be created."
           fi
 
       - name: Create draft PR
@@ -228,8 +235,12 @@ jobs:
           git config user.name "authtics-bot"
           git config user.email "authtics-bot@users.noreply.github.com"
           git checkout -b "$branch"
-          git add findings/pypi reports metadata/pypi-recent-packages.json metadata/scan-state.json
-          git diff --cached --quiet || git commit -m "scan: daily PyPI security analysis"
+          git add findings/pypi reports
+          if git diff --cached --quiet; then
+            echo "No staged advisory changes after reconciliation. No PR will be created."
+            exit 0
+          fi
+          git commit -m "scan: update PyPI security advisories"
           git push origin "$branch"
           gh pr create \
             --draft \
