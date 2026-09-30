@@ -136,14 +136,21 @@ jobs:
           GEMINI_FALLBACK_MODELS: gemini-2.5-flash,gemini-2.5-flash-lite,gemini-flash-lite-latest
         run: python3 scripts/classify_cwe.py
 
-      - name: Check for actionable findings
+      - name: Reconcile existing advisories
+        env:
+          AUTHTICS_ECOSYSTEM: npm
+        run: python3 scripts/upsert_findings.py
+
+
+      - name: Check for advisory changes
         id: findings
         run: |
-          if [ -z "$(find findings/npm -type f -name 'AUTH-*.json' -print -quit 2>/dev/null)" ]; then
-            echo "has_findings=false" >> "$GITHUB_OUTPUT"
-            echo "No actionable findings. Nothing will be committed or submitted as a PR."
-          else
+          if [ -n "$(git status --porcelain=v1 --untracked-files=all -- findings reports)" ]; then
             echo "has_findings=true" >> "$GITHUB_OUTPUT"
+            echo "New or updated advisories detected."
+          else
+            echo "has_findings=false" >> "$GITHUB_OUTPUT"
+            echo "No new or updated advisories. No report, commit, or PR will be created."
           fi
 
       - name: Show generated report and advisories
@@ -164,7 +171,7 @@ jobs:
           BASE_BRANCH="${{ github.event.repository.default_branch }}"
           BRANCH="authtics/monthly-scan-${GITHUB_RUN_ID}"
           git checkout -b "$BRANCH"
-          git add reports/*.md findings/npm metadata/recent-packages.json metadata/scan-state.json
+          git add reports findings/npm
           if git diff --cached --quiet; then echo "No changes to commit."; exit 0; fi
           git commit -m "security: add monthly npm advisories for review"
           git push --set-upstream origin "$BRANCH"
