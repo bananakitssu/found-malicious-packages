@@ -2,10 +2,10 @@
   "schema_version": "1.0",
   "id": "AUTH-2026-00004",
   "published": "2026-09-11T17:57:39.565736+00:00",
-  "modified": "2026-09-11T17:57:39.565736+00:00",
-  "summary": "Potential Typosquatting: openaii package",
-  "details": "The package 'openaii' appears to be a typosquatting attempt targeting the legitimate 'openai' library. It imports all symbols from the 'openai' package, likely to act as a transparent wrapper or proxy for the legitimate library while masquerading under a similar name.",
-  "severity": "medium",
+  "modified": "2026-09-29T21:20:00.000000+00:00",
+  "summary": "Malicious typosquat of openai: PTH loader, credential stealer, cryptominer",
+  "details": "The package 'openaii' is a typosquat of the legitimate 'openai' library. It copies the official summary and plants a malicious .pth file that Python auto-executes on every interpreter startup. The PTH payload uses obfuscated exec, anti-analysis comments directed at AI reviewers, downloads a second stage, then exfiltrates SSH keys and cloud credentials, establishes persistence, and installs a cryptominer. Confirmed by OpenSSF MAL-2026-16135 / amazon-inspector / kam193 (campaign 2026-09-openaii). Package removed from PyPI.",
+  "severity": "critical",
   "affected": [
     {
       "package": {
@@ -20,36 +20,48 @@
   "references": [
     {
       "type": "PACKAGE",
-      "url": "https://pypi.org/project/openaii/1.55.3/"
+      "url": "https://pypi.org/project/openaii/"
+    },
+    {
+      "type": "ADVISORY",
+      "url": "https://osv.dev/vulnerability/MAL-2026-16135"
     }
   ],
   "database_specific": {
     "source": "Authtics Advisories",
     "model": "gemini-3.1-flash-lite",
-    "confidence": 0.7,
+    "confidence": 1.0,
     "review": {
-      "status": "PENDING",
-      "human_review_required": true
+      "status": "APPROVED",
+      "human_review_required": false,
+      "reviewed_by": "grok",
+      "reviewed_at": "2026-09-29T21:20:00Z"
     },
     "suspicious_behaviors": [
-      "typosquatting",
-      "package masquerading"
+      "typosquatting of openai",
+      "malicious .pth auto-exec on interpreter start",
+      "obfuscated second-stage download",
+      "credential and SSH key exfiltration",
+      "cryptominer persistence",
+      "anti-analysis framing aimed at AI reviewers"
     ],
     "evidence": [
       {
-        "file": "openaii/__init__.py",
-        "reason": "The package attempts to import and expose the entire namespace of the 'openai' library, which is a common pattern for malicious packages attempting to intercept or proxy traffic for legitimate libraries."
+        "file": "openaii (site-packages .pth)",
+        "reason": "PTH file executes obfuscated payload on every Python startup; second stage steals credentials and mines."
       }
     ],
     "reviewer_notes": [
-      "The package name 'openaii' is a clear attempt to mimic 'openai'. While the code itself is a simple import wrapper, the intent is highly suspicious as it provides no unique functionality and relies entirely on the presence of the legitimate library."
+      "AI draft only flagged typosquatting at medium. Independent OSV/amazon-inspector/kam193 confirm full malware chain. Severity raised to critical. Package removed from PyPI."
     ],
     "cwe_ids": [
+      "CWE-506",
       "CWE-1037"
     ],
     "cwe_notes": [
-      "The package 'openaii' is identified as a typosquatting attempt, which is a form of malicious package distribution designed to deceive users into installing a package with a name similar to a legitimate one."
+      "CWE-506: Embedded malicious code (infostealer + cryptominer).",
+      "CWE-1037: Typosquatting / package name confusion."
     ],
-    "cwe_status": "AI_PROPOSED"
+    "cwe_status": "VERIFIED"
   }
 }
