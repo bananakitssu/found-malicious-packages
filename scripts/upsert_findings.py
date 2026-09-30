@@ -62,8 +62,6 @@ def package_matches(data, name):
 def package_advisories(name, tracked):
     found = []
     for path in tracked:
-        if name not in path.parts:
-            continue
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
