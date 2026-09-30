@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-17T18:23:31.242368+00:00",
+  "modified": "2026-09-29T21:15:00.000000+00:00",
+  "summary": "Malicious data exfiltration and privilege escalation in aiosendletter",
+  "details": "The PyPI package aiosendletter is malware. It masquerades as a 'bug reporter' / utility but, on execution, attempts UAC elevation via ctypes.windll.shell32.ShellExecuteW with the 'runas' verb, archives local data (including %LOCALAPPDATA%\\logs and, in related campaign packages, Telegram Desktop tdata), and POSTs the archive to a hardcoded Cloudflare Workers endpoint (sparkling-pine-f202.stilluer-sweden.workers.dev). The package has been removed from PyPI. Independent confirmations: Snyk SNYK-PYTHON-AIOSENDLETTER-19920809, OpenSSF/OSSF malicious-packages, Corgea MAL-2026-16264. Campaign also includes related packages such as pullgetsage targeting Telegram session data.",
+  "severity": "critical",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "aiosendletter"
+      },
+      "versions": [
+        "0.2.0",
+        "3.7",
+        "3.8",
+        "3.9",
+        "4.0",
+        "4.1",
+        "4.3",
+        "4.5",
+        "4.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/aiosendletter/"
+    },
+    {
+      "type": "ADVISORY",
+      "url": "https://security.snyk.io/vuln/SNYK-PYTHON-AIOSENDLETTER-19920809"
+    },
+    {
+      "type": "ADVISORY",
+      "url": "https://corgea.com/advisories/malware/MAL-2026-16264"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 1.0,
+    "review": {
+      "status": "APPROVED",
+      "human_review_required": false,
+      "reviewed_by": "grok",
+      "reviewed_at": "2026-09-29T21:15:00Z"
+    },
+    "suspicious_behaviors": [
+      "Privilege escalation via ShellExecuteW runas",
+      "Exfiltration of local user data to Cloudflare Workers",
+      "Hardcoded C2 endpoint",
+      "Misleading package purpose (bug reporter cover story)",
+      "Related campaign targets Telegram tdata"
+    ],
+    "evidence": [
+      {
+        "file": "aiosendletter-4.6/e.py",
+        "reason": "Requests admin privileges and zips/uploads local logs directory to a hardcoded remote Workers URL."
+      }
+    ],
+    "iocs": {
+      "domains": [
+        "sparkling-pine-f202.stilluer-sweden.workers.dev",
+        "red-poetry-6b6f.martinmcflywork.workers.dev"
+      ]
+    },
+    "reviewer_notes": [
+      "Confirmed malicious by multiple independent sources (Snyk, OpenSSF, Corgea/kam193). Package removed from PyPI. Critical severity is correct.",
+      "Duplicate AI drafts AUTH-2026-00007 and AUTH-2026-00009 for the same package were dropped in favor of this single consolidated advisory.",
+      "podpac and supply-chain-guard findings from the same scan were rejected (intentional design, not malware)."
+    ],
+    "cwe_ids": [
+      "CWE-506",
+      "CWE-200",
+      "CWE-269"
+    ],
+    "cwe_notes": [
+      "CWE-506: Embedded malicious code (infostealer / data exfiltration).",
+      "CWE-200: Unauthorized exposure of local user data.",
+      "CWE-269: Improper privilege management via UAC elevation."
+    ],
+    "cwe_status": "VERIFIED"
+  }
+}
