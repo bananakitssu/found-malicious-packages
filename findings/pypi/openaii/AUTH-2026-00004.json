@@ -62,6 +62,7 @@
       "CWE-506: Embedded malicious code (infostealer + cryptominer).",
       "CWE-1037: Typosquatting / package name confusion."
     ],
-    "cwe_status": "VERIFIED"
+    "cwe_status": "VERIFIED",
+    "human_review_required": false
   }
 }

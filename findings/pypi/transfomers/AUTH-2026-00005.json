@@ -51,8 +51,12 @@
       }
     ],
     "iocs": {
-      "ips": ["16.78.16.190"],
-      "urls": ["http://16.78.16.190:7788/lurves-agent.py"]
+      "ips": [
+        "16.78.16.190"
+      ],
+      "urls": [
+        "http://16.78.16.190:7788/lurves-agent.py"
+      ]
     },
     "reviewer_notes": [
       "AI draft only flagged typosquat at medium. OSV/amazon-inspector/kam193 confirm full malware. Severity raised to critical. Same campaign as openaii."
@@ -65,6 +69,7 @@
       "CWE-506: Embedded malicious code.",
       "CWE-1037: Typosquatting."
     ],
-    "cwe_status": "VERIFIED"
+    "cwe_status": "VERIFIED",
+    "human_review_required": false
   }
 }
