@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00005",
+  "published": "2026-09-11T17:57:39.565736+00:00",
+  "modified": "2026-09-29T21:20:00.000000+00:00",
+  "summary": "Malicious typosquat of transformers: PTH loader, credential stealer, cryptominer",
+  "details": "The package 'transfomers' typosquats Hugging Face's 'transformers'. It installs a .pth file auto-executed on every Python startup. The PTH contains decoy 'verified clean' comments, then execs a base64+XOR-obfuscated payload that downloads http://16.78.16.190:7788/lurves-agent.py and runs it as a daemon. Second stage exfiltrates credentials/SSH keys, persists, and mines. Same campaign as openaii (2026-09-openaii). Confirmed MAL-2026-16136. Package removed from PyPI.",
+  "severity": "critical",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "transfomers"
+      },
+      "versions": [
+        "4.44.2"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/transfomers/"
+    },
+    {
+      "type": "ADVISORY",
+      "url": "https://osv.dev/vulnerability/MAL-2026-16136"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 1.0,
+    "review": {
+      "status": "APPROVED",
+      "human_review_required": false,
+      "reviewed_by": "grok",
+      "reviewed_at": "2026-09-29T21:20:00Z"
+    },
+    "suspicious_behaviors": [
+      "typosquatting of transformers",
+      "malicious .pth auto-exec",
+      "obfuscated second-stage download from 16.78.16.190:7788",
+      "credential/SSH key exfiltration",
+      "cryptominer persistence"
+    ],
+    "evidence": [
+      {
+        "file": "transfomers (site-packages .pth)",
+        "reason": "PTH executes XOR-obfuscated payload that downloads and runs lurves-agent.py as daemon."
+      }
+    ],
+    "iocs": {
+      "ips": ["16.78.16.190"],
+      "urls": ["http://16.78.16.190:7788/lurves-agent.py"]
+    },
+    "reviewer_notes": [
+      "AI draft only flagged typosquat at medium. OSV/amazon-inspector/kam193 confirm full malware. Severity raised to critical. Same campaign as openaii."
+    ],
+    "cwe_ids": [
+      "CWE-506",
+      "CWE-1037"
+    ],
+    "cwe_notes": [
+      "CWE-506: Embedded malicious code.",
+      "CWE-1037: Typosquatting."
+    ],
+    "cwe_status": "VERIFIED"
+  }
+}
