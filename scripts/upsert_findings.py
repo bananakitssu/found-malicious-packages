@@ -93,6 +93,7 @@ def similarity(existing, candidate):
 
 def find_match(name, version, candidate, tracked):
     advisories = package_advisories(name, tracked)
+    exact = []
 
     for path, data in advisories:
         for affected in data.get("affected", []):
@@ -102,21 +103,28 @@ def find_match(name, version, candidate, tracked):
                 and package.get("ecosystem") == ecosystem_name()
                 and version in affected.get("versions", [])
             ):
-                return path, data
+                exact.append((path, data))
+                break
 
-    if len(advisories) == 1:
-        return advisories[0]
+    if len(exact) == 1:
+        return exact[0]
+
+    candidates = exact if exact else advisories
+    if not candidates:
+        return None
 
     scored = sorted(
-        ((similarity(data, candidate), path, data) for path, data in advisories),
+        ((similarity(data, candidate), path, data) for path, data in candidates),
         key=lambda item: item[0],
         reverse=True,
     )
-    if scored and scored[0][0] >= 0.50:
-        second = scored[1][0] if len(scored) > 1 else 0.0
-        if scored[0][0] - second >= 0.10:
-            return scored[0][1], scored[0][2]
-    return None
+    if not scored or scored[0][0] < 0.50:
+        return None
+
+    second = scored[1][0] if len(scored) > 1 else 0.0
+    if len(scored) > 1 and scored[0][0] - second < 0.10:
+        return None
+    return scored[0][1], scored[0][2]
 
 
 def merge_unique(old, new, key):
