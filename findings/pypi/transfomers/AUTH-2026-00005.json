@@ -2,10 +2,10 @@
   "schema_version": "1.0",
   "id": "AUTH-2026-00005",
   "published": "2026-09-11T17:57:39.565736+00:00",
-  "modified": "2026-09-11T17:57:39.565736+00:00",
-  "summary": "Typosquatting detected in package transfomers",
-  "details": "The package 'transfomers' (note the typo in the name, missing the 's' after 'n') appears to be a typosquatting attempt targeting the legitimate 'transformers' library by Hugging Face.",
-  "severity": "medium",
+  "modified": "2026-09-29T21:20:00.000000+00:00",
+  "summary": "Malicious typosquat of transformers: PTH loader, credential stealer, cryptominer",
+  "details": "The package 'transfomers' typosquats Hugging Face's 'transformers'. It installs a .pth file auto-executed on every Python startup. The PTH contains decoy 'verified clean' comments, then execs a base64+XOR-obfuscated payload that downloads http://16.78.16.190:7788/lurves-agent.py and runs it as a daemon. Second stage exfiltrates credentials/SSH keys, persists, and mines. Same campaign as openaii (2026-09-openaii). Confirmed MAL-2026-16136. Package removed from PyPI.",
+  "severity": "critical",
   "affected": [
     {
       "package": {
@@ -20,37 +20,51 @@
   "references": [
     {
       "type": "PACKAGE",
-      "url": "https://pypi.org/project/transfomers/4.44.2/"
+      "url": "https://pypi.org/project/transfomers/"
+    },
+    {
+      "type": "ADVISORY",
+      "url": "https://osv.dev/vulnerability/MAL-2026-16136"
     }
   ],
   "database_specific": {
     "source": "Authtics Advisories",
     "model": "gemini-3.1-flash-lite",
-    "confidence": 0.8,
+    "confidence": 1.0,
     "review": {
-      "status": "PENDING",
-      "human_review_required": true
+      "status": "APPROVED",
+      "human_review_required": false,
+      "reviewed_by": "grok",
+      "reviewed_at": "2026-09-29T21:20:00Z"
     },
     "suspicious_behaviors": [
-      "Typosquatting: Package name is a common misspelling of a popular library.",
-      "Dynamic import/proxying: The package attempts to import from 'transformers', suggesting it acts as a wrapper or a malicious proxy for the legitimate package."
+      "typosquatting of transformers",
+      "malicious .pth auto-exec",
+      "obfuscated second-stage download from 16.78.16.190:7788",
+      "credential/SSH key exfiltration",
+      "cryptominer persistence"
     ],
     "evidence": [
       {
-        "file": "transfomers/__init__.py",
-        "reason": "The package name 'transfomers' is a clear typosquat of 'transformers'. The code attempts to import from the legitimate library, which is a common pattern for malicious packages to maintain functionality while potentially intercepting data or executing arbitrary code."
+        "file": "transfomers (site-packages .pth)",
+        "reason": "PTH executes XOR-obfuscated payload that downloads and runs lurves-agent.py as daemon."
       }
     ],
+    "iocs": {
+      "ips": ["16.78.16.190"],
+      "urls": ["http://16.78.16.190:7788/lurves-agent.py"]
+    },
     "reviewer_notes": [
-      "The package name 'transfomers' is highly suspicious due to the missing 's'. This is a classic typosquatting technique. The implementation in __init__.py confirms it is attempting to shadow or wrap the legitimate 'transformers' library.",
-      "No malicious payload was found in the provided snippet, but the intent to impersonate a major library is high-risk."
+      "AI draft only flagged typosquat at medium. OSV/amazon-inspector/kam193 confirm full malware. Severity raised to critical. Same campaign as openaii."
     ],
     "cwe_ids": [
+      "CWE-506",
       "CWE-1037"
     ],
     "cwe_notes": [
-      "The package name 'transfomers' is a typosquat of the legitimate 'transformers' library, which is a form of supply chain attack via package name impersonation."
+      "CWE-506: Embedded malicious code.",
+      "CWE-1037: Typosquatting."
     ],
-    "cwe_status": "AI_PROPOSED"
+    "cwe_status": "VERIFIED"
   }
 }
