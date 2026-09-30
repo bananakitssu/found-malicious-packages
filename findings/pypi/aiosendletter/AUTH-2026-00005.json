@@ -83,6 +83,7 @@
       "CWE-200: Unauthorized exposure of local user data.",
       "CWE-269: Improper privilege management via UAC elevation."
     ],
-    "cwe_status": "VERIFIED"
+    "cwe_status": "VERIFIED",
+    "human_review_required": false
   }
 }
