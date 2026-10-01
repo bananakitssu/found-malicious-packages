@@ -73,6 +73,7 @@ The package includes a .codex/hooks.json file that defines command-line hooks to
 
 ### Malicious Data Exfiltration in aiosendletter
 - **Advisory:** `AUTH-2026-00007`
+- **CWE:** `CWE-306`
 - **Package:** `aiosendletter@4.6`
 - **Severity:** `critical`
 - **Confidence:** `1`

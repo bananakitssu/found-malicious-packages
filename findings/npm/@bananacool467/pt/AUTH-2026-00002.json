@@ -2,10 +2,10 @@
   "schema_version": "1.0",
   "id": "AUTH-2026-00002",
   "published": "2026-09-06T00:14:01Z",
-  "modified": "2026-09-06T00:40:00Z",
+  "modified": "2026-10-01T18:41:02.061565+00:00",
   "summary": "Security consideration when executing project build scripts",
   "details": "The package's `pt build` command reads the local project's `prepublishOnly` or `prepare` script from package.json and executes it with child_process.execSync. This behavior is part of the build automation workflow and is not, by itself, evidence that the package injects or secretly executes attacker-controlled code. However, running `pt build` on an untrusted project can execute commands intentionally defined by that project's package.json. Developers should treat build commands from untrusted projects as executable code and review the project's scripts before running them.\n\nObserved behavior:\n- `pt build` executes the local project's `prepublishOnly` or `prepare` script via child_process.execSync.\n\nEvidence:\n- `pt.js` \u2014 The build() function reads the `prepublishOnly` or `prepare` script from the local package.json and executes it.",
-  "severity": "low",
+  "severity": "medium",
   "affected": [
     {
       "package": {
@@ -28,14 +28,27 @@
     "model": "gemini-3.1-flash-lite",
     "confidence": 0.7,
     "review": {
-      "status": "APPROVED",
-      "human_review_required": false
+      "status": "PENDING",
+      "human_review_required": true
     },
     "cwe_ids": [],
     "cwe_notes": [
       "No CWE is assigned because executing the project's explicitly configured build script is expected build-tool behavior and does not by itself establish OS command injection."
     ],
     "cwe_status": "AI_PROPOSED",
-    "human_review_required": false
+    "human_review_required": false,
+    "suspicious_behaviors": [
+      "Automatic execution of arbitrary scripts from package.json via execSync"
+    ],
+    "evidence": [
+      {
+        "file": "pt.js",
+        "reason": "The build() function automatically executes 'prepublishOnly' or 'prepare' scripts using child_process.execSync without user interaction or validation."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed as a local development utility to test NPM packages. The behavior of running build scripts is consistent with its stated purpose, but the lack of confirmation before executing potentially arbitrary shell commands is a security risk.",
+      "The regex logic in pt.js for generating test folder names is complex and relies on string manipulation of the package name, which could be brittle but does not appear inherently malicious."
+    ]
   }
 }

@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "id": "AUTH-2026-00001",
   "published": "2026-09-06T00:14:01Z",
-  "modified": "2026-09-06T00:38:00Z",
+  "modified": "2026-10-01T18:41:02.060939+00:00",
   "summary": "Potential Unauthorized Server Control if DAT Credential Is Compromised",
   "details": "The package includes administrative API endpoints that can restart or shut down the server. These endpoints are protected by a DAT credential configured by the developer and sent as a cookie. The security of these administrative operations therefore depends on the confidentiality and proper configuration of the DAT. If the DAT is leaked, exposed, or otherwise compromised, an attacker who can reach the administrative endpoints may be able to perform privileged server actions.\n\nObserved behaviors:\n- Runtime process control (restart/shutdown) via HTTP endpoints\n- Administrative access protected by a developer-configured DAT credential\n- Browser network traffic interception and monitoring for development tooling\n\nEvidence:\n- `dist/cli.js` \u2014 The class App exposes POST endpoints such as /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which use child_process.spawn and process.kill to manipulate the server lifecycle.\n- `dist/devPanel.js` \u2014 The function installNetworkInterceptor monkey-patches global fetch, WebSocket, and EventSource to monitor and log network activity, which is consistent with development tooling.",
   "severity": "medium",
@@ -28,8 +28,8 @@
     "model": "gemini-3.1-flash-lite",
     "confidence": 0.7,
     "review": {
-      "status": "APPROVED",
-      "human_review_required": false
+      "status": "PENDING",
+      "human_review_required": true
     },
     "cwe_ids": [
       "CWE-284"
@@ -38,6 +38,26 @@
       "The administrative endpoints use a shared DAT credential for access control. The security concern is dependent on protecting that credential; compromise or exposure of the DAT could allow unauthorized administrative actions."
     ],
     "cwe_status": "AI_PROPOSED",
-    "human_review_required": false
+    "human_review_required": false,
+    "suspicious_behaviors": [
+      "Remote server control via HTTP endpoints (restart, shutdown)",
+      "Runtime modification of server state (usersPaused)",
+      "Use of child_process.spawn to restart the server process"
+    ],
+    "evidence": [
+      {
+        "file": "dist/cli.js",
+        "reason": "The class App defines POST endpoints like /__authtics_host_apis__/restart and /__authtics_host_apis__/shutdown which execute process.kill and spawn new processes without explicit authentication beyond a 'dat' parameter check."
+      },
+      {
+        "file": "dist/cli.js",
+        "reason": "The /__authtics_host_apis__/set-users-paused endpoint allows modifying the internal 'usersPaused' state, which could be used to disrupt service."
+      }
+    ],
+    "reviewer_notes": [
+      "The 'dat' parameter check appears to be a simple equality check against a configuration value. If this value is predictable or exposed, it provides no real security.",
+      "The use of 'child_process.spawn' to restart the server is a common pattern in dev tools but carries risks if exposed to the public internet.",
+      "The package is intended as a development framework, which mitigates the severity, but these endpoints should be strictly guarded or disabled in production environments."
+    ]
   }
 }
