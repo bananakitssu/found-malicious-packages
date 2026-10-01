@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00007",
+  "published": "2026-10-01T19:28:05.711460+00:00",
+  "modified": "2026-10-01T19:28:05.711460+00:00",
+  "summary": "Potential Arbitrary Code Execution via eval() in Unit Transformation Logic",
+  "details": "The package uses eval() to process transformation expressions defined in JSON files, which could lead to arbitrary code execution if the JSON files are tampered with.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "corva-unit-converter"
+      },
+      "versions": [
+        "3.3.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/corva-unit-converter/3.3.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of eval() on dynamically loaded content"
+    ],
+    "evidence": [
+      {
+        "file": "corva_unit_converter-3.3.0/src/corva_unit_converter/loader.py",
+        "reason": "The function _parse_transform uses eval() to execute strings loaded from JSON definition files. While the current usage is restricted to mathematical expressions, it represents a dangerous pattern if the source data is ever compromised."
+      }
+    ],
+    "reviewer_notes": [
+      "The use of eval() is restricted to a specific context (mathematical transformations) and attempts to limit built-ins, but it remains a high-risk pattern. The package is designed to load these definitions from local JSON files, which mitigates the risk unless the package installation itself is compromised or the definitions directory is writable by an attacker."
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "cwe_notes": [
+      "The use of eval() to process data from external JSON files allows for arbitrary code execution if the input source is untrusted or tampered with."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

@@ -90,6 +90,7 @@ The package 'aiosendletter' contains malicious code designed to exfiltrate local
 
 ### Invasive Runtime Monkey-patching in supply-chain-guard
 - **Advisory:** `AUTH-2026-00008`
+- **CWE:** `CWE-78`
 - **CWE:** `CWE-693`
 - **Package:** `supply-chain-guard@0.3.1`
 - **Severity:** `medium`

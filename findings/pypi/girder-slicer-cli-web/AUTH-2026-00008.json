@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00008",
+  "published": "2026-10-01T19:28:05.711460+00:00",
+  "modified": "2026-10-01T19:28:05.711460+00:00",
+  "summary": "Potential Command Injection and Dynamic Execution Risks in girder-slicer-cli-web",
+  "details": "The package uses subprocess.call to execute CLI tools based on user-provided input, which could lead to command injection if the input is not properly sanitized. Additionally, the package dynamically generates REST endpoints and executes Docker containers, which requires careful security review of the input handling and environment configuration.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "girder-slicer-cli-web"
+      },
+      "versions": [
+        "5.0.18"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/girder-slicer-cli-web/5.0.18/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Dynamic execution of subprocesses based on user-provided CLI names.",
+      "Dynamic generation of REST endpoints based on Docker image metadata.",
+      "Use of subprocess.call with unsanitized user input.",
+      "Potential for command injection via CLI arguments."
+    ],
+    "evidence": [
+      {
+        "file": "slicer_cli_web/cli_list_entrypoint.py",
+        "reason": "Uses subprocess.call to execute scripts based on user-provided CLI names without explicit sanitization."
+      },
+      {
+        "file": "slicer_cli_web/docker_resource.py",
+        "reason": "Dynamically routes POST requests to run CLI tasks, which involves parsing user-provided parameters and executing them in a Docker container."
+      },
+      {
+        "file": "slicer_cli_web/image_job.py",
+        "reason": "Executes docker run commands with user-provided image names and arguments, which could be exploited if the image name or arguments are malicious."
+      }
+    ],
+    "reviewer_notes": [
+      "The package is designed to expose Slicer CLI tools over the web, which inherently involves executing external commands. The security of this package depends heavily on the sanitization of the CLI specifications and the input parameters.",
+      "The use of subprocess.call is a common pattern in this type of application, but it should be audited to ensure that the CLI names and arguments are strictly validated against a whitelist or sanitized.",
+      "The dynamic generation of REST endpoints based on Docker image metadata is a powerful feature that should be reviewed for potential unauthorized access or configuration issues."
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The package uses subprocess.call with user-provided input to execute CLI tools and Docker commands, which is a classic pattern for OS command injection."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
