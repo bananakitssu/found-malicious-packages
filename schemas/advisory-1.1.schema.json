@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/bananakitssu/found-malicious-packages/main/schemas/advisory-1.1.schema.json",
+  "title": "Authtics Advisory 1.1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "id",
+    "published",
+    "modified",
+    "summary",
+    "details",
+    "severity",
+    "affected",
+    "references",
+    "database_specific"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^AUTH-[0-9]{4}-[0-9]{5}$"
+    },
+    "published": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "modified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "details": {
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "affected": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "package",
+          "versions",
+          "patched_versions",
+          "version_details"
+        ],
+        "properties": {
+          "package": {
+            "type": "object",
+            "required": [
+              "ecosystem",
+              "name"
+            ],
+            "properties": {
+              "ecosystem": {
+                "enum": [
+                  "npm",
+                  "PyPI"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          },
+          "versions": {
+            "type": "array",
+            "description": "Exact releases confirmed or proposed as affected. Do not use version ranges here.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "patched_versions": {
+            "type": "array",
+            "description": "Exact releases proposed as fixed for this advisory. A maintainer must review each proposal.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "version_details": {
+            "type": "array",
+            "description": "One evidence-based statement for each exact affected or patched release.",
+            "items": {
+              "type": "object",
+              "required": [
+                "version",
+                "status",
+                "statement"
+              ],
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "enum": [
+                    "affected",
+                    "patched"
+                  ]
+                },
+                "statement": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "database_specific": {
+      "type": "object",
+      "required": [
+        "intent_assessment",
+        "human_review_required",
+        "review"
+      ],
+      "properties": {
+        "intent_assessment": {
+          "const": "undetermined"
+        },
+        "review": {
+          "type": "object",
+          "required": [
+            "status",
+            "human_review_required"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "PENDING",
+                "APPROVED",
+                "REJECTED",
+                "NEEDS_EDIT"
+              ]
+            },
+            "human_review_required": {
+              "type": "boolean"
+            },
+            "reviewed_by": {
+              "type": "string"
+            },
+            "reviewed_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "human_review_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

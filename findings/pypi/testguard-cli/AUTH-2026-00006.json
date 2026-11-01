@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "id": "AUTH-2026-00006",
   "published": "2026-09-17T18:23:31.242368+00:00",
   "modified": "2026-09-17T18:23:31.242368+00:00",
@@ -14,6 +14,14 @@
       },
       "versions": [
         "0.5.0"
+      ],
+      "patched_versions": [],
+      "version_details": [
+        {
+          "version": "0.5.0",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        }
       ]
     }
   ],
@@ -51,6 +59,8 @@
     "cwe_notes": [
       "The package implements a mechanism that executes arbitrary Node.js scripts based on file system events, which constitutes improper control of generation of code or code injection."
     ],
-    "cwe_status": "AI_PROPOSED"
+    "cwe_status": "AI_PROPOSED",
+    "human_review_required": true,
+    "intent_assessment": "undetermined"
   }
 }

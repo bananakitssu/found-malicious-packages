@@ -1,0 +1,66 @@
+name: Report an advisory update
+description: Report a correction, additional affected release, proposed fix, or new evidence.
+title: "[Advisory update]: "
+body:
+  - type: input
+    id: advisory_id
+    attributes:
+      label: Advisory ID
+      description: For example, AUTH-2026-00005. Leave blank if this is a new report.
+      placeholder: AUTH-2026-00005
+    validations:
+      required: false
+  - type: input
+    id: package
+    attributes:
+      label: Package and ecosystem
+      description: Include the package name and registry.
+      placeholder: "PyPI: example-package"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Exact version
+      description: Use the exact package release, not a range.
+      placeholder: "1.2.3"
+    validations:
+      required: true
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: What needs updating?
+      options:
+        - Add an affected version
+        - Propose a patched version
+        - Correct existing advisory details
+        - Add supporting evidence or references
+        - Report a possible false positive
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: explanation
+    attributes:
+      label: What should change?
+      description: Explain what you observed and why the advisory needs an update.
+      placeholder: Describe the specific behavior or correction.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and references
+      description: Link to sources and, where possible, identify the relevant file and code.
+      placeholder: "https://..."
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I have not included secrets, credentials, or private data.
+          required: true
+        - label: I understand that a report is a request for review, not an automatic change to the advisory.
+          required: true

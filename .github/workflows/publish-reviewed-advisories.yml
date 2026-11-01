@@ -45,10 +45,13 @@ jobs:
                       continue
 
                   advisory_id = data.get("id", advisory_path.stem)
-                  package = data.get("affected", [{}])[0].get("package", {})
+                  affected_entry = data.get("affected", [{}])[0]
+                  package = affected_entry.get("package", {})
                   name = package.get("name", "unknown")
                   ecosystem = package.get("ecosystem", root.name)
-                  versions = package.get("versions", [])
+                  versions = affected_entry.get("versions", [])
+                  patched_versions = affected_entry.get("patched_versions", [])
+                  version_details = affected_entry.get("version_details", [])
                   cwe_ids = database_specific.get("cwe_ids", [])
                   if not isinstance(cwe_ids, list):
                       cwe_ids = []
@@ -57,6 +60,7 @@ jobs:
                       f"**Ecosystem:** `{ecosystem}`",
                       f"**Package:** `{name}`",
                       f"**Affected versions:** {', '.join(f'`{v}`' for v in versions) or 'Not specified'}",
+                      f"**Patched versions:** {', '.join(f'`{v}`' for v in patched_versions) or 'None recorded'}",
                       f"**Severity:** `{data.get('severity', 'n/a')}`",
                       f"**Published:** {data.get('published', generated)}",
                       f"**CWE:** {', '.join(f'`{cwe}`' for cwe in cwe_ids) if cwe_ids else 'Not assigned'}",
@@ -68,6 +72,12 @@ jobs:
                       "## References", "",
                   ]
                   refs = data.get("references", [])
+                  if version_details:
+                      lines += ["", "## Version details", ""]
+                      for version_detail in version_details:
+                          label = "Affected" if version_detail.get("status") == "affected" else "Patched"
+                          lines.append(f"- **{version_detail.get('version', 'unknown')} ({label}):** {version_detail.get('statement', '')}")
+                      lines.append("")
                   if refs:
                       lines.extend(f"- {ref.get('url', '')}" for ref in refs if ref.get("url"))
                   else:
