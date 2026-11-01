@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00010",
+  "published": "2026-11-01T18:57:55.237401+00:00",
+  "modified": "2026-11-01T18:57:55.237401+00:00",
+  "summary": "Potential disruptive behavior via Jupyter cell manipulation",
+  "details": "The package includes functionality that attempts to programmatically delete Jupyter notebook cells and clear output using injected JavaScript. While this is likely intended for a 'clean' educational experience, it represents an unusual and potentially disruptive behavior that warrants caution.",
+  "severity": "low",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "randomclassifier"
+      },
+      "versions": [
+        "0.1.10"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/randomclassifier/0.1.10/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Use of injected JavaScript to manipulate the Jupyter notebook environment (e.g., deleting cells, clearing output)."
+    ],
+    "evidence": [
+      {
+        "file": "src/randomclassifier/__init__.py",
+        "reason": "The _cleanup_cell_and_output function uses IPython.display.Javascript to execute code that attempts to find and remove the currently selected Jupyter notebook cell."
+      },
+      {
+        "file": "src/randomclassifier/data.py",
+        "reason": "The dataset function also contains logic to inject JavaScript for cell deletion and output clearing, mirroring the behavior in __init__.py."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be an educational tool for deep learning. The cell deletion behavior is likely designed to keep the user's workspace tidy after running demonstration code. However, programmatic manipulation of the notebook environment is a non-standard practice that could be misused or cause unexpected data loss if the user is not expecting it.",
+      "No evidence of malicious payloads, exfiltration, or unauthorized system access was found."
+    ],
+    "cwe_ids": [
+      "CWE-20"
+    ],
+    "cwe_notes": [
+      "The package performs unexpected and potentially disruptive actions by programmatically manipulating the Jupyter notebook environment (deleting cells and clearing output) via injected JavaScript, which constitutes improper input validation or handling of the execution environment."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

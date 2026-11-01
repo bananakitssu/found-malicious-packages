@@ -73,6 +73,7 @@ The package includes a .codex/hooks.json file that defines command-line hooks to
 
 ### Malicious Data Exfiltration in aiosendletter
 - **Advisory:** `AUTH-2026-00007`
+- **CWE:** `CWE-829`
 - **Package:** `aiosendletter@4.6`
 - **Severity:** `critical`
 - **Confidence:** `1`
@@ -90,6 +91,7 @@ The package 'aiosendletter' contains malicious code designed to exfiltrate local
 
 ### Invasive Runtime Monkey-patching in supply-chain-guard
 - **Advisory:** `AUTH-2026-00008`
+- **CWE:** `CWE-1188`, `CWE-78`
 - **CWE:** `CWE-693`
 - **Package:** `supply-chain-guard@0.3.1`
 - **Severity:** `medium`
@@ -109,6 +111,7 @@ The package implements a global import hook and monkey-patches core Python funct
 
 ### Malicious Data Exfiltration in aiosendletter
 - **Advisory:** `AUTH-2026-00009`
+- **CWE:** `CWE-798`
 - **Package:** `aiosendletter@4.6`
 - **Severity:** `critical`
 - **Confidence:** `1`
@@ -125,6 +128,7 @@ The package 'aiosendletter' contains malicious code designed to exfiltrate local
 
 ### Invasive Security Hook Implementation in supply-chain-guard
 - **Advisory:** `AUTH-2026-00010`
+- **CWE:** `CWE-20`
 - **CWE:** `CWE-1068`
 - **Package:** `supply-chain-guard@0.3.1`
 - **Severity:** `medium`

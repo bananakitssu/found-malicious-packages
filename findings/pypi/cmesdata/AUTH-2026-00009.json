@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00009",
+  "published": "2026-11-01T18:57:55.237401+00:00",
+  "modified": "2026-11-01T18:57:55.237401+00:00",
+  "summary": "Potential Opaque Financial Data Service Wrapper",
+  "details": "The package 'cmesdata' implements a custom binary protocol for financial data retrieval, utilizing hardcoded IP addresses and a proprietary authentication mechanism. It relies on external binary dependencies (openctp_ctp) and performs network communication to 'cmes-data.com'.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "cmesdata"
+      },
+      "versions": [
+        "1.2.57"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/cmesdata/1.2.57/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Hardcoded network endpoints and IP addresses for data retrieval.",
+      "Custom binary protocol implementation using socket communication.",
+      "Dynamic execution of network requests based on user-provided tokens.",
+      "Potential for data exfiltration or unauthorized access via the proprietary 'cmes-data.com' backend."
+    ],
+    "evidence": [
+      {
+        "file": "cmesdata/hq_route.py",
+        "reason": "Contains hardcoded IP addresses (e.g., 154.8.161.134) and domain names for data routing, which is a common pattern for C2 or proprietary data-scraping backends."
+      },
+      {
+        "file": "cmesdata/third/maths.py",
+        "reason": "Implements a low-level socket-based binary protocol with custom packet framing, which bypasses standard HTTP/API security controls and hinders static analysis."
+      },
+      {
+        "file": "cmesdata/stock.py",
+        "reason": "Uses a proprietary authentication flow ('auth2') that sends user tokens to a remote server to receive further credentials ('autu_token', 'fu_autu_token'), which could be used to track or compromise user sessions."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be a wrapper for a proprietary financial data service. The use of custom binary protocols and hardcoded infrastructure is typical for such services but warrants caution due to the lack of transparency in the communication protocol.",
+      "The dependency 'openctp_ctp' is a third-party library for CTP (Comprehensive Transaction Platform) which is standard in Chinese futures trading, but the implementation here wraps it in a way that obscures the underlying network traffic.",
+      "No explicit malicious code (e.g., shell execution, credential theft) was found, but the architecture is highly opaque."
+    ],
+    "cwe_ids": [
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package contains hardcoded IP addresses and domain names used for network communication, which limits flexibility and can be used to facilitate unauthorized or opaque connections."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

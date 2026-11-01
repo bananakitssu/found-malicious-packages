@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00008",
+  "published": "2026-11-01T18:57:55.237401+00:00",
+  "modified": "2026-11-01T18:57:55.237401+00:00",
+  "summary": "Insecure Dependency Management and Hardcoded Paths in securetools",
+  "details": "The package contains multiple scripts that perform automatic, unprompted installation of external dependencies via 'os.system(\"pip install ...\")' at runtime. This is a dangerous practice that can lead to unexpected system modifications, dependency conflicts, and security risks by executing arbitrary commands during package usage.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "securetools"
+      },
+      "versions": [
+        "0.1.6"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/securetools/0.1.6/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Automatic execution of 'pip install' commands via os.system() at module import time.",
+      "Hardcoded absolute file paths (e.g., C:\\Users\\user\\Downloads\\...) which are non-portable and suggest local development artifacts were included in the distribution."
+    ],
+    "evidence": [
+      {
+        "file": "src/securetools/assignment_1.py",
+        "reason": "Uses os.system() to install multiple heavy NLP libraries (emoji, nltk, spacy, transformers) and download spacy models upon import."
+      },
+      {
+        "file": "src/securetools/assignment_11.py",
+        "reason": "Uses os.system() to install scikit-learn at runtime."
+      },
+      {
+        "file": "src/securetools/assignment_2.py",
+        "reason": "Uses os.system() to install pandas at runtime."
+      },
+      {
+        "file": "src/securetools/assignment_3.py",
+        "reason": "Uses os.system() to install numpy and scikit-learn at runtime."
+      },
+      {
+        "file": "src/securetools/assignment_4.py",
+        "reason": "Contains hardcoded absolute Windows paths (C:\\Users\\user\\Downloads\\...) and uses subprocess to install libraries."
+      },
+      {
+        "file": "src/securetools/assignment_8.py",
+        "reason": "Uses subprocess to install transformers, torch, and other dependencies at runtime."
+      }
+    ],
+    "reviewer_notes": [
+      "The package appears to be a collection of educational assignments rather than a production library. However, the practice of including 'pip install' commands inside source files is highly discouraged and poses a security risk.",
+      "The presence of hardcoded absolute paths in assignment_4.py and assignment_8.py indicates poor packaging practices and potential privacy leakage of the developer's local environment.",
+      "The package structure is unconventional, including a file named 'requirements.txt.py' which is likely a misnamed requirements file."
+    ],
+    "cwe_ids": [
+      "CWE-1188",
+      "CWE-78"
+    ],
+    "cwe_notes": [
+      "The use of os.system() to execute arbitrary shell commands (pip install) at runtime constitutes OS Command Injection.",
+      "The inclusion of hardcoded absolute local file paths in the distributed package represents insecure default configuration and poor packaging practices."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
