@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00011",
+  "published": "2026-11-01T18:57:55.237401+00:00",
+  "modified": "2026-11-01T18:57:55.237401+00:00",
+  "summary": "Hard-coded JWT and Insecure API Communication",
+  "details": "The package contains a hard-coded JWT token in the source code, which is a security risk. Additionally, the API communication uses HTTP (not HTTPS) for the JSON API, potentially exposing credentials and data to interception.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "kingspan-connect-sensor"
+      },
+      "versions": [
+        "4.6.4"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/kingspan-connect-sensor/4.6.4/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.8,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Hard-coded credentials or tokens in source code",
+      "Use of insecure communication protocols (HTTP)"
+    ],
+    "evidence": [
+      {
+        "file": "kingspan_connect_sensor-4.6.4/src/connectsensor/const.py",
+        "reason": "Contains a hard-coded JWT token string assigned to the variable 'TOKEN'."
+      },
+      {
+        "file": "kingspan_connect_sensor-4.6.4/src/connectsensor/const.py",
+        "reason": "API_BASE_URL is defined using 'http://', indicating unencrypted communication with the sensor API."
+      }
+    ],
+    "reviewer_notes": [
+      "The hard-coded JWT appears to be a static identifier for the mobile application client rather than a user-specific session token, but it should still be handled as a secret.",
+      "The use of HTTP for API communication is a significant concern for a package handling user credentials (email/password).",
+      "The package includes a 'mitmdumper.py' script in the source tree, which is likely for debugging but could be misused if included in production environments."
+    ],
+    "cwe_ids": [
+      "CWE-319",
+      "CWE-798"
+    ],
+    "cwe_notes": [
+      "The package contains a hard-coded JWT token in the source code.",
+      "The package uses HTTP instead of HTTPS for API communication, leading to cleartext transmission of sensitive data."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}

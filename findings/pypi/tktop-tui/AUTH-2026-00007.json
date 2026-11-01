@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "AUTH-2026-00007",
+  "published": "2026-11-01T18:57:55.237401+00:00",
+  "modified": "2026-11-01T18:57:55.237401+00:00",
+  "summary": "Runtime dependency fetching and execution in tktop-tui",
+  "details": "The package acts as a wrapper that automatically downloads and executes external JavaScript dependencies via 'bun install' at runtime. This behavior introduces a supply chain risk as it relies on external network resources and third-party packages that are not pinned or verified during the Python package installation process.",
+  "severity": "medium",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "tktop-tui"
+      },
+      "versions": [
+        "0.3.0"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "PACKAGE",
+      "url": "https://pypi.org/project/tktop-tui/0.3.0/"
+    }
+  ],
+  "database_specific": {
+    "source": "Authtics Advisories",
+    "model": "gemini-3.1-flash-lite",
+    "confidence": 0.7,
+    "review": {
+      "status": "PENDING",
+      "human_review_required": true
+    },
+    "suspicious_behaviors": [
+      "Runtime execution of external package manager (bun install) to fetch dependencies.",
+      "Automatic modification of local files (package.json) at runtime.",
+      "Execution of arbitrary code via os.execv after downloading external dependencies."
+    ],
+    "evidence": [
+      {
+        "file": "tktop_tui-0.3.0/tktop_tui/__init__.py",
+        "reason": "The 'main' function triggers 'bun install' to fetch dependencies from the network if 'node_modules' is missing, and then executes the downloaded code using 'os.execv'."
+      },
+      {
+        "file": "tktop_tui-0.3.0/tktop_tui/__init__.py",
+        "reason": "The package modifies its own 'package.json' file at runtime before running the install command."
+      }
+    ],
+    "reviewer_notes": [
+      "The package design is a 'launcher' pattern. While common for TUI tools, it bypasses standard Python packaging security controls by deferring dependency resolution to the user's runtime environment.",
+      "The reliance on 'bun' and external network calls during the first execution means the integrity of the TUI depends entirely on the upstream npm/bun registry and the user's network security.",
+      "No evidence of malicious intent found, but the pattern is inherently risky for automated environments."
+    ],
+    "cwe_ids": [
+      "CWE-829"
+    ],
+    "cwe_notes": [
+      "The package performs runtime fetching and execution of external dependencies from an untrusted or unverified source, which is a form of inclusion of functionality from an untrusted control sphere."
+    ],
+    "cwe_status": "AI_PROPOSED"
+  }
+}
