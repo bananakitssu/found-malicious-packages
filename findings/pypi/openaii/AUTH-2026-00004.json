@@ -73,5 +73,13 @@
     "cwe_status": "VERIFIED",
     "human_review_required": false,
     "intent_assessment": "undetermined"
+  },
+  "status": "REVIEWED",
+  "human_review_required": false,
+  "review": {
+    "status": "APPROVED",
+    "reviewed_at": "2026-11-02T02:31:15Z",
+    "pull_request": 65,
+    "merge_commit": "0d7d5d5e0ab35e0a11e3cfeeb364ef1a948cffe7"
   }
 }
