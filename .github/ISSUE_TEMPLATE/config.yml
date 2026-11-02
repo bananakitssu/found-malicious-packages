@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Contribution guide
+    url: https://github.com/bananakitssu/found-malicious-packages/blob/main/CONTRIBUTING.md
+    about: Read how to propose advisory corrections and version updates.

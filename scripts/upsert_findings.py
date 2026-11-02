@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Reconcile newly generated Authtics findings with existing advisories."""
+"""Reconcile Gemini proposals with existing Authtics Advisories."""
 
 import json
 import os
-import re
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -11,6 +10,8 @@ from pathlib import Path
 ECOSYSTEM = os.environ.get("AUTHTICS_ECOSYSTEM", "npm").lower()
 ROOT = Path("findings") / ECOSYSTEM
 REPORT_ROOT = Path("reports")
+SCAN_RESULTS = Path("metadata/analysis-results.json")
+ADVISORY_ECOSYSTEM = "npm" if ECOSYSTEM == "npm" else "PyPI"
 
 
 def tracked_advisories():
@@ -22,12 +23,10 @@ def tracked_advisories():
         capture_output=True,
         text=True,
     )
-    paths = []
-    for line in result.stdout.splitlines():
-        path = Path(line)
-        if path.name.startswith("AUTH-") and path.suffix == ".json":
-            paths.append(path)
-    return paths
+    return [
+        Path(line) for line in result.stdout.splitlines()
+        if Path(line).name.startswith("AUTH-") and Path(line).suffix == ".json"
+    ]
 
 
 def generated_advisories():
@@ -37,94 +36,36 @@ def generated_advisories():
         capture_output=True,
         text=True,
     )
-    paths = []
-    for line in result.stdout.splitlines():
-        if not line.startswith("?? "):
-            continue
-        path = Path(line[3:])
-        if path.name.startswith("AUTH-") and path.suffix == ".json":
-            paths.append(path)
-    return paths
+    return [
+        Path(line[3:]) for line in result.stdout.splitlines()
+        if line.startswith("?? ")
+        and Path(line[3:]).name.startswith("AUTH-")
+        and Path(line[3:]).suffix == ".json"
+    ]
 
 
-def ecosystem_name():
-    return "npm" if ECOSYSTEM == "npm" else "PyPI"
-
-
-def package_matches(data, name):
+def affected_package(data, name):
     for affected in data.get("affected", []):
         package = affected.get("package", {}) if isinstance(affected, dict) else {}
-        if package.get("name") == name and package.get("ecosystem") == ecosystem_name():
-            return True
-    return False
+        if package.get("name") == name and package.get("ecosystem") == ADVISORY_ECOSYSTEM:
+            return affected
+    return None
 
 
-def package_advisories(name, tracked):
-    found = []
+def find_advisory_by_id(advisory_id, package_name, tracked):
+    if not advisory_id:
+        return None
+    matches = []
     for path in tracked:
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
             continue
-        if package_matches(data, name):
-            found.append((path, data))
-    return found
-
-
-def tokens(value):
-    return set(re.findall(r"[a-z0-9]+", str(value).lower()))
-
-
-def similarity(existing, candidate):
-    def text(data):
-        db = data.get("database_specific", {})
-        return " ".join([
-            data.get("summary", ""),
-            data.get("details", ""),
-            " ".join(db.get("suspicious_behaviors", [])),
-        ])
-
-    left = tokens(text(existing))
-    right = tokens(text(candidate))
-    if not left or not right:
-        return 0.0
-    return len(left & right) / len(left | right)
-
-
-def find_match(name, version, candidate, tracked):
-    advisories = package_advisories(name, tracked)
-    exact = []
-
-    for path, data in advisories:
-        for affected in data.get("affected", []):
-            package = affected.get("package", {}) if isinstance(affected, dict) else {}
-            if (
-                package.get("name") == name
-                and package.get("ecosystem") == ecosystem_name()
-                and version in affected.get("versions", [])
-            ):
-                exact.append((path, data))
-                break
-
-    if len(exact) == 1:
-        return exact[0]
-
-    candidates = exact if exact else advisories
-    if not candidates:
+        if data.get("id") == advisory_id and affected_package(data, package_name) is not None:
+            matches.append((path, data))
+    if len(matches) != 1:
         return None
-
-    scored = sorted(
-        ((similarity(data, candidate), path, data) for path, data in candidates),
-        key=lambda item: item[0],
-        reverse=True,
-    )
-    if not scored or scored[0][0] < 0.50:
-        return None
-
-    second = scored[1][0] if len(scored) > 1 else 0.0
-    if len(scored) > 1 and scored[0][0] - second < 0.10:
-        return None
-    return scored[0][1], scored[0][2]
+    return matches[0]
 
 
 def merge_unique(old, new, key):
@@ -141,23 +82,61 @@ def merge_unique(old, new, key):
     return merged, changed
 
 
+def mark_review_pending(data):
+    database_specific = data.setdefault("database_specific", {})
+    current = database_specific.get("review", {})
+    if current and (current.get("status") != "PENDING" or current.get("reviewed_by") or current.get("reviewed_at")):
+        history = database_specific.setdefault("review_history", [])
+        snapshot = dict(current)
+        if snapshot not in history:
+            history.append(snapshot)
+    database_specific["review"] = {
+        "status": "PENDING",
+        "human_review_required": True,
+    }
+    database_specific["human_review_required"] = True
+
+
+def add_version_detail(affected, version, status, statement):
+    details = affected.setdefault("version_details", [])
+    for item in details:
+        if item.get("version") == version and item.get("status") == status:
+            if statement and statement not in item.get("statement", ""):
+                item["statement"] = (item.get("statement", "").rstrip() + "\n\nUpdate from a later scan: " + statement).strip()
+                return True
+            return False
+    details.append({
+        "version": version,
+        "status": status,
+        "statement": statement or "No version-specific statement was supplied.",
+    })
+    details.sort(key=lambda item: (item.get("version", ""), item.get("status", "")))
+    return True
+
+
 def merge(existing, candidate, version):
     merged = json.loads(json.dumps(existing))
     changed = False
     name = candidate["affected"][0]["package"]["name"]
+    target = affected_package(merged, name)
+    if target is None:
+        return merged, False
 
-    target_affected = None
-    for affected in merged.get("affected", []):
-        package = affected.get("package", {})
-        if package.get("name") == name and package.get("ecosystem") == ecosystem_name():
-            target_affected = affected
-            break
-
-    if target_affected is None:
-        merged.setdefault("affected", []).append(candidate["affected"][0])
+    patched_versions = target.setdefault("patched_versions", [])
+    if version in patched_versions:
+        patched_versions.remove(version)
+        target["version_details"] = [
+            item for item in target.get("version_details", [])
+            if not (item.get("version") == version and item.get("status") == "patched")
+        ]
         changed = True
-    elif version not in target_affected.setdefault("versions", []):
-        target_affected["versions"] = sorted(set(target_affected["versions"] + [version]))
+    versions = target.setdefault("versions", [])
+    if version not in versions:
+        versions.append(version)
+        versions.sort()
+        changed = True
+    detail = candidate["affected"][0].get("version_details", [{}])[0]
+    if add_version_detail(target, version, "affected", detail.get("statement", candidate.get("details", ""))):
         changed = True
 
     references, ref_changed = merge_unique(
@@ -171,57 +150,69 @@ def merge(existing, candidate, version):
 
     existing_db = merged.setdefault("database_specific", {})
     candidate_db = candidate.get("database_specific", {})
-
-    behaviors, behavior_changed = merge_unique(
-        existing_db.get("suspicious_behaviors", []),
-        candidate_db.get("suspicious_behaviors", []),
-        lambda item: item,
-    )
-    if behavior_changed:
-        existing_db["suspicious_behaviors"] = behaviors
-        changed = True
-
-    evidence, evidence_changed = merge_unique(
-        existing_db.get("evidence", []),
-        candidate_db.get("evidence", []),
-        lambda item: (item.get("file"), item.get("reason")),
-    )
-    if evidence_changed:
-        existing_db["evidence"] = evidence
-        changed = True
-
-    notes, notes_changed = merge_unique(
-        existing_db.get("reviewer_notes", []),
-        candidate_db.get("reviewer_notes", []),
-        lambda item: item,
-    )
-    if notes_changed:
-        existing_db["reviewer_notes"] = notes
-        changed = True
+    for field, key in [
+        ("suspicious_behaviors", lambda item: item),
+        ("evidence", lambda item: (item.get("file"), item.get("reason"))),
+        ("reviewer_notes", lambda item: item),
+        ("cwe_ids", lambda item: item),
+        ("cwe_notes", lambda item: item),
+    ]:
+        values, value_changed = merge_unique(existing_db.get(field, []), candidate_db.get(field, []), key)
+        if value_changed:
+            existing_db[field] = values
+            changed = True
 
     rank = {"low": 1, "medium": 2, "high": 3, "critical": 4}
     if rank.get(candidate.get("severity"), 0) > rank.get(merged.get("severity"), 0):
         merged["severity"] = candidate["severity"]
         changed = True
 
-    candidate_confidence = candidate_db.get("confidence")
-    existing_confidence = existing_db.get("confidence")
-    if isinstance(candidate_confidence, (int, float)) and (
-        not isinstance(existing_confidence, (int, float))
-        or candidate_confidence > existing_confidence
+    confidence = candidate_db.get("confidence")
+    old_confidence = existing_db.get("confidence")
+    if isinstance(confidence, (int, float)) and (
+        not isinstance(old_confidence, (int, float)) or confidence > old_confidence
     ):
-        existing_db["confidence"] = candidate_confidence
+        existing_db["confidence"] = confidence
         changed = True
 
     if changed:
         merged["modified"] = datetime.now(timezone.utc).isoformat()
-        existing_db["review"] = {
-            "status": "PENDING",
-            "human_review_required": True,
-        }
-        merged["database_specific"] = existing_db
-
+        existing_db.setdefault("intent_assessment", "undetermined")
+        mark_review_pending(merged)
     return merged, changed
+
+
+def propose_patch(existing, version, result):
+    proposed = json.loads(json.dumps(existing))
+    name = result["package"]
+    affected = affected_package(proposed, name)
+    if affected is None:
+        return proposed, False, "The selected advisory does not cover this package."
+    versions = affected.setdefault("versions", [])
+    patched = affected.setdefault("patched_versions", [])
+    if version in versions:
+        return proposed, False, "The release is already listed as affected; refusing to mark it patched."
+    detail_changed = add_version_detail(
+        affected,
+        version,
+        "patched",
+        result.get("version_statement", ""),
+    )
+    changed = False
+    if version not in patched:
+        patched.append(version)
+        patched.sort()
+        changed = True
+    if detail_changed:
+        changed = True
+    if changed:
+        notes = proposed.setdefault("database_specific", {}).setdefault("reviewer_notes", [])
+        note = f"Automated scan proposes {version} as patched for this advisory. This is a proposal only and requires human review."
+        if note not in notes:
+            notes.append(note)
+        proposed["modified"] = datetime.now(timezone.utc).isoformat()
+        mark_review_pending(proposed)
+    return proposed, changed, "Patch proposal recorded for human review."
 
 
 def rewrite_latest_report(changes):
@@ -229,14 +220,13 @@ def rewrite_latest_report(changes):
     if not reports:
         return
     report = reports[-1]
-
     if not changes:
         report.unlink(missing_ok=True)
         print("No advisory changes; removed the generated scan report.")
         return
 
     lines = [
-        f"# Authtics {ecosystem_name()} Security Scan",
+        f"# Authtics {ADVISORY_ECOSYSTEM} Security Scan",
         "",
         f"Generated: {datetime.now(timezone.utc).isoformat()}",
         "",
@@ -247,6 +237,9 @@ def rewrite_latest_report(changes):
             f"- Advisory: {change['id']}",
             f"- Package: {change['package']}@{change['version']}",
             f"- Change: {change['type']}",
+            f"- Review: PENDING",
+            "",
+            change.get("note", ""),
             "",
         ])
     report.write_text("\n".join(lines), encoding="utf-8")
@@ -254,58 +247,91 @@ def rewrite_latest_report(changes):
 
 def main():
     tracked = tracked_advisories()
-    generated = generated_advisories()
     changes = []
 
-    for path in generated:
+    for path in generated_advisories():
         candidate = json.loads(path.read_text(encoding="utf-8"))
-        affected = candidate.get("affected", [])
-        if not affected:
+        affected_items = candidate.get("affected", [])
+        if not affected_items:
             continue
-        package = affected[0].get("package", {}).get("name")
-        versions = affected[0].get("versions", [])
-        if not package or not versions:
+        package_name = affected_items[0].get("package", {}).get("name")
+        versions = affected_items[0].get("versions", [])
+        if not package_name or not versions:
             continue
-
         version = versions[0]
-        match = find_match(package, version, candidate, tracked)
+        database_specific = candidate.setdefault("database_specific", {})
+        reconciliation = database_specific.pop("reconciliation", {})
+        match = None
+        if reconciliation.get("decision") == "same_vulnerability":
+            match = find_advisory_by_id(reconciliation.get("advisory_id"), package_name, tracked)
+
         if match is None:
+            path.write_text(json.dumps(candidate, indent=2) + "\n", encoding="utf-8")
             continue
 
         existing_path, existing = match
         merged, changed = merge(existing, candidate, version)
         path.unlink(missing_ok=True)
-
         if changed:
-            existing_path.write_text(
-                json.dumps(merged, indent=2) + "\n",
-                encoding="utf-8",
-            )
+            existing_path.write_text(json.dumps(merged, indent=2) + "\n", encoding="utf-8")
             changes.append({
                 "type": "updated",
                 "id": existing.get("id", existing_path.stem),
-                "package": package,
+                "package": package_name,
                 "version": version,
+                "note": reconciliation.get("reason", "Same vulnerability; exact release added for human review."),
             })
-            print(f"Updated {existing.get('id', existing_path.stem)} with {package}@{version}")
+            print(f"Updated {existing.get('id', existing_path.stem)} with {package_name}@{version}")
         else:
-            print(f"No changes for existing advisory {existing.get('id', existing_path.stem)}; duplicate removed.")
+            print(f"No changes for matched advisory {existing.get('id', existing_path.stem)}.")
+
+    if SCAN_RESULTS.exists():
+        try:
+            results = json.loads(SCAN_RESULTS.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise RuntimeError(f"Could not read analysis results for patched-version review: {exc}") from exc
+        for result in results:
+            if result.get("version_assessment") != "patched":
+                continue
+            match_info = result.get("advisory_match", {})
+            if match_info.get("decision") != "same_vulnerability" or not match_info.get("advisory_id"):
+                print(f"Skipping patched-version proposal for {result.get('package')}@{result.get('version')}: no explicit advisory match.")
+                continue
+            match = find_advisory_by_id(match_info["advisory_id"], result.get("package"), tracked)
+            if match is None:
+                print(f"Skipping patched-version proposal for {result.get('package')}@{result.get('version')}: advisory ID was not found for this package.")
+                continue
+            path, existing = match
+            updated, changed, note = propose_patch(existing, result["version"], result)
+            if changed:
+                path.write_text(json.dumps(updated, indent=2) + "\n", encoding="utf-8")
+                changes.append({
+                    "type": "patch-proposed",
+                    "id": existing.get("id", path.stem),
+                    "package": result["package"],
+                    "version": result["version"],
+                    "note": note,
+                })
+                print(f"Proposed {result['version']} as patched in {existing.get('id', path.stem)}; human review required.")
+            else:
+                print(f"No patched-version update for {existing.get('id', path.stem)}: {note}")
 
     for path in generated_advisories():
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
             continue
-        affected = data.get("affected", [])
-        if not affected:
+        affected_items = data.get("affected", [])
+        if not affected_items:
             continue
-        package = affected[0].get("package", {}).get("name", "unknown")
-        version = (affected[0].get("versions") or ["unknown"])[0]
+        package_name = affected_items[0].get("package", {}).get("name", "unknown")
+        version = (affected_items[0].get("versions") or ["unknown"])[0]
         changes.append({
             "type": "new",
             "id": data.get("id", path.stem),
-            "package": package,
+            "package": package_name,
             "version": version,
+            "note": "New advisory draft. Human review required.",
         })
 
     rewrite_latest_report(changes)

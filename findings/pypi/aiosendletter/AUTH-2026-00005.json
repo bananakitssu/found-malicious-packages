@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "id": "AUTH-2026-00005",
   "published": "2026-09-17T18:23:31.242368+00:00",
   "modified": "2026-09-29T21:15:00.000000+00:00",
@@ -22,6 +22,54 @@
         "4.3",
         "4.5",
         "4.6"
+      ],
+      "patched_versions": [],
+      "version_details": [
+        {
+          "version": "0.2.0",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        },
+        {
+          "version": "3.7",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        },
+        {
+          "version": "3.8",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        },
+        {
+          "version": "3.9",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        },
+        {
+          "version": "4.0",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        },
+        {
+          "version": "4.1",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        },
+        {
+          "version": "4.3",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        },
+        {
+          "version": "4.5",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        },
+        {
+          "version": "4.6",
+          "status": "affected",
+          "statement": "Legacy affected-version entry. The schema 1.0 record did not preserve evidence separately for this exact release; see the advisory details."
+        }
       ]
     }
   ],
@@ -42,7 +90,7 @@
   "database_specific": {
     "source": "Authtics Advisories",
     "model": "gemini-3.1-flash-lite",
-    "confidence": 1.0,
+    "confidence": 1,
     "review": {
       "status": "APPROVED",
       "human_review_required": false,
@@ -84,6 +132,7 @@
       "CWE-269: Improper privilege management via UAC elevation."
     ],
     "cwe_status": "VERIFIED",
-    "human_review_required": false
+    "human_review_required": false,
+    "intent_assessment": "undetermined"
   }
 }

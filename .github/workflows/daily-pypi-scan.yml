@@ -199,6 +199,7 @@ jobs:
       - name: Run PyPI static analysis
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           AUTHTICS_ECOSYSTEM: pypi
         run: python3 scripts/run_gemini_analyze.py
 
@@ -242,9 +243,22 @@ jobs:
           fi
           git commit -m "scan: update PyPI security advisories"
           git push origin "$branch"
+          cat > /tmp/authtics-pr-body.md <<'EOF'
+          ## Authtics PyPI security scan
+
+          This is an automated AI draft for human review.
+
+          - Ecosystem: PyPI
+          - Package code was not executed.
+          - Only exact analyzed releases are affected.
+          - n/a results do not create advisories.
+          - CWE classifications are AI-proposed and need human verification.
+          - Changes to existing advisories and proposed patched versions still need human review.
+          - No advisory update is published until the review is approved.
+          EOF
           gh pr create \
             --draft \
             --base main \
             --head "$branch" \
             --title "[PyPI] Daily security scan ${GITHUB_RUN_ID}" \
-            --body "## Authtics PyPI security scan\n\nThis is an automated **AI draft** for human review.\n\n- Ecosystem: PyPI\n- Package code was not executed.\n- Only exact analyzed releases are affected.\n- \\`n/a\\` results do not create advisories.\n- CWE classifications are AI-proposed and require human verification.\n- No advisory is considered published until the human review gate approves it."
+            --body-file /tmp/authtics-pr-body.md

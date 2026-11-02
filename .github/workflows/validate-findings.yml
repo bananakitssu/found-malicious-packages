@@ -6,6 +6,12 @@ on:
     paths:
       - 'findings/npm/**/*.json'
       - 'findings/pypi/**/*.json'
+      - 'scripts/validate_findings.py'
+      - 'scripts/ecosystem.py'
+      - 'scripts/gemini_analyze.py'
+      - 'scripts/upsert_findings.py'
+      - 'schemas/advisory-1.1.schema.json'
+      - 'tests/**'
 
 permissions:
   contents: read
@@ -17,6 +23,15 @@ jobs:
     steps:
       - name: Checkout PR
         uses: actions/checkout@v4
+
+      - name: Check schema JSON
+        run: python3 -m json.tool schemas/advisory-1.1.schema.json > /dev/null
+
+      - name: Compile Python scripts
+        run: python3 -m py_compile scripts/*.py tests/*.py
+
+      - name: Test advisory reconciliation and validation
+        run: python3 -m unittest discover -s tests -v
 
       - name: Validate findings
         run: |
